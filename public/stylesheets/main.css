@@ -1,0 +1,405 @@
+*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+.clearfix:before, .clearfix:after { content: ''; display: table; }
+.clearfix:after { clear: both; }
+
+html, body {
+	min-height: 100%;
+	height: 100%;
+	margin: 0;
+	position: relative;
+}
+
+ul, ol, li, dl, dd {
+    margin: 0;
+    padding: 0;
+}
+
+ul{
+	list-style: none;
+}
+
+a:focus{
+	text-decoration: none;
+}
+
+a:focus, ul:focus, button:focus{
+	outline: 0 !important;
+}
+
+.green{
+	color: #6EA12A;
+}
+
+.dark-blue{
+	color: #2B364A;
+}
+
+.blue{
+	color: #1AA7F7;
+}
+
+@-webkit-keyframes autofill {
+    to {
+        color: #999;
+        background: transparent;
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #999;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #999;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #999;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #999;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+   color:    #999;
+}
+
+input[type="submit"]{
+   outline:none;
+}
+
+.left-align{
+	float: left;
+}
+
+.right-align{
+	float: right;
+}
+
+.radial-bg {
+  background-color: #2F2727;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  /* Safari 4-5, Chrome 1-9 */
+  /* Can't specify a percentage size? Laaaaaame. */
+  background: -webkit-gradient(radial, center center, 0, center center, 460, from(#1a82f7), to(#2B364A));
+
+  /* Safari 5.1+, Chrome 10+ */
+  background: -webkit-radial-gradient(circle, #4A5363, #2B364A);
+
+  /* Firefox 3.6+ */
+  background: -moz-radial-gradient(circle, #4A5363, #2B364A);
+
+  /* IE 10 */
+  background: -ms-radial-gradient(circle, #4A5363, #2B364A);
+}
+
+.linear-bg {
+  /* fallback */
+  background-color: #1AA7F7;
+  background-repeat: repeat-y;
+
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, left top, right top, from(#1AA7F7), to(6EA12A));
+
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(left, #6EA12A, #1AA7F7);
+
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(left, #6EA12A, #1AA7F7);
+
+  /* IE 10 */
+  background: -ms-linear-gradient(left, #6EA12A, #1AA7F7);
+
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(left, #6EA12A, #1AA7F7);
+}
+
+/** alert start **/
+
+.alert-danger, .alert-success, .alert-warning{
+	width: 500px;
+	height: 49px;
+	top: -49px;
+	left: 50%;
+	display: none;
+	opacity: 0;
+	text-align: center;
+	position: fixed;
+	z-index: 9999;
+	transform: translate(-50%, 0);
+	box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.alert.appear{
+	display: inline-block;
+	opacity: 1;
+}
+
+/** alert end **/
+
+/** Spinner Start **/
+
+.btn-gp{
+	margin-top: 20px;
+	position: relative;
+}
+
+.spinner{
+	color: white;
+	display:inline-block;
+	position: absolute;
+	transform: translate(-50%, -50%);
+}
+
+.glyphicon-spinner, .fa-spinner {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin .7s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+/** Spinner End **/
+
+
+/** Create Lesson Dashboard Start **/
+
+#dash-content{
+	padding: 10px 0;
+	height: 100%;	
+}
+
+.dash-bg{
+	background-color: #F5FAFC;
+}
+
+.dash-block{
+	border-radius: 4px;
+	background-color: white;
+	margin: 0 10px;
+	position: relative;
+	padding: 15px 0;
+	border:1px solid #E0F4FE;
+}
+
+.dash-block > a{
+	width: 150px;
+	height: 80px; 	
+	vertical-align: middle;
+}
+
+#sidebar > p:first-child{
+	margin: 10px 0;
+	color: #777;
+}
+
+.btn-wrap{
+	position: absolute;
+	top: 50%;
+	right: 15px;
+	-ms-transform: translate(0, -50%);
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%); 
+}
+
+.btn-wrap > div{
+	display: inline-block;
+	position: relative;
+}
+
+.btn-wrap .btn{
+	color: white !important;
+	width: 82px;
+	height: 34px;
+}
+
+#sidebar {
+	position: absolute;
+    width: 240px;
+    min-height: 638px;
+    margin: 10px;
+    overflow: hidden;
+    outline: none; 
+    z-index: 100;
+}
+
+.dash-block > p{
+	margin-top: 30px;
+	margin-bottom: 10px;
+	color: #777;
+	font-size: 18px;
+}
+
+ul.sidebar-menu li {
+	position: relative;
+    line-height: 15px;
+    
+}
+
+ul.sidebar-menu li a {
+	position: relative;
+    text-decoration: none;
+    display: block;
+    padding: 15px 0 15px 10px;
+    font-size: 15px;
+    outline: none;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+ul.sidebar-menu li a span {
+    display: inline-block;
+}
+
+ul.sidebar-menu li a.active {
+    color:#76abbf !important;
+}
+
+ul.sidebar-menu li a.active > i{
+	top: 0;
+    left: 0;
+    background-color: red;
+    height: 100%;
+    position: absolute;
+    width: 5px;
+}
+
+ul.sidebar-menu li a > span, i{
+	color: inherit;
+}
+
+ul.sidebar-menu li a.active > span{
+	margin-left: 5px;
+	font-weight: 600;
+}
+
+#dash-detail-wrap{
+    width: 100%;
+    margin-top: 10px;
+}
+
+#dash-detail{
+	margin-left: 260px;
+	min-height: 638px;
+}
+
+#dash-detail .form-label, #dash-detail .form-input{
+	display:inline-block;
+}
+
+.dash-detail-header{
+	position: relative;
+}
+
+.dash-detail-header > p{
+	margin: 0 0 30px 0 !important;
+	padding: 10px 0;
+	border-bottom: 1px solid #eee;
+	color: #777;
+}
+
+.dash-detail-header > a{
+	position: absolute;
+    top: 0;
+    right: 0;
+    color: white !important;
+    display: inline-block;
+}
+
+.dash-detail-header > a > i{
+	margin-left: 5px;
+	font-size: 120%;
+	vertical-align: middle;
+}
+/** Create Lesson Dashboard End **/
+
+
+/** Login start **/
+
+.login-content{
+	width: 100%;
+    height: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.login-form-wrapper{
+	display: table-cell;
+    vertical-align: middle;
+}
+
+.login-form-wrapper form{
+	width: 20%;
+	min-width: 300px;
+	max-width: 480px;
+	margin: auto;
+}
+
+.line-form{
+	margin-top: 20px;
+  	border-bottom: 1px solid #999;
+}
+
+.line-form input{
+	color:#999;
+	border: 0;
+  	outline: 0;
+  	width: 100%;
+  	background: transparent;
+}
+
+#login-btn{
+	width: 100%;
+	text-align: center;
+	border:none;
+	color: white;
+	font-size: 1.2em;
+	font-weight: 200;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.login-spinner{
+	top: 14px;
+	right: 20px;
+}
+
+.form-bottom{
+	margin-top: 5px;
+}
+
+.form-bottom a{
+	color: #999;
+}
+
+/** Login end **/
+
+
+/** Footer start **/
+
+footer{
+	height: 30px;
+	line-height: 30px;
+	position: absolute;
+  	right: 0;
+  	bottom: 0;
+  	left: 0;
+  	text-align: center;
+  	color: #999;
+  	font-weight: 200;
+  	font-size: 0.8em;
+}
+
+/** Footer end **/

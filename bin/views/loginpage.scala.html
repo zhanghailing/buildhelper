@@ -1,0 +1,95 @@
+@scripts = {
+	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
+}
+
+@main(scripts, "Login"){
+<script type="text/javascript">
+		$(function(){
+			$("#login-form").validate({
+		        rules: {
+		            title:{
+		            	email: true,
+		            	required:true
+		            },
+		            password:{
+		            	required:true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        	var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner login-spinner"></i>');
+		        	$('#login-btn').after(spinner);
+		        	$('#login-btn').attr("disabled", true);
+		        
+		        	$.ajax({
+		                url: "@routes.AuthController.login()",
+		                type: "POST",
+		                data: $(form).serialize(),
+		                success: function(response, status) {
+		                	var data = $.parseJSON(JSON.stringify(response));
+		                	if(data.code != 0){
+		                		showAlertToast(data.message, "alert-danger");
+		                	}else{
+		                		window.location.href = "@routes.HomeController.index()"
+		                	}
+		                	spinner.remove();
+		                	$('#login-btn').attr("disabled", false);
+		                },
+		                error: function(request, status, err){
+		                	showAlertToast(err, "alert-danger");
+		                	spinner.remove();
+		                	$('#login-btn').attr("disabled", false);
+		                }
+		            });
+		        }
+		    });
+		});
+	</script>
+	<div class="login-content radial-bg">
+		<div class="login-form-wrapper">
+			<form id="login-form">
+				<div class="line-form">
+	      			<input type="text" name="email" placeholder="@messages.at("login")">
+				</div>
+				<div class="line-form">
+	      			<input type="password" name="password" placeholder="@messages.at("password")">
+				</div>
+				<div class="btn-gp">
+					<input id="login-btn" class="linear-bg" type="submit" >
+				</div>
+				<div class="form-bottom">
+					<a class="left-align">@messages.at("forget_pwd")</a>
+					<a class="right-align" data-toggle="modal" data-target="#signup-modal">@messages.at("sign_up")</a>
+				</div>
+			</form>
+		</div>
+	</div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
