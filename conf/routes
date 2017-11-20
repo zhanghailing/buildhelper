@@ -17,4 +17,4 @@ GET   	/logout           								controllers.AuthController.logout()
 POST   	/signup           								controllers.AuthController.signup()
 
 
-POST   	/company           								controllers.CompanyController.companys(offset: Integer ?= 0)
+GET   	/companys           							controllers.CompanyController.companys(offset: Integer ?= 0)

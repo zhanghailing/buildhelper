@@ -49,6 +49,7 @@ public class Account{
 	
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
 	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@JsonIgnore
 	public User user;
 	
 	public Account(){}
