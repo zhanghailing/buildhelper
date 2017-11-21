@@ -32,10 +32,15 @@
 		                data: $(form).serialize(),
 		                success: function(response, status) {
 		                	var data = $.parseJSON(JSON.stringify(response));
+		                	
 		                	if(data.code != 0){
 		                		showAlertToast(data.message, "alert-danger");
 		                	}else{
-		                		window.location.href = "@routes.HomeController.index()"
+		                		if(data.data.accType === "SADMIN"){
+		                			window.location.href = "@routes.CompanyController.companys()";
+		                		}else{
+		                			window.location.href = "@routes.HomeController.index()";
+		                		}
 		                	}
 		                	spinner.remove();
 		                	$('#login-btn').attr("disabled", false);

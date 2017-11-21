@@ -15,3 +15,6 @@ GET     /loginpage                     					controllers.AuthController.loginPage
 POST   	/login           								controllers.AuthController.login()
 GET   	/logout           								controllers.AuthController.logout()
 POST   	/signup           								controllers.AuthController.signup()
+
+
+GET   	/companys           							controllers.CompanyController.companys(offset: Integer ?= 0)
