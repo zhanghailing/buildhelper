@@ -11,15 +11,6 @@ GET     /message             	   controllers.AsyncController.message
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-<<<<<<< HEAD
-GET     /loginpage                     					controllers.AuthController.loginPage()
-POST   	/login           								controllers.AuthController.login()
-GET   	/logout           								controllers.AuthController.logout()
-POST   	/signup           								controllers.AuthController.signup()
-
-
-GET   	/companys           							controllers.CompanyController.companys(offset: Integer ?= 0)
-=======
 GET     /loginpage                  controllers.AuthController.loginPage()
 POST   	/login        			   controllers.AuthController.login()
 GET   	/logout           		   controllers.AuthController.logout()
@@ -29,4 +20,3 @@ POST   	/signup           		   controllers.AuthController.signup()
 GET   	/companys           		   controllers.CompanyController.companys(offset: Integer ?= 0)
 GET 		/create/company			   controllers.CompanyController.createCompany()
 POST		/save/company			   controllers.CompanyController.saveCompany()
->>>>>>> 74735d9fe270fd404978d1de22feb65fd575eae9

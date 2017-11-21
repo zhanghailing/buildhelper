@@ -434,6 +434,112 @@ ul.sidebar-menu li a.active > span{
 
 /** Error End **/
 
+/** Teacher Settle Start ---- Form **/
+
+.mod-form__block-name {
+    font-weight: 200;
+    font-size: 18px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F2F2F2;
+}
+
+.wrap-step-2 {
+    padding: 40px 30px;
+    overflow: hidden;
+}
+
+#teacher-info-form .form-label, #personal-main-form .form-label{
+	width: 120px;
+	display:inline-block;
+	vertical-align: top;
+}
+
+#teacher-info-form .form-input, #personal-main-form .form-input, #tiny-lesson-group .form-input{
+	width: 240px;
+	display:inline-block;
+}
+
+#teacher-info-form .long-txt, #personal-main-form .long-txt{
+	width: 70%;
+}
+
+#teacher-info-form .uploader{
+	width: 200px;
+	height: 120px;	
+}
+
+#teacher-info-form input[type=file]{
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.upload-tips{
+	display: inline-block;
+	vertical-align: top;
+}
+
+.upload-tips p{
+	color: #777;
+}
+
+.institution-tip{
+	line-height: 34px;
+}
+
+.form-join{
+	margin: 0 5px;
+}
+
+#avatar-link, #cert-link{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top:0;
+	left: 0;
+}
+
+#teacher-info-form .form-submit{
+	margin-top: 50px;
+}
+
+#teacher-info-form label.error{
+	width: 100%;	
+}
+
+.upload-wrap > label.error{
+	font-size: 14px;
+    margin-top: 15px;
+}
+
+/** Teacher Settle End ---- Form **/
+
+/** Teacher Settle Start ---- review **/
+
+.join-msg{
+	margin: 30px;
+	text-align: center;
+}
+
+.join-msg p{
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.span-large{
+	font-size: 20px;
+}
+
+.home-link{
+	display: inline-block;
+	margin-top: 30px;
+}
+
+/** Teacher Settle End ---- review **/
+
+
 /** Footer start **/
 
 footer{
