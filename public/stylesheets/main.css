@@ -310,6 +310,10 @@ ul.sidebar-menu li a.active > span{
 	color: #777;
 }
 
+.dash-detail-header  > p.title{
+	padding: 10px;
+}
+
 .dash-detail-header > a{
 	position: absolute;
     top: 0;
@@ -386,6 +390,49 @@ ul.sidebar-menu li a.active > span{
 
 /** Login end **/
 
+/** Error Start **/
+
+.error-body{
+	height: 100%;
+	background-color: #76abbf;
+	text-align: center;
+	padding: 60px;
+}
+
+.error-body p{
+	margin-bottom: 20px;
+}
+
+.error-title{
+	font-size: 150px;
+    color: #577C89;
+    text-align: center;
+    margin-bottom: 1px;
+    text-shadow: 1px 1px 6px #96DAF3;
+}
+
+.error-message{
+	font-size: 24px;
+	font-weight: bold;
+	font-family: proxima-nova,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.back-btn{
+	margin-top: 20px;
+	display: inline-block;
+	color: white !important;
+    background: #577C89;
+    text-decoration: none;
+    padding: 7px 120px;
+    font-size: 13px;
+    font-family: arial, serif;
+    font-weight: bold;
+    -webkit-border-radius: 3em;
+    -moz-border-radius: .1em;
+    -border-radius: .1em;
+}
+
+/** Error End **/
 
 /** Footer start **/
 
