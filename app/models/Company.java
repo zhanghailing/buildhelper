@@ -43,12 +43,10 @@ public class Company {
 	@Column(name = "create_datetime")
 	public Date createDatetime; 
 	
-	@OneToMany(mappedBy = "company")
-	public List<LetterHead> letterHeads;
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+	public LetterHead letterHead;
 	
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
 	public Avatar logo;
 		
-	
-	
 }
