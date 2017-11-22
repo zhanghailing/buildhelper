@@ -6,6 +6,7 @@ email_body=您的账户是： {0} 和 密码： {1}!
 error_email_empty=您的邮件不可以为空！
 company_info=公司信息
 company_name=公司名字
+placeholder_company_name= 请填入您要注册的公司名字
 
 
 

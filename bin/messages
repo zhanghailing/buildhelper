@@ -6,6 +6,7 @@ email_body=Your account is {0} and password is {1}!
 error_email_empty=Your email cannot be empty!
 company_info=Company Info
 company_name=Company Name
+placeholder_company_name=Fill in the company's name
 
 
 
