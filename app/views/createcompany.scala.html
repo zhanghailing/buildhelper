@@ -115,6 +115,28 @@
 		@helper.form(action = routes.CompanyController.saveCompany(), 'id-> "company-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
 			<div class="mod-form__block">
 			   <div class="mod-form__block-content">
+				  <!-- 资格证书 --> 
+				  <div class="form-group">
+			         <div id="cert-wrap" class="form-label">	
+			            <label><b>*</b>Certification:</label>
+			         </div>
+			         <div class="uploader-wrapper">
+			         	 <div id="lh-uploader" class="uploader">
+				            <a id="cert-link" class="link-img hidden"></a>
+				            <div class="upload-wrap">
+				               <i class="fa fa-picture-o" aria-hidden="true"></i>
+				               <div class="upload-text">
+				                  <p>Drop Certificate here or  <a class="browse-btn">Browse Files</a></p>
+				               </div>
+				               <input id="cert-uploader" class="file-input" type="file" name="certImage"/>
+				            </div>
+				         </div>
+			         	<div class="upload-tips">
+				            <p>Please scan and upload a copy of your teaching qualification or certification; The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p>
+				         </div>
+			         </div>
+			      </div>
+			      
 			      <div class="form-group">
 			         <div class="form-label">
 			            <label for="cy-name"><b>*</b>@messages.at("company_name")</label>
@@ -137,7 +159,7 @@
 					<div id="avatar" class="form-label">
 						<label><b>*</b>Profile Photo:</label>
 					</div>
-					<div class="uploader">
+					<div id="logo-uploader" class="uploader">
 			            <a id="avatar-link" class="link-img hidden"></a>
 			            <div class="upload-wrap">
 			               <i class="fa fa-picture-o" aria-hidden="true"></i>
@@ -150,36 +172,10 @@
 			            </div>
 			         </div>
 			         <div class="upload-tips">
-			            <p>The size of the image must be less than 2M.</p> 
-			            <p>JPG, PNG, and BMP formats are supported.</p>
+			            <p>The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p> 
 			         </div>
 			      </div>
 			      
-			      
-			      <!-- 资格证书 --> 
-			      <div class="form-group">
-			         <div id="cert-wrap" class="form-label">	
-			            <label><b>*</b>Certification:</label>
-			         </div>
-			         <div class="uploader">
-			            <a id="cert-link" class="link-img hidden"></a>
-			            <div class="upload-wrap">
-			               <i class="fa fa-picture-o" aria-hidden="true"></i>
-			               <div class="upload-text">
-			                  <p>Drop Certificate here</p>
-			                  <p class="small-p">or</p>
-			               </div>
-			               <a class="browse-btn">Browse Files</a>
-			               <input id="cert-uploader" class="file-input" type="file" name="certImage"/>
-			            </div>
-			         </div>
-			         <div class="upload-tips">
-			            <p>Please scan and upload a copy of</p>
-			            <p>your teaching qualification or certification.</p> 
-			            <p>The size of the image must be less than 2M.</p> 
-			            <p>JPG, PNG, and BMP formats are supported.</p>
-			         </div>
-			      </div>
 			      <!-- 个人简介 -->
 			      <div class="form-group">
 			         <div class="form-label">
