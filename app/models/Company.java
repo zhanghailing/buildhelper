@@ -22,7 +22,6 @@ public class Company {
 	
 	@Id
 	@GeneratedValue	
-	@JsonIgnore
 	public long id;
 	
 	public String name;

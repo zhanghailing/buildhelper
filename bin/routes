@@ -12,11 +12,13 @@ GET     /message             	   controllers.AsyncController.message
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 GET     /loginpage                  controllers.AuthController.loginPage()
-POST   	/login        			   controllers.AuthController.login()
-GET   	/logout           		   controllers.AuthController.logout()
-POST   	/signup           		   controllers.AuthController.signup()
+POST   	/login        			    controllers.AuthController.login()
+GET   	/logout           		    controllers.AuthController.logout()
+POST   	/signup           		    controllers.AuthController.signup()
 
 
-GET   	/companys           		   controllers.CompanyController.companys(offset: Integer ?= 0)
-GET 		/create/company			   controllers.CompanyController.createCompany()
-POST		/save/company			   controllers.CompanyController.saveCompany()
+GET   	/companys           		controllers.CompanyController.companys(offset: Integer ?= 0)
+GET 	/create/company			   	controllers.CompanyController.createCompany()
+POST	/save/company			    controllers.CompanyController.saveCompany()
+GET     /company/show/letterhead    controllers.CompanyController.showLetterHead(uuid: String ?= "", isLarge: Boolean ?= false)
+GET     /copmany/show/logo           controllers.CompanyController.showLogo(uuid: String ?= "", isLarge: Boolean ?= false)

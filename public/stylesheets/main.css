@@ -195,7 +195,7 @@ input[type="submit"]{
 }
 
 .dash-bg{
-	background-color: #F5FAFC;
+	background-color: #F1F1F1;
 }
 
 .dash-block{
@@ -204,7 +204,6 @@ input[type="submit"]{
 	margin: 0 10px;
 	position: relative;
 	padding: 15px 0;
-	border:1px solid #E0F4FE;
 }
 
 .dash-block > a{
@@ -635,7 +634,7 @@ footer{
   	color: #999;
   	font-weight: 200;
   	font-size: 0.8em;
-  	background-color: #F5FAFC;
+  	background-color: #F1F1F1;
 }
 
 /** Footer end **/

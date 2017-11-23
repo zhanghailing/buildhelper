@@ -2,10 +2,13 @@ package controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 import actions.AuthAction;
 import models.Account;
@@ -27,6 +30,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import tools.Constants;
+import tools.Utils;
 import views.html.*;
 
 public class CompanyController extends Controller{
@@ -63,8 +67,15 @@ public class CompanyController extends Controller{
 			responseData.message = "You do not have permission.";
 			return notFound(errorpage.render(responseData));
 		}
+
+		Company company = null;
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String companyId = requestData.get("companyId");
+		if(!Utils.isBlank(companyId)){
+			company = jpaApi.em().find(Company.class, companyId);
+		}
 		
-		return ok(createcompany.render());
+		return ok(createcompany.render(company));
 	}
 	
 	@With(AuthAction.class)
@@ -114,6 +125,46 @@ public class CompanyController extends Controller{
 		}
 		
 		return redirect(routes.CompanyController.companys(0));
+	}
+	
+	@Transactional
+	public Result showLetterHead(String uuid, boolean isLarge){
+		TypedQuery<LetterHead> query = jpaApi.em()
+				.createQuery("from LetterHead lh where lh.uuid = :uuid", LetterHead.class)
+				.setParameter("uuid", uuid);
+		
+		InputStream imageStream = null;
+		try{
+			LetterHead letterHead = query.getSingleResult();
+			if(isLarge){
+				imageStream = letterHead.download();
+			}else{
+				imageStream = letterHead.downloadThumbnail();
+			}
+		}catch(NoResultException e){
+			imageStream = application.get().classloader().getResourceAsStream(LetterHead.PLACEHOLDER);
+		}
+		return ok(imageStream);
+	}
+	
+	@Transactional
+	public Result showLogo(String uuid, boolean isLarge){
+		TypedQuery<Avatar> query = jpaApi.em()
+				.createQuery("from Avatar lh where av.uuid = :uuid", Avatar.class)
+				.setParameter("uuid", uuid);
+		
+		InputStream imageStream = null;
+		try{
+			Avatar logo = query.getSingleResult();
+			if(isLarge){
+				imageStream = logo.download();
+			}else{
+				imageStream = logo.downloadThumbnail();
+			}
+		}catch(NoResultException e){
+			imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+		}
+		return ok(imageStream);
 	}
 	
 }
