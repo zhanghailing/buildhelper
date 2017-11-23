@@ -7,6 +7,21 @@ error_email_empty=Your email cannot be empty!
 company_info=Company Info
 company_name=Company Name
 placeholder_company_name=Fill in the company's name
+default_letterhead=Default LetterHead
+drop_image=Drop image here or
+browser_file=Browse Files
+uen_no=UEN No.
+placeholder_uen_no=Fill in your UEN number of your company 
+company_logo=Company Logo
+phone_no=Phone No.
+placeholder_phone_no=Fill in the company's phone number
+email=Email
+placeholder_email=Fill in the company's email address
+address=Address
+placeholder_address=Fill in the company's address
+
+
+error.file_size=File size cannot be more than 2MB!
 
 
 

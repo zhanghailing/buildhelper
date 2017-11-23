@@ -79,9 +79,9 @@ public class CompanyController extends Controller{
 		}else {
 			DynamicForm requestData = formFactory.form().bindFromRequest();
 			String name = requestData.get("name");
-			String uenNo = requestData.get("uenno");
+			String uenNo = requestData.get("uenNo");
 			String email = requestData.get("email");
-			String mobile = requestData.get("mobile");
+			String phone = requestData.get("phone");
 			String address = requestData.get("address");
 			
 			Company company = new Company();
@@ -89,21 +89,21 @@ public class CompanyController extends Controller{
 			company.name = name;
 			company.uenNo = uenNo;
 			company.email = email;
-			company.mobile = mobile;
+			company.phone = phone;
 			
 			jpaApi.em().persist(company);
 			
 			MultipartFormData<File> body = request().body().asMultipartFormData();
-		    FilePart<File> avatar = body.getFile("avatar"); 
-		    FilePart<File> letterHead = body.getFile("letterHead"); 
+		    FilePart<File> logoPart = body.getFile("logoImage"); 
+		    FilePart<File> letterHead = body.getFile("letterhead"); 
 		    
 			try {
-				Avatar logo = new Avatar(company, avatar.getFile());
+				Avatar logo = new Avatar(company, logoPart.getFile());
 				jpaApi.em().persist(logo);
 				
 				LetterHead lh = new LetterHead(company, letterHead.getFile());
 				jpaApi.em().persist(lh);
-			} catch (IOException e) {
+			} catch (NullPointerException | IOException e) {
 				responseData.code = 4000;
 				responseData.message = "Logo uplaod failure";
 			}

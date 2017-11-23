@@ -49,6 +49,11 @@ a:focus, ul:focus, button:focus{
     border-radius: 50%;
 }
 
+p.empty{
+	text-align: center;
+	color: #777;
+}
+
 @-webkit-keyframes autofill {
     to {
         color: #999;
@@ -186,7 +191,7 @@ input[type="submit"]{
 
 #dash-content{
 	padding: 10px 0;
-	height: 100%;	
+	min-height: 100%;	
 }
 
 .dash-bg{
@@ -338,6 +343,15 @@ ul.sidebar-menu li a.active > span{
 	font-size: 120%;
 	vertical-align: middle;
 }
+
+.dash-detail-header > a.edit-btn{
+	right: 85px;
+}
+
+.dash-detail-header > a.create-btn{
+	right: 10px;
+}
+
 /** Create Lesson Dashboard End **/
 
 
@@ -455,18 +469,18 @@ ul.sidebar-menu li a.active > span{
 }
 
 .wrap-step-2 {
-    padding: 40px 30px;
+    padding: 0 30px;
     overflow: hidden;
 }
 
 #company-form .form-label{
-	width: 120px;
+	width: 150px;
 	display:inline-block;
 	vertical-align: top;
 }
 
 #company-form .form-input{
-	width: 240px;
+	width: 400px;
 	display:inline-block;
 }
 
@@ -491,6 +505,7 @@ ul.sidebar-menu li a.active > span{
 	padding:10px;
 	max-width: 800px;
 	min-height: 80px;
+	display: inline-block;
 	margin: 0 15px 15px 0;
 	position: relative;
 	background-size: cover;
@@ -502,12 +517,12 @@ ul.sidebar-menu li a.active > span{
 	background: #F9FBFE;
 }
 
-#logo-uploader{
+#logo-uploader-wrapper{
 	width: 125px;
 	height: 125px;
 }
 
-#lh-uploader{
+#lh-uploader-wrapper{
 	width: 800px;
 	height: 80px;
 }
@@ -521,11 +536,6 @@ ul.sidebar-menu li a.active > span{
     font-size: 0.7em;
     font-weight: 200;
     color: #97A1A8 !important;
-}
-
-.upload-text p.small-p{
-	font-size: 50%;
-    margin: 3px;
 }
 
 .upload-text span {
@@ -557,6 +567,10 @@ ul.sidebar-menu li a.active > span{
     background: #76abbf;
 }
 
+#logo-uploader-wrapper .browse-btn{
+	font-size: 0.78em;
+}
+
 .browse-btn > div{
 	position: absolute;
     opacity: 0;
@@ -586,7 +600,7 @@ input.file-input{
 	margin: 0 5px;
 }
 
-#avatar-link, #cert-link{
+#logo-link, #lh-link{
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -614,7 +628,6 @@ input.file-input{
 footer{
 	height: 30px;
 	line-height: 30px;
-	position: absolute;
   	right: 0;
   	bottom: 0;
   	left: 0;
@@ -622,6 +635,7 @@ footer{
   	color: #999;
   	font-weight: 200;
   	font-size: 0.8em;
+  	background-color: #F5FAFC;
 }
 
 /** Footer end **/

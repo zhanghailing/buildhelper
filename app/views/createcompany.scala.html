@@ -11,16 +11,16 @@
 					var isValidFile = GetFileSize(srcTarget.id);
 					if(isValidFile){
 						var reader = new FileReader();
-			        	var inputEle = $(this);
+			        		var inputEle = $(this);
 				        reader.onloadend = function() {
-				        	var uploaderEle = inputEle.closest('.uploader');
-		                	var browserEle = uploaderEle.find('.browse-btn');
-		                	var linkEle = uploaderEle.find('.link-img');
-		                	
-		                	uploaderEle.addClass('noborder');
-		                	linkEle.removeClass('hidden');
-		                	browserEle.hide();
-		                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+					        	var uploaderEle = inputEle.closest('.uploader');
+			                	var browserEle = uploaderEle.find('.browse-btn');
+			                	var linkEle = uploaderEle.find('.link-img');
+			                	
+			                	uploaderEle.addClass('noborder');
+			                	linkEle.removeClass('hidden');
+			                	browserEle.hide();
+			                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 				        }
 				        reader.readAsDataURL(file);
 					}else{
@@ -30,29 +30,32 @@
 			});
 			
 			
-			$("#teacher-info-form").validate({
+			$("#company-form").validate({
 				ignore: [],
 		        rules: {
-		        	realName:{
+		        	name:{
 		            	minlength: 2,
 		                maxlength: 50,
-		            	required:true
+		            		required:true
 		            },
-		            icNo:{
-		            	required:true
+		            uenNo:{
+		            		required:true
 		            },
-		            brief:{
-		            	minlength: 10,
-		            	required:true
+		            phone:{
+		            		required:true
 		            },
-		            institution:{
-		            	required:true
+		            email:{
+		            		email:true,
+		            		required:true
 		            },
-		            avatarImage:{
-		            	required: true
+		            address:{
+		            		required:true
 		            },
-		            certImage:{
-		            	required: true
+		            letterhead:{
+		            		required: true
+		            },
+		            logoImage:{
+		            		required: true
 		            }
 		        },
 		        highlight: function (element) {
@@ -62,14 +65,8 @@
 		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		        },
 		        submitHandler: function(form) {
-		        	$('input[type=submit]').attr("disabled", true);
-		        	
-		        	$('input.datepicker').each(function(index, value){
-		        		var utcDate = toUTC(new Date($(this).val()));
-		        		$(this).val(moment(utcDate).format('YYYY-MM-DD'));
-		        	});
-		        	
-		        	form.submit();
+		        		$('input[type=submit]').attr("disabled", true);
+		        		form.submit();
 		        }
 		    });
 			
@@ -115,26 +112,50 @@
 		@helper.form(action = routes.CompanyController.saveCompany(), 'id-> "company-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
 			<div class="mod-form__block">
 			   <div class="mod-form__block-content">
-				  <!-- 资格证书 --> 
+			   
+				  <!-- LetterHead --> 
 				  <div class="form-group">
-			         <div id="cert-wrap" class="form-label">	
-			            <label><b>*</b>Certification:</label>
+			         <div class="form-label">	
+			            <label><b>*</b>@messages.at("default_letterhead"):</label>
 			         </div>
 			         <div class="uploader-wrapper">
-			         	 <div id="lh-uploader" class="uploader">
-				            <a id="cert-link" class="link-img hidden"></a>
+			         	 <div id="lh-uploader-wrapper" class="uploader">
+				            <a id="lh-link" class="link-img hidden"></a>
 				            <div class="upload-wrap">
 				               <i class="fa fa-picture-o" aria-hidden="true"></i>
 				               <div class="upload-text">
-				                  <p>Drop Certificate here or  <a class="browse-btn">Browse Files</a></p>
+				                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
 				               </div>
-				               <input id="cert-uploader" class="file-input" type="file" name="certImage"/>
+				               <input id="lh-uploader" class="file-input" type="file" name="letterhead"/>
 				            </div>
 				         </div>
 			         	<div class="upload-tips">
 				            <p>Please scan and upload a copy of your teaching qualification or certification; The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p>
 				         </div>
 			         </div>
+			      </div>
+			      
+			      <!-- Logo --> 
+			      <div class="form-group">
+					<div class="form-label">
+						<label><b>*</b>@messages.at("company_logo"):</label>
+					</div>
+					 <div class="uploader-wrapper">
+					 	<div id="logo-uploader-wrapper" class="uploader">
+				            <a id="logo-link" class="link-img hidden"></a>
+				            <div class="upload-wrap">
+				               <i class="fa fa-picture-o" aria-hidden="true"></i>
+				               <div class="upload-text">
+				                  <p>@messages.at("drop_image")</p>
+				               </div>
+				               <a class="browse-btn">@messages.at("browser_file")</a>
+				               <input id="logo-uploader" class="file-input" type="file" name="logoImage"/>
+				            </div>
+				         </div>
+				         <div class="upload-tips">
+				            <p>The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p> 
+				         </div>
+					 </div>
 			      </div>
 			      
 			      <div class="form-group">
@@ -147,59 +168,38 @@
 			      </div>
 			      
 			      <div class="form-group">
-			         <div id="ic-wrap" class="form-label">	
-			            <label><b>*</b>IC No.:</label>
+			         <div id="uen-wrap" class="form-label">	
+			            <label for="une-no"><b>*</b>@messages.at("uen_no"):</label>
 			         </div>
 			         <div class="form-input">
-			            <input id="ic-no" type="text" class="form-control" name="icNo" placeholder="Fill in your IC number">
-			         </div>
-			      </div>
-			      
-			      <div class="form-group avatar-group">
-					<div id="avatar" class="form-label">
-						<label><b>*</b>Profile Photo:</label>
-					</div>
-					<div id="logo-uploader" class="uploader">
-			            <a id="avatar-link" class="link-img hidden"></a>
-			            <div class="upload-wrap">
-			               <i class="fa fa-picture-o" aria-hidden="true"></i>
-			               <div class="upload-text">
-			                  <p>Drop photo here</p>
-			                  <p class="small-p">or</p>
-			               </div>
-			               <a class="browse-btn">Browse Files</a>
-			               <input id="avatar-uploader" class="file-input" type="file" name="avatarImage"/>
-			            </div>
-			         </div>
-			         <div class="upload-tips">
-			            <p>The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p> 
-			         </div>
-			      </div>
-			      
-			      <!-- 个人简介 -->
-			      <div class="form-group">
-			         <div class="form-label">
-			            <label for="personal-brief"><b>*</b>Personal Brief:</label>
-			         </div>
-			         <div class="form-input long-txt">
-			            <textarea id="personal-brief" class="form-control" name="brief" rows="5" placeholder="eg：I'm a full-time music teacher and part-time bartender. Have a great sense of humor and passion in running. Don't be shy to showcase your talent and charm."></textarea>
-			            <div class="upload-tips">
-			               <p>Kindly indicate your teaching style and strengths. <span class="orange">200 words</span> </p>
-			            </div>
+			            <input id="une-no" type="text" class="form-control" name="uenNo" placeholder="@messages.at("placeholder_uen_no")">
 			         </div>
 			      </div>
 			      
 			      <div class="form-group">
-			         <div class="form-label">
-			            <label for="best-institution"><b>*</b>Institution:</label>
+			         <div id="phone-wrap" class="form-label">	
+			            <label for="phone-no"><b>*</b>@messages.at("phone_no"):</label>
 			         </div>
-			         <div class="form-input long-txt">
-			            <div class="form-input">
-				            <input id="best-institution" type="text" class="form-control" name="institution" placeholder="Institution you worked at.">
-				         </div>
-			            <div class="upload-tips institution-tip">
-			               <p>Kindly indicate an educational institution that you worked/are working at.</p>
-			            </div>
+			         <div class="form-input">
+			            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")">
+			         </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div id="email-wrap" class="form-label">	
+			            <label for="email"><b>*</b>@messages.at("email"):</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")">
+			         </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div id="addr-wrap" class="form-label">	
+			            <label for="addr"><b>*</b>@messages.at("address"):</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="addr" type="text" class="form-control" name="address" placeholder="@messages.at("placeholder_address")">
 			         </div>
 			      </div>
 			   </div>

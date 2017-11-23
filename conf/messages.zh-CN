@@ -7,9 +7,21 @@ error_email_empty=您的邮件不可以为空！
 company_info=公司信息
 company_name=公司名字
 placeholder_company_name= 请填入您要注册的公司名字
+default_letterhead=默认信笺
+drop_image=图片拖到这里或者
+browser_file=浏览图片
+uen_no=UEN 号码
+placeholder_uen_no=请输入公司的UEN号码
+company_logo=公司图标
+phone_no=电话号码
+placeholder_phone_no=请输入公司联系电话
+email=邮箱地址
+placeholder_email=请输入公司邮箱地址
+address=地址
+placeholder_address=请输入公司地址
 
 
-
+error.file_size=上传的文件不可以超过2MB!
 
 
 
