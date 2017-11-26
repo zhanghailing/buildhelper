@@ -1,0 +1,85 @@
+<div class="modal fade" id="set-admin-model" role="dialog">
+	<div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        	<h4 class="modal-title">@messages.at("company_administrator")</h4>
+	      	</div>
+	      	<form id="admin-form">
+	      		<input type="hidden" name="companyId" value=""/>
+	      		<div class="modal-body">
+		    		<div class="form-group">
+		    			<label>@messages.at("email")</label>
+		      			<input class="form-control" type="text" name="email" placeholder="@messages.at("placeholder_admin_email")"/>
+		      		</div>
+			      	<div class="form-group">
+			      		<label>Password</label>	
+			      		<input class="form-control" type="password" name="password" placeholder="@messages.at("placeholder_password")"/>
+			      	</div>
+		      	</div>
+		      	<div class="modal-footer">
+			      	<div class="form-group">
+			        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+			        </div>
+		      	</div>
+	      	</form>
+    	</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#set-admin-model').on('show.bs.modal', function(e) {
+	        var id = $(e.relatedTarget).data('id');
+	        $('input[name=companyId]').val(id);
+	    });
+		
+		$("#admin-form").validate({
+	        rules: {
+	        	email:{
+	        		email:true,
+	            	required:true
+	            },
+	            password:{
+	            	required:true
+	            }
+	        },
+	        highlight: function (element) {
+	            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+	        },
+	        unhighlight: function (element) {
+	            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+	        },
+	        submitHandler: function(form) {
+	        	var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+	        	$('input[type="submit"]').after(spinner);
+	        	$('input[type="submit"]').css('color', 'transparent');
+	        	$('input[type="submit"]').attr("disabled", true);
+	        	
+	        	$.ajax({
+	                url: "@routes.CompanyController.assignAccountForCompany()",
+	                type: "POST",
+	                data: $(form).serialize(),
+	                success: function(response, status) {
+	                	var data = $.parseJSON(JSON.stringify(response));
+	                	
+	                	if(data.code != 0){
+	                		showAlertToast(data.message, "alert-danger");
+	                	}else{
+	                		showAlertToast(data.message, "alert-success");
+	                		$('#set-admin-model').modal('hide');
+	                	}
+	                	spinner.remove();
+	                	$('input[type="submit"]').css("color", "white");
+	                	$('input[type="submit"]').attr("disabled", false);
+	                },
+	                error: function(request, status, err){
+	                	showAlertToast(err, "alert-danger");
+	                	spinner.remove();
+	                	$('input[type="submit"]').css("color", "white");
+	                	$$('input[type="submit"]').attr("disabled", false);
+	                }
+	            });
+	        }
+	    });
+   	});
+</script>

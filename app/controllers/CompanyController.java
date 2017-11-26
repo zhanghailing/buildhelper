@@ -3,7 +3,11 @@ package controllers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -15,8 +19,10 @@ import models.Account;
 import models.AccountType;
 import models.Avatar;
 import models.Company;
+import models.Document;
 import models.LetterHead;
 import models.ResponseData;
+import models.User;
 import play.Application;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
@@ -26,6 +32,7 @@ import play.data.FormFactory;
 import play.db.jpa.JPAApi;
 import play.db.jpa.Transactional;
 import play.i18n.MessagesApi;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
@@ -38,6 +45,42 @@ public class CompanyController extends Controller{
 	@Inject private JPAApi jpaApi;
 	@Inject private Provider<Application> application;
 	@Inject private MessagesApi messageApi; 
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result assignAccountForCompany(){
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String companyId = requestData.get("companyId");
+		String email = requestData.get("email");
+		String password = requestData.get("password");
+		
+		Company company = jpaApi.em().find(Company.class, Long.parseLong(companyId));
+		if(company == null){
+			responseData.code = 4000;
+			responseData.message = "Company doesn't exist.";
+		}else{
+			if(company.account != null){
+				responseData.code = 4000;
+				responseData.message = "The company already assigned to an administrator.";
+			}else{
+				if(AuthController.notExists(email)){
+					Account account = new Account(email, password);
+					account.accType = AccountType.ADMIN;
+					jpaApi.em().persist(account);
+					
+					company.account = account;
+					jpaApi.em().persist(company);
+				}else{
+					responseData.code = 4000;
+					responseData.message = "The email already exist.";
+				}
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
 	
 	@With(AuthAction.class)
 	@Transactional
@@ -58,7 +101,7 @@ public class CompanyController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result createCompany() {
+	public Result createCompany(long companyId) {
 		ResponseData responseData = new ResponseData();
 		
 		Account account = (Account) ctx().args.get("account");
@@ -69,9 +112,7 @@ public class CompanyController extends Controller{
 		}
 
 		Company company = null;
-		DynamicForm requestData = formFactory.form().bindFromRequest();
-		String companyId = requestData.get("companyId");
-		if(!Utils.isBlank(companyId)){
+		if(companyId > 0){
 			company = jpaApi.em().find(Company.class, companyId);
 		}
 		
@@ -89,13 +130,20 @@ public class CompanyController extends Controller{
 			responseData.message = "You do not have permission.";
 		}else {
 			DynamicForm requestData = formFactory.form().bindFromRequest();
+			String companyId = requestData.get("companyId");
 			String name = requestData.get("name");
 			String uenNo = requestData.get("uenNo");
 			String email = requestData.get("email");
 			String phone = requestData.get("phone");
 			String address = requestData.get("address");
 			
-			Company company = new Company();
+			Company company = null;
+			if(!Utils.isBlank(companyId)){
+				company = jpaApi.em().find(Company.class, Long.parseLong(companyId));
+			}else{
+				company = new Company();
+			}
+		
 			company.address = address;
 			company.name = name;
 			company.uenNo = uenNo;
@@ -107,13 +155,27 @@ public class CompanyController extends Controller{
 			MultipartFormData<File> body = request().body().asMultipartFormData();
 		    FilePart<File> logoPart = body.getFile("logoImage"); 
 		    FilePart<File> letterHead = body.getFile("letterhead"); 
-		    
 			try {
-				Avatar logo = new Avatar(company, logoPart.getFile());
-				jpaApi.em().persist(logo);
+				if(logoPart != null && !Utils.isBlank(logoPart.getFilename())){
+					if(company.logo != null){
+						company.logo.deleteThumbnail();
+						company.logo.delete();
+						jpaApi.em().remove(company.logo);
+					}
+					Avatar logo = new Avatar(company, logoPart.getFile());
+					jpaApi.em().persist(logo);
+				}
 				
-				LetterHead lh = new LetterHead(company, letterHead.getFile());
-				jpaApi.em().persist(lh);
+				if(letterHead != null && !Utils.isBlank(letterHead.getFilename())){
+					if(company.letterHead != null){
+						company.letterHead.deleteThumbnail();
+						company.letterHead.delete();
+						jpaApi.em().remove(company.letterHead);
+					}
+					LetterHead lh = new LetterHead(company, letterHead.getFile());
+					jpaApi.em().persist(lh);
+				}
+				
 			} catch (NullPointerException | IOException e) {
 				responseData.code = 4000;
 				responseData.message = "Logo uplaod failure";
@@ -150,12 +212,13 @@ public class CompanyController extends Controller{
 	@Transactional
 	public Result showLogo(String uuid, boolean isLarge){
 		TypedQuery<Avatar> query = jpaApi.em()
-				.createQuery("from Avatar lh where av.uuid = :uuid", Avatar.class)
+				.createQuery("from Avatar av where av.uuid = :uuid", Avatar.class)
 				.setParameter("uuid", uuid);
 		
 		InputStream imageStream = null;
 		try{
 			Avatar logo = query.getSingleResult();
+			
 			if(isLarge){
 				imageStream = logo.download();
 			}else{
@@ -167,7 +230,195 @@ public class CompanyController extends Controller{
 		return ok(imageStream);
 	}
 	
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result createQPAccount(long qpAccountId){
+		ResponseData responseData = new ResponseData();
+		
+		Account account = (Account) ctx().args.get("account");
+		if(account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+			return notFound(errorpage.render(responseData));
+		}
+		
+		Account qpAccount = null;
+		if(qpAccountId > 0){
+			qpAccount = jpaApi.em().find(Account.class, qpAccountId);
+		}
+		
+		return ok(createqpaccount.render(qpAccount));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result saveQPAccount() {
+		ResponseData responseData = new ResponseData();
+			
+		Account account = (Account) ctx().args.get("account");
+		if(account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+			String qpAccountId = requestData.get("qpAccountId");
+			String name = requestData.get("name");
+			String email = requestData.get("email");
+			String password = requestData.get("password");
+			String alerEmail1 = requestData.get("alerEmail1");
+			String alerEmail2 = requestData.get("alerEmail2");
+			String officePhone = requestData.get("officePhone");
+			String mobile = requestData.get("mobile");
+			String isCivil = requestData.get("isCivil");
+			String isQECP = requestData.get("isQECP");
+			String isGeo = requestData.get("isGeo");
+			String isElectric = requestData.get("isElectric");
+			String isMechnical = requestData.get("isMechnical");
+			String peNo = requestData.get("peNo");
+			String qecpNo = requestData.get("qecpNo");
+			
+			Account qpAccount = null;
+			if(!Utils.isBlank(qpAccountId)){
+				qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
+			}else{
+				qpAccount = new Account(email, password);
+			}
+			
+			qpAccount.email = email;
+			qpAccount.password = password;
+			
+			Company company = (Company)jpaApi.em().createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
+					.setParameter("accId", account.id).getSingleResult();
+			
+			if(company == null){
+				responseData.code = 4000;
+				responseData.message = "The account don't have company.";
+			}else{
+				qpAccount.company = company;
+				jpaApi.em().persist(qpAccount);
+				
+				User user = null;
+				if(qpAccount.user != null){
+					user = qpAccount.user;
+				}else{
+					user = new User(qpAccount);
+				}
+				user.name = name;
+				user.alterEmail1 = alerEmail1;
+				user.alterEmail2 = alerEmail2;
+				user.officePhone = officePhone;
+				user.mobile = mobile;
+				user.isCivil = Boolean.getBoolean(isCivil);
+				user.isQECP = Boolean.getBoolean(isQECP);
+				user.isGeotechnical = Boolean.getBoolean(isGeo);
+				user.isElectric = Boolean.getBoolean(isElectric);
+				user.isMechanical = Boolean.getBoolean(isMechnical);
+				user.peNo = peNo;
+				user.qecpNo = qecpNo;
+				jpaApi.em().persist(user);
+				
+				MultipartFormData<File> body = request().body().asMultipartFormData();
+				List<FilePart<File>> fileParts = body.getFiles();
+				
+				if(user.documents != null && user.documents.size() > 0){
+					List<Document> documentWillDelete = user.documents;
+					for(FilePart<File> filePart : fileParts){
+						for(Document document : user.documents){
+							if(document.name.equals(filePart.getFilename()) && document.size == filePart.getFile().length()){
+								documentWillDelete.remove(document);
+								continue;
+							}
+						}
+						Document doc = new Document(user, filePart.getFile());
+						doc.name = filePart.getFilename();
+						jpaApi.em().persist(doc);
+					}
+					
+					for(Document d : documentWillDelete){
+						d.delete();
+						jpaApi.em().remove(d);
+					}
+				}else{
+					for(FilePart<File> filePart : fileParts){
+						Document doc = new Document(user, filePart.getFile());
+						doc.name = filePart.getFilename();
+						jpaApi.em().persist(doc);
+					}
+				}
+			}
+		}
+		
+		if(responseData.code != 0) {
+			return notFound(errorpage.render(responseData));
+		}
+		
+		return redirect(routes.CompanyController.qpList(0));
+	}
+	
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result qpList(int offset){
+		ResponseData responseData = new ResponseData();
+		
+		Account account = (Account) ctx().args.get("account");
+		if(account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}
+		
+		Account dbAcc = jpaApi.em().find(Account.class, account.id);
+				
+		String whereCause = "";
+		for(int i = 0; i < dbAcc.companys.size(); i++){
+			if(i == dbAcc.companys.size() - 1){
+				whereCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
+			}else{
+				whereCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
+			}
+		}
+
+		String sql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE " + whereCause;
+		int totalAmount = ((BigInteger)jpaApi.em().createNativeQuery(sql).getSingleResult()).intValue();
+		int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+		
+		List<Account> qpAccounts = jpaApi.em()
+				.createNativeQuery("SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE " + whereCause, Account.class)
+				.setFirstResult(offset)
+				.setMaxResults(Constants.COMPANY_PAGE_SIZE)
+				.getResultList();
+		
+		return ok(qplist.render(qpAccounts, pageIndex, totalAmount));
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

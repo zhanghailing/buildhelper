@@ -1,18 +1,24 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,10 +46,19 @@ public class Company {
 	@Column(name = "create_datetime")
 	public Date createDatetime; 
 	
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "company")
 	public LetterHead letterHead;
 	
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "company")
 	public Avatar logo;
-		
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "acc_id")
+	public Account account;
+	
+	@OneToMany(mappedBy = "company")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@JsonIgnore
+	public List<Account> qpAccounts;
 }

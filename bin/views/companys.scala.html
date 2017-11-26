@@ -28,20 +28,6 @@
 		        }
 		    });
 	   	});
-		
-		function toClientDatetime(serverDatetimeStr, format){
-			var date = serverDatetimeStr,
-			    values = date.split(/[^0-9]/),
-			    year = parseInt(values[0], 10),
-			    month = parseInt(values[1], 10) - 1,
-			    day = parseInt(values[2], 10),
-			    hours = parseInt(values[3], 10),
-			    minutes = parseInt(values[4], 10),
-			    seconds = parseInt(values[5], 10);
-			
-			date = toLocal(new Date(year, month, day, hours, minutes, seconds));
-			return moment(date).format(format);
-		}
 	</script>
 	<div class="dash-detail-header">
 		<p class="title">@messages.at("company_info")</p>
@@ -49,7 +35,7 @@
 	</div>
 	
 	@if(companys == null || companys.size == 0){
-		<p class="empty">Sorry, This lesson doesn't have any sesson～</p>
+		<p class="empty">Sorry, You don't have any company～</p>
 	}else{
 		<table class="table table-striped table-hover lesson-table">
 		    <thead>
@@ -59,20 +45,25 @@
 		        <th>UEN No.</th>
 		        <th>Phone</th>
 		        <th>Email</th>
+		        <th>Admin</th>
 		        <th>Address</th>
 		        <th>Action</th>
 		      </tr>
 		    </thead>
 		    <tbody>
-		    		@for(index <- 0 until companys.size){
+		    	@for(index <- 0 until companys.size){
 				    <tr class="paginate">
 						<th>@((pageIndex-1) * Constants.COMPANY_PAGE_SIZE + index+1)</th>
 						<td class="col col-md-4">@companys(index).name</td>
 						<td>@companys(index).uenNo</td>
 						<td>@companys(index).phone</td>
 						<td>@companys(index).email</td>
+						<td>@if(companys(index).account != null){@companys(index).account.email}else{none}</td>
 						<td>@companys(index).address</td>
-						<td><a href="">Edit</a></td>
+						<td>
+							<a href="@routes.CompanyController.createCompany(companys(index).id)">Edit</a>
+							<a data-toggle="modal" data-target="#set-admin-model" data-id="@companys(index).id">Admin</a>
+						</td>
 			        </tr>
 				}
 		    </tbody>
@@ -84,4 +75,11 @@
 			</form>
 		</div>
 	}
+	@setadminacc()
 }
+
+
+
+
+
+

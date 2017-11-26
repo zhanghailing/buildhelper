@@ -19,7 +19,31 @@ email=邮箱地址
 placeholder_email=请输入公司邮箱地址
 address=地址
 placeholder_address=请输入公司地址
-
+company_administrator=设置公司管理员
+placeholder_admin_email=请出入管理员的邮件
+placeholder_password=请出入登陆密码
+submit=提交
+manage_qp=管理QP
+qp_accounts=QP人员账号
+create_qp=创建QP账号
+name=姓名
+placeholder_name=请输入姓名
+primary_email_address=主要的邮箱地址
+account_info=账号信息
+personal_info=个人信息
+alter_emaill_1=其它邮箱地址 1 (可选)
+alter_emaill_2=其它邮箱地址 2 (可选)
+office_phone=办公室电话
+placeholder_office_phone=请输入办公室电话
+mobile_no=手机号码
+placeholder_mobile=请输入手机号码
+qualified_person_particular=个人质量的详细情况
+branch_engineering=工程师的分类
+pe_no=PE号码
+placeholder_no=请输入PE号码
+qecp_no=QECP号码
+placeholder_qecp=请输入QECP号码
+attach_cert=上传文件或证书
 
 error.file_size=上传的文件不可以超过2MB!
 

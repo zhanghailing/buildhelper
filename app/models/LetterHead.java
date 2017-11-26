@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
@@ -29,8 +30,8 @@ public class LetterHead extends Image{
 	@JsonIgnore
 	public static final String PLACEHOLDER = "public/images/image_placeholder.png";
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@OneToOne
+	@JoinColumn(name = "company_id")
 	public Company company;
 	
 	@Column(name="thumbnail_uuid")
@@ -39,7 +40,9 @@ public class LetterHead extends Image{
 	public LetterHead(){}
 	public LetterHead(Company company, File file) throws IOException{
 		super(file);
+		this.thumbnailUUID = Utils.uuid();
 		this.company = company;
+		uploadThumbnail(file);
 	}
 	
 	public void uploadThumbnail(File file) throws IOException{

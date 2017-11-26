@@ -31,33 +31,32 @@
 		        }
 			});
 			
-			
 			$("#company-form").validate({
 				ignore: [],
 		        rules: {
 		        	name:{
 		            	minlength: 2,
 		                maxlength: 50,
-		            		required:true
+		            	required:true
 		            },
 		            uenNo:{
-		            		required:true
+		            	required:true
 		            },
 		            phone:{
-		            		required:true
+		            	required:true
 		            },
 		            email:{
-		            		email:true,
-		            		required:true
+		            	email:true,
+		            	required:true
 		            },
 		            address:{
-		            		required:true
+		            	required:true
 		            },
 		            letterhead:{
-		            		required: true
+		            	letterHeadRequired: true
 		            },
 		            logoImage:{
-		            		required: true
+		            	logoRequired: true
 		            }
 		        },
 		        highlight: function (element) {
@@ -71,6 +70,14 @@
 		        		form.submit();
 		        }
 		    });
+			
+			$.validator.addMethod("logoRequired", function(value, element) {
+	            return $("#logo-link").css('background-image') !== 'none';
+	        }, "Logo Required");
+			
+			$.validator.addMethod("letterHeadRequired", function(value, element) {
+	            return $("#lh-link").css('background-image') !== 'none';
+	        }, "LetterHead Required");
 			
 	   	});
 		
@@ -122,7 +129,7 @@
 			         </div>
 			         <div class="uploader-wrapper">
 			         	 <div id="lh-uploader-wrapper" class="uploader">
-				            <a id="lh-link" class="link-img hidden" 
+				            <a id="lh-link" class="link-img" 
 				            @if(company != null){
 				            	@if(company.letterHead != null){
 				            		style="background-image:url(/company/show/letterhead?uuid=@company.letterHead.uuid)"
@@ -149,7 +156,8 @@
 					</div>
 					 <div class="uploader-wrapper">
 					 	<div id="logo-uploader-wrapper" class="uploader">
-				            <a id="logo-link" class="link-img hidden" @if(company != null){
+				            <a id="logo-link" class="link-img" 
+				            @if(company != null){
 				            	@if(company.logo != null){
 				            		style="background-image:url(/company/show/logo?uuid=@company.logo.uuid)"
 				            	}
@@ -192,7 +200,7 @@
 			            <label for="phone-no"><b>*</b>@messages.at("phone_no"):</label>
 			         </div>
 			         <div class="form-input">
-			            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")" vaule="@if(company != null){@company.phone}">
+			            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")" value="@if(company != null){@company.phone}">
 			         </div>
 			      </div>
 			      
