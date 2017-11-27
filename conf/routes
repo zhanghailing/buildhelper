@@ -18,7 +18,11 @@ POST   	/signup           		    controllers.AuthController.signup()
 
 
 GET   	/companys           		controllers.CompanyController.companys(offset: Integer ?= 0)
-GET 	/create/company			   	controllers.CompanyController.createCompany()
+GET 	/create/company			   	controllers.CompanyController.createCompany(companyId: Long ?= 0)
 POST	/save/company			    controllers.CompanyController.saveCompany()
 GET     /company/show/letterhead    controllers.CompanyController.showLetterHead(uuid: String ?= "", isLarge: Boolean ?= false)
-GET     /copmany/show/logo           controllers.CompanyController.showLogo(uuid: String ?= "", isLarge: Boolean ?= false)
+GET     /company/show/logo          controllers.CompanyController.showLogo(uuid: String ?= "", isLarge: Boolean ?= false)
+POST 	/company/set/admin			controllers.CompanyController.assignAccountForCompany()
+GET 	/qplist						controllers.CompanyController.qpList(offset: Integer ?= 0)
+GET 	/create/qp/account			controllers.CompanyController.createQPAccount(qpAccountId: Long ?= 0)
+POST	/save/qp/account			controllers.CompanyController.saveQPAccount()

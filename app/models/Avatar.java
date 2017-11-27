@@ -7,9 +7,8 @@ import java.io.InputStream;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -29,8 +28,8 @@ public class Avatar extends Image{
 	@JsonIgnore
 	public static final String DEFAULT_AVATAR = "public/images/default_avatar.png";
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@OneToOne
+	@JoinColumn(name = "company_id")
 	public Company company;
 	
 	@Column(name="thumbnail_uuid")
@@ -40,6 +39,7 @@ public class Avatar extends Image{
 	public Avatar(Company company, File file) throws IOException{
 		super(file);
 		this.thumbnailUUID = Utils.uuid();
+		this.company = company;
 		uploadThumbnail(file);
 	}
 	
