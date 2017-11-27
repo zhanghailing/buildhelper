@@ -44,6 +44,10 @@ placeholder_no=请输入PE号码
 qecp_no=QECP号码
 placeholder_qecp=请输入QECP号码
 attach_cert=上传文件或证书
+create_inspector_acc=创建监督人员账号
+designation=职位
+placeholder_designation=请出入职位信息
+inspector_accounts=监督人员账号
 
 error.file_size=上传的文件不可以超过2MB!
 

@@ -48,6 +48,8 @@ public class User{
 	@Column(name="qecp_no")
 	public String qecpNo;
 	
+	public String designation;
+	
 	@Column(name="is_civil")
 	public boolean isCivil;
 	

@@ -27,6 +27,26 @@
 		            $('form#page-form').submit();
 		        }
 		    });
+		    
+		    $('#acc-block-btn').on('click', function(){
+		    		var qpAccountId = $(this).data('id');
+		    		var url = $(this).data('url');
+		    		$.ajax({
+	                url: url,
+	                type: "POST",
+	                data: {
+	                		qpAccountId:qpAccountId
+	                },
+	                success: function(response, status) {
+		                	var data = $.parseJSON(JSON.stringify(response));
+		                	if(data.code != 0){
+		                		showAlertToast(data.message, "alert-danger");
+		                	}else{
+		                		window.location.href = "@routes.CompanyController.qpList(0)";
+		                	}
+		            }
+	            });
+		    });
 	   	});
 	</script>
 	<div class="dash-detail-header">
@@ -80,7 +100,7 @@
 						<td>@qpAccounts(index).password</td>
 						<td>
 							<a href="">Edit</a>
-							<a href="">Block</a>
+							<a id="acc-block-btn" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockQPAccount()}else{@routes.AuthController.blockQPAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
 							<a href="">Delete</a>
 						</td>
 			        </tr>

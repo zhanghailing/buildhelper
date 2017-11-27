@@ -44,6 +44,10 @@ placeholder_no=PE No.
 qecp_no=QECP No.
 placeholder_qecp=QECP No.
 attach_cert=Attach Documents/Certificates
+create_inspector_acc=Create Inspector Account
+designation=Designation
+placeholder_designation=Fill in designation
+inspector_accounts=Inspector Accounts
 
 error.file_size=File size cannot be more than 2MB!
 

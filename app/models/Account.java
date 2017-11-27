@@ -67,6 +67,8 @@ public class Account{
 	@JoinColumn(name = "company_id")
 	public Company company;
 	
+	public boolean blocked;
+	
 	public Account(){}
 	
 	public Account(String email, String password){
@@ -75,6 +77,7 @@ public class Account{
 		this.password = password;
 		this.creationDateTime = new Date();
 		this.token = Utils.genernateAcessToken(this.creationDateTime, this.email);
+		this.blocked = false;
 	}
 	
 	public static Account findByToken(String token){

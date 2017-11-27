@@ -3,26 +3,32 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET     /                           	controllers.HomeController.index
 
 # An example controller showing how to write asynchronous code
-GET     /message             	   controllers.AsyncController.message
+GET     /message             	   	controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file               	controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /loginpage                  controllers.AuthController.loginPage()
+GET     /loginpage                  	controllers.AuthController.loginPage()
 POST   	/login        			    controllers.AuthController.login()
 GET   	/logout           		    controllers.AuthController.logout()
 POST   	/signup           		    controllers.AuthController.signup()
 
 
-GET   	/companys           		controllers.CompanyController.companys(offset: Integer ?= 0)
-GET 	/create/company			   	controllers.CompanyController.createCompany(companyId: Long ?= 0)
-POST	/save/company			    controllers.CompanyController.saveCompany()
-GET     /company/show/letterhead    controllers.CompanyController.showLetterHead(uuid: String ?= "", isLarge: Boolean ?= false)
-GET     /company/show/logo          controllers.CompanyController.showLogo(uuid: String ?= "", isLarge: Boolean ?= false)
+GET   	/companys           			controllers.CompanyController.companys(offset: Integer ?= 0)
+GET 		/create/company			   	controllers.CompanyController.createCompany(companyId: Long ?= 0)
+POST		/save/company			    controllers.CompanyController.saveCompany()
+GET     /company/show/letterhead    	controllers.CompanyController.showLetterHead(uuid: String ?= "", isLarge: Boolean ?= false)
+GET     /company/show/logo          	controllers.CompanyController.showLogo(uuid: String ?= "", isLarge: Boolean ?= false)
 POST 	/company/set/admin			controllers.CompanyController.assignAccountForCompany()
-GET 	/qplist						controllers.CompanyController.qpList(offset: Integer ?= 0)
-GET 	/create/qp/account			controllers.CompanyController.createQPAccount(qpAccountId: Long ?= 0)
-POST	/save/qp/account			controllers.CompanyController.saveQPAccount()
+GET 		/qplist						controllers.CompanyController.qpList(offset: Integer ?= 0)
+GET 		/create/qp/account			controllers.CompanyController.createQPAccount(qpAccountId: Long ?= 0)
+POST		/save/qp/account				controllers.CompanyController.saveQPAccount()
+POST		/block/qp/account			controllers.AuthController.blockQPAccount()
+POST		/unblock/qp/account			controllers.AuthController.unBlockQPAccount()
+GET 		/create/inspector/account	controllers.CompanyController.createInspectorAccount(inspectorAccountId: Long ?= 0)
+POST		/save/inspector/account		controllers.CompanyController.saveInspectorAccount()
+GET 		/inspectors					controllers.CompanyController.inspectors(offset: Integer ?= 0)
+
