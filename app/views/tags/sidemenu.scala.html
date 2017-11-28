@@ -19,39 +19,46 @@
 		            </a>
 		        </li>
 		        <li class="sub-menu dcjq-parent-li">
-		            <a @if(section == 1){class="active"} href="">
+		            <a @if(section == 1){class="active"} href="@routes.CompanyController.company()">
 		                <i></i>
 		                <span>QP Company Info</span>
 		            </a>
 		        </li>
+		        
+		        <li class="sub-menu dcjq-parent-li">
+		            <a @if(section == 2){class="active"} href="@routes.CompanyController.qpList(0)">
+		                <i></i>
+		                <span>Manage QP</span>
+		            </a>
+		        </li>
 		
 		        <li class="sub-menu dcjq-parent-li">
-		            <a @if(section == 2){class="active"} href="">
+		            <a @if(section == 3){class="active"} href="@routes.CompanyController.inspectors(0)">
 		                <i></i>
 		                <span>Manage Inspector</span>
 		            </a>
 		        </li>
 		
 		        <li class="sub-menu dcjq-parent-li">
-		            <a @if(section == 3){class="active"} href="">
+		            <a @if(section == 4){class="active"} href="">
 		                <i></i>
 		                <span>Project Engineer</span>
 		            </a>
 		        </li>
 		        <li class="sub-menu dcjq-parent-li">
-		            <a href="">
+		            <a @if(section == 5){class="active"} href="">
 		                <i></i>
 		                <span>Document Format</span>
 		            </a>
 		        </li>
 		        <li class="sub-menu dcjq-parent-li">
-		            <a @if(section == 4){class="active"} href="">
+		            <a @if(section == 6){class="active"} href="">
 		                <i></i>
 		                <span>Notices</span>
 		            </a>
 		        </li>
 		        <li class="sub-menu dcjq-parent-li">
-		            <a @if(section == 5){class="active"} href="@routes.AuthController.logout()">
+		            <a @if(section == 7){class="active"} href="@routes.AuthController.logout()">
 		                <i></i>
 		                <span>Logout</span>
 		            </a>

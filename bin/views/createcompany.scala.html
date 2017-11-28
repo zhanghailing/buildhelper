@@ -1,0 +1,231 @@
+@import tags._
+
+@(company: Company)
+
+@sidemenu(0){
+	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
+	<script type="text/javascript">
+		$(function(){
+			$(".uploader").on("change", function(e){
+				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
+				var file = srcTarget.files[0];
+				if(file){
+					var isValidFile = GetFileSize(srcTarget.id);
+					if(isValidFile){
+						var reader = new FileReader();
+			        		var inputEle = $(this);
+				        reader.onloadend = function() {
+					        	var uploaderEle = inputEle.closest('.uploader');
+			                	var browserEle = uploaderEle.find('.browse-btn');
+			                	var linkEle = uploaderEle.find('.link-img');
+			                	
+			                	uploaderEle.addClass('noborder');
+			                	linkEle.removeClass('hidden');
+			                	browserEle.hide();
+			                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+				        }
+				        reader.readAsDataURL(file);
+					}else{
+						showAlertToast('@messages.at("error.file_size")', "alert-danger");
+					}
+		        }
+			});
+			
+			$("#company-form").validate({
+				ignore: [],
+		        rules: {
+		        	name:{
+		            	minlength: 2,
+		                maxlength: 50,
+		            	required:true
+		            },
+		            uenNo:{
+		            	required:true
+		            },
+		            phone:{
+		            	required:true
+		            },
+		            email:{
+		            	email:true,
+		            	required:true
+		            },
+		            address:{
+		            	required:true
+		            },
+		            letterhead:{
+		            	letterHeadRequired: true
+		            },
+		            logoImage:{
+		            	logoRequired: true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        		$('input[type=submit]').attr("disabled", true);
+		        		form.submit();
+		        }
+		    });
+			
+			$.validator.addMethod("logoRequired", function(value, element) {
+	            return $("#logo-link").css('background-image') !== 'none';
+	        }, "Logo Required");
+			
+			$.validator.addMethod("letterHeadRequired", function(value, element) {
+	            return $("#lh-link").css('background-image') !== 'none';
+	        }, "LetterHead Required");
+			
+	   	});
+		
+		function GetFileSize(fileid) {
+			 try {
+				 var fileSize = 0;
+				 if(checkIE()) {
+					 var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+					 var objFile = objFSO.getFile(filePath);
+					 var fileSize = objFile.size; //size in kb
+					 fileSize = fileSize / 1048576; //size in mb 
+				 }else {
+					 fileSize = $("#" + fileid)[0].files[0].size //size in kb
+					 fileSize = fileSize / 1048576; //size in mb 
+				 }
+				 
+				 if(fileSize <= 2){
+					 return true; 
+				 }
+			 }catch (e) {
+			 	console.log("Error is :" + e);
+			 }
+			 return false;
+		}
+		
+		function checkIE() {
+		    var ua = window.navigator.userAgent;
+		    var msie = ua.indexOf("MSIE");
+		    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){  
+				return true;
+		    } else{
+		 		return false;
+		    }	
+		}
+	</script>
+	<div class="dash-detail-header">
+		<p class="title">@messages.at("company_info")</p>
+	</div>
+	
+	<div class="wrap-step wrap-step-2" style="display: block;">
+		@helper.form(action = routes.CompanyController.saveCompany(), 'id-> "company-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
+			<div class="mod-form__block">
+			   <div class="mod-form__block-content">
+				  <input type="hidden" name="companyId" value="@if(company != null){@company.id}"/>
+				  <!-- LetterHead --> 
+				  <div class="form-group">
+			         <div class="form-label">	
+			            <label><b>*</b>@messages.at("default_letterhead"):</label>
+			         </div>
+			         <div class="uploader-wrapper">
+			         	 <div id="lh-uploader-wrapper" class="uploader">
+				            <a id="lh-link" class="link-img" 
+				            @if(company != null){
+				            	@if(company.letterHead != null){
+				            		style="background-image:url(/company/show/letterhead?uuid=@company.letterHead.uuid)"
+				            	}
+				            }></a>
+				            <div class="upload-wrap">
+				               <i class="fa fa-picture-o" aria-hidden="true"></i>
+				               <div class="upload-text">
+				                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+				               </div>
+				               <input id="lh-uploader" class="file-input" type="file" name="letterhead"/>
+				            </div>
+				         </div>
+			         	<div class="upload-tips">
+				            <p>Please scan and upload a copy of your teaching qualification or certification; The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p>
+				         </div>
+			         </div>
+			      </div>
+			      
+			      <!-- Logo --> 
+			      <div class="form-group">
+					<div class="form-label">
+						<label><b>*</b>@messages.at("company_logo"):</label>
+					</div>
+					 <div class="uploader-wrapper">
+					 	<div id="logo-uploader-wrapper" class="uploader">
+				            <a id="logo-link" class="link-img" 
+				            @if(company != null){
+				            	@if(company.logo != null){
+				            		style="background-image:url(/company/show/logo?uuid=@company.logo.uuid)"
+				            	}
+				            }></a>
+				            <div class="upload-wrap">
+				               <i class="fa fa-picture-o" aria-hidden="true"></i>
+				               <div class="upload-text">
+				                  <p>@messages.at("drop_image")</p>
+				               </div>
+				               <a class="browse-btn">@messages.at("browser_file")</a>
+				               <input id="logo-uploader" class="file-input" type="file" name="logoImage"/>
+				            </div>
+				         </div>
+				         <div class="upload-tips">
+				            <p>The size of the image must be less than 2M; JPG, PNG, and BMP formats are supported.</p> 
+				         </div>
+					 </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div class="form-label">
+			            <label for="cy-name"><b>*</b>@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="cy-name" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_company_name")" value="@if(company != null){@company.name}">
+			         </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div id="uen-wrap" class="form-label">	
+			            <label for="une-no"><b>*</b>@messages.at("uen_no"):</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="une-no" type="text" class="form-control" name="uenNo" placeholder="@messages.at("placeholder_uen_no")" value="@if(company != null){@company.uenNo}">
+			         </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div id="phone-wrap" class="form-label">	
+			            <label for="phone-no"><b>*</b>@messages.at("phone_no"):</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")" value="@if(company != null){@company.phone}">
+			         </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div id="email-wrap" class="form-label">	
+			            <label for="email"><b>*</b>@messages.at("email"):</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")" value="@if(company != null){@company.email}">
+			         </div>
+			      </div>
+			      
+			      <div class="form-group">
+			         <div id="addr-wrap" class="form-label">	
+			            <label for="addr"><b>*</b>@messages.at("address"):</label>
+			         </div>
+			         <div class="form-input">
+			            <input id="addr" type="text" class="form-control" name="address" placeholder="@messages.at("placeholder_address")" value="@if(company != null){@company.address}">
+			         </div>
+			      </div>
+			   </div>
+			</div>
+			<div class="form-group txt-center form-submit">
+			   <input class="btn btn-success" type="submit" value="Submit"/>
+			</div>
+		}
+	</div>
+}

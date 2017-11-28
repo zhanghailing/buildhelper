@@ -25,6 +25,7 @@ import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import tools.MailerService;
 import tools.Utils;
 import views.html.*;
@@ -118,5 +119,43 @@ public class AuthController extends Controller{
 	public Result logout() {
 	    session().clear();
 	    return redirect(controllers.routes.AuthController.loginPage());
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result blockQPAccount(){
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String qpAccountId = requestData.get("qpAccountId");
+		
+		Account qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
+		if(qpAccount == null) {
+			responseData.code = 4000;
+			responseData.message  = "The QP Account doesn't exist.";
+		}
+		
+		qpAccount.blocked = true;
+		jpaApi.em().persist(qpAccount);
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result unBlockQPAccount(){
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String qpAccountId = requestData.get("qpAccountId");
+		
+		Account qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
+		if(qpAccount == null) {
+			responseData.code = 4000;
+			responseData.message  = "The QP Account doesn't exist.";
+		}
+		
+		qpAccount.blocked = false;
+		jpaApi.em().persist(qpAccount);
+		return ok(Json.toJson(responseData));
 	}
 }
