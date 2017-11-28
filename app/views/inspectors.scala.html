@@ -56,14 +56,14 @@
 		    	@for(index <- 0 until inspectors.size){
 				    <tr class="paginate">
 						<th>@((pageIndex-1) * Constants.ACCOUNT_PAGE_SIZE + index+1)</th>
-						<td class="col col-md-4">@inspectors(index).user.name</td>
+						<td>@inspectors(index).user.name</td>
 						<td>@inspectors(index).user.designation</td>
 						<td>@inspectors(index).email</td>
 						<td>@inspectors(index).password</td>
 						<td>
-							<a href="">Edit</a>
-							<a id="acc-block-btn">Block</a>
-							<a href="">Delete</a>
+							<a href="" class="action-btn">Edit</a>
+							<a id="acc-block-btn" class="action-btn">Block</a>
+							<a href="" class="action-btn">Delete</a>
 						</td>
 			        </tr>
 				}

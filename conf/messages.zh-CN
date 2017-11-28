@@ -28,7 +28,7 @@ qp_accounts=QP人员账号
 create_qp=创建QP账号
 name=姓名
 placeholder_name=请输入姓名
-primary_email_address=主要的邮箱地址
+primary_email_address=主要的邮箱地址/账号
 account_info=账号信息
 personal_info=个人信息
 alter_emaill_1=其它邮箱地址 1 (可选)
@@ -50,6 +50,7 @@ placeholder_designation=请出入职位信息
 inspector_accounts=监督人员账号
 qp_company_info=QP公司信息
 customize_letterhead=自定义信笺
+create_company=创建新公司
 
 error.file_size=上传的文件不可以超过2MB!
 

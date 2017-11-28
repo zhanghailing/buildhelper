@@ -65,8 +65,8 @@
 	                	if(data.code != 0){
 	                		showAlertToast(data.message, "alert-danger");
 	                	}else{
-	                		showAlertToast(data.message, "alert-success");
 	                		$('#set-admin-model').modal('hide');
+	                		window.location.href = "@routes.CompanyController.companys()";
 	                	}
 	                	spinner.remove();
 	                	$('input[type="submit"]').css("color", "white");

@@ -15,40 +15,49 @@
 	       		if($(this).parent().hasClass("selected") && $(".subject-lbl.selected").length > 1){
 	       			$(this).parent().removeClass('selected');
 	       			$(this).val("0");
+	       			
+	       			if($(this).attr("name") === "isQECP"){
+		       			$('#qecp-no').parent().parent().addClass("hidden");
+		       		}else{
+		       			$('#qecp-no').parent().parent().removeClass("hidden");
+		       		}
 	       		}else{
 	       			$(this).parent().addClass('selected');
 	       			$(this).val("1");
+	       			
+	       			if($(this).attr("name") === "isQECP"){
+		       			$('#qecp-no').parent().parent().removeClass("hidden");
+		       		}else{
+		       			$('#qecp-no').parent().parent().addClass("hidden");
+		       		}
 	       		}
 	       	});
 			
 			$("#qp-account-form").validate({
 				ignore: [],
 		        rules: {
-		        	name:{
-		            	minlength: 2,
-		                maxlength: 50,
-		            	required:true
+			        	name:{
+			            	minlength: 2,
+			            	maxlength: 50,
+		            		required:true
+		           	},
+			        email:{
+		            		email: true,
+		            		required:true
 		            },
-		            email:{
-		            	email: true,
-		            	required:true
+			        password:{
+			            	required:true
 		            },
-		            password:{
-		            	required:true
+			        mobile:{
+			            	required: true
 		            },
-		            officePhone:{
-		            	required:true
+			        peNo:{
+			            	required: true
 		            },
-		            mobile:{
-		            	required: true
-		            },
-		            peNo:{
-		            	required: true
-		            },
-		            qecpNo:{
-		            	required: true
+			        qecpNo:{
+			        		qecpRequired: true
 		            }
-		        },
+	        		},
 		        highlight: function (element) {
 		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 		        },
@@ -60,6 +69,10 @@
 		        		form.submit();
 		        }
 		    });
+			
+			$.validator.addMethod("qecpRequired", function(value, element) {
+	            return $('#qecp-no').parent().parent().hasClass("hidden");
+	        }, "QECP Required");
 			
 	   	});
 		
@@ -247,7 +260,7 @@
 					        </div>
 				        </td>
 				        <td>
-							<div class="form-group">
+							<div class="form-group hidden">
 					           <div class="form-label">	
 					              <label for="qecp-no">@messages.at("qecp_no"):</label>
 							   </div>	

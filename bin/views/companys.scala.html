@@ -31,7 +31,7 @@
 	</script>
 	<div class="dash-detail-header">
 		<p class="title">@messages.at("company_info")</p>
-		<a class="btn btn-success create-btn" href="@routes.CompanyController.createCompany()">Create</a>
+		<a class="btn btn-success create-btn" href="@routes.CompanyController.createCompany()">@messages.at("create_company")</a>
 	</div>
 	
 	@if(companys == null || companys.size == 0){
@@ -54,16 +54,16 @@
 		    	@for(index <- 0 until companys.size){
 				    <tr class="paginate">
 						<th>@((pageIndex-1) * Constants.COMPANY_PAGE_SIZE + index+1)</th>
-						<td class="col col-md-4">@companys(index).name</td>
+						<td>@companys(index).name</td>
 						<td>@companys(index).uenNo</td>
 						<td>@companys(index).phone</td>
 						<td>@companys(index).email</td>
 						<td>@if(companys(index).account != null){@companys(index).account.email}else{none}</td>
 						<td>@companys(index).address</td>
 						<td>
-							<a href="@routes.CompanyController.createCompany(companys(index).id)">Edit</a>
-							<a data-toggle="modal" data-target="#set-admin-model" data-id="@companys(index).id">Admin</a>
-						</td>
+							<a class="action-btn" href="@routes.CompanyController.createCompany(companys(index).id)">Edit</a>
+							<a class="action-btn" data-toggle="modal" data-target="#set-admin-model" data-id="@companys(index).id">Admin</a>
+						</td> 
 			        </tr>
 				}
 		    </tbody>

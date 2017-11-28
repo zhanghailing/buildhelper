@@ -73,7 +73,7 @@
 		    	@for(index <- 0 until qpAccounts.size){
 				    <tr class="paginate">
 						<th>@((pageIndex-1) * Constants.ACCOUNT_PAGE_SIZE + index+1)</th>
-						<td class="col col-md-4">@qpAccounts(index).user.name</td>
+						<td>@qpAccounts(index).user.name</td>
 						<td>@qpAccounts(index).user.peNo</td>
 						<td>
 							@if(qpAccounts(index).user.isCivil){
@@ -99,9 +99,9 @@
 						<td>@qpAccounts(index).email</td>
 						<td>@qpAccounts(index).password</td>
 						<td>
-							<a href="">Edit</a>
-							<a id="acc-block-btn" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockQPAccount()}else{@routes.AuthController.blockQPAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
-							<a href="">Delete</a>
+							<a href="" class="action-btn">Edit</a>
+							<a id="acc-block-btn" class="action-btn" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockQPAccount()}else{@routes.AuthController.blockQPAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
+							<a href="" class="action-btn">Delete</a>
 						</td>
 			        </tr>
 				}

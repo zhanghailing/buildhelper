@@ -28,7 +28,7 @@ qp_accounts=QP Accounts
 create_qp=Create QP Account
 name=Name
 placeholder_name=Fill the name
-primary_email_address=Primary E-mail Address
+primary_email_address=Primary E-mail Address/ID
 account_info=Account Information
 personal_info=Personal Information
 alter_emaill_1=Alternative E-mail Address 1 (Optional)
@@ -50,6 +50,7 @@ placeholder_designation=Fill in designation
 inspector_accounts=Inspector Accounts
 qp_company_info=QP Company Information
 customize_letterhead=Customize LetterHead
+create_company=Create Company
 
 error.file_size=File size cannot be more than 2MB!
 
