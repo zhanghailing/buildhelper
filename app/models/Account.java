@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -81,8 +82,13 @@ public class Account{
 	}
 	
 	public static Account findByToken(String token){
-		Account account = JPA.em().createQuery("from Account ac where ac.token = :token", Account.class)
-		.setParameter("token", token).getSingleResult();
+		Account account = null;
+		try{
+			account = JPA.em().createQuery("from Account ac where ac.token = :token", Account.class)
+					.setParameter("token", token).getSingleResult();
+		}catch(NoResultException e){
+			e.printStackTrace();
+		}
 		return account;
 	}
 }

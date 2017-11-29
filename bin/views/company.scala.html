@@ -6,7 +6,10 @@
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<script type="text/javascript">
 		$(function(){
-			
+			$('input[type="checkbox"]').on('click', function(){
+				$('input[type="checkbox"]').prop("checked", false);
+				$(this).prop("checked", true);
+			});
 	   	});
 	</script>
 	
@@ -42,7 +45,7 @@
 		<div class="form-group">
 			<div class="form-label">
 				<label class="chx-container">@messages.at("customize_letterhead")
-				  <input type="checkbox" checked="checked">
+				  <input type="checkbox" checked="">
 				  <span class="checkmark"></span>
 				</label>
 			</div>
@@ -107,9 +110,6 @@
 			            <input id="email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")" value="@if(company != null){@company.email}">
 			         </div>
 			      </div>
-			</div>
-			<div class="btn-gp">
-				<a>Cancel</a>
 			</div>
 		</div>
 	</div>

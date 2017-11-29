@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -33,6 +34,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import tools.Constants;
+import tools.MailerService;
 import tools.Utils;
 import views.html.*;
 
@@ -59,14 +61,14 @@ public class CompanyController extends Controller {
 			responseData.message = "You do not have permission.";
 		}
 		
-		cy = (Company) jpaApi.em()
+		try{
+			cy = (Company) jpaApi.em()
 				.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
 				.setParameter("accId", account.id).getSingleResult();
-		
-		if (cy == null) {
+		}catch(NoResultException e){
 			responseData.code = 4000;
 			responseData.message = "Company doesn't exist.";
-		} 
+		}
 		
 		if(responseData.code != 0){
 			return notFound(errorpage.render(responseData));
@@ -101,6 +103,10 @@ public class CompanyController extends Controller {
 
 					company.account = account;
 					jpaApi.em().persist(company);
+					
+					CompletableFuture.supplyAsync(() 
+							-> MailerService.getInstance()
+							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 				} else {
 					responseData.code = 4000;
 					responseData.message = "The email already exist.";
@@ -294,14 +300,14 @@ public class CompanyController extends Controller {
 			String alerEmail2 = requestData.get("alerEmail2");
 			String officePhone = requestData.get("officePhone");
 			String mobile = requestData.get("mobile");
-			String isCivil = requestData.get("isCivil");
-			String isQECP = requestData.get("isQECP");
-			String isGeo = requestData.get("isGeo");
-			String isElectric = requestData.get("isElectric");
-			String isMechnical = requestData.get("isMechnical");
+			String isCivil = Utils.isBlank(requestData.get("isCivil")) ? "0" : requestData.get("isCivil");
+			String isQECP = Utils.isBlank(requestData.get("isQECP")) ? "0" : requestData.get("isQECP");
+			String isGeo = Utils.isBlank(requestData.get("isGeo")) ? "0" : requestData.get("isGeo");
+			String isElectric = Utils.isBlank(requestData.get("isElectric")) ? "0" : requestData.get("isElectric");
+			String isMechnical = Utils.isBlank(requestData.get("isMechnical")) ? "0" : requestData.get("isMechnical");
 			String peNo = requestData.get("peNo");
 			String qecpNo = requestData.get("qecpNo");
-
+			
 			Account qpAccount = null;
 			if (!Utils.isBlank(qpAccountId)) {
 				qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
@@ -335,51 +341,44 @@ public class CompanyController extends Controller {
 				user.alterEmail2 = alerEmail2;
 				user.officePhone = officePhone;
 				user.mobile = mobile;
-				user.isCivil = Boolean.getBoolean(isCivil);
-				user.isQECP = Boolean.getBoolean(isQECP);
-				user.isGeotechnical = Boolean.getBoolean(isGeo);
-				user.isElectric = Boolean.getBoolean(isElectric);
-				user.isMechanical = Boolean.getBoolean(isMechnical);
+				user.isCivil = isCivil.equals("1") ? true : false;
+				user.isQECP = isQECP.equals("1") ? true : false;
+				user.isGeotechnical = isGeo.equals("1") ? true : false;
+				user.isElectric = isElectric.equals("1") ? true : false;
+				user.isMechanical = isMechnical.equals("1") ? true : false;
 				user.peNo = peNo;
 				user.qecpNo = qecpNo;
 				jpaApi.em().persist(user);
-
+				
 				MultipartFormData<File> body = request().body().asMultipartFormData();
 				List<FilePart<File>> fileParts = body.getFiles();
 
+				List<Document> documentWillDelete = user.documents;
 				if (user.documents != null && user.documents.size() > 0) {
-					List<Document> documentWillDelete = user.documents;
-					for (FilePart<File> filePart : fileParts) {
-						for (Document document : user.documents) {
-							if (document.name.equals(filePart.getFilename())
-									&& document.size == filePart.getFile().length()) {
-								documentWillDelete.remove(document);
-								continue;
-							}
+					if(documentWillDelete != null && documentWillDelete.size() > 0){
+						for (Document d : documentWillDelete) {
+							d.delete();
+							jpaApi.em().remove(d);
 						}
-						Document doc = new Document(user, filePart.getFile());
-						doc.name = filePart.getFilename();
-						jpaApi.em().persist(doc);
 					}
-
-					for (Document d : documentWillDelete) {
-						d.delete();
-						jpaApi.em().remove(d);
-					}
-				} else {
+					
 					for (FilePart<File> filePart : fileParts) {
 						Document doc = new Document(user, filePart.getFile());
 						doc.name = filePart.getFilename();
 						jpaApi.em().persist(doc);
 					}
-				}
+				} 
+				
+				CompletableFuture.supplyAsync(() 
+						-> MailerService.getInstance()
+						.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 			}
 		}
 
 		if (responseData.code != 0) {
 			return notFound(errorpage.render(responseData));
 		}
-
+		
 		return redirect(routes.CompanyController.qpList(0));
 	}
 
@@ -396,22 +395,28 @@ public class CompanyController extends Controller {
 
 		Account dbAcc = jpaApi.em().find(Account.class, account.id);
 
-		String whereCause = "";
+		String companyIDCause = "";
 		for (int i = 0; i < dbAcc.companys.size(); i++) {
 			if (i == dbAcc.companys.size() - 1) {
-				whereCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
+				companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
 			} else {
-				whereCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
+				companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
 			}
 		}
 
-		String sql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE " + whereCause;
-		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(sql).getSingleResult()).intValue();
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3";
+		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3";
+		if(!Utils.isBlank(companyIDCause)){
+			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3 AND " + companyIDCause;
+			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3 AND " + companyIDCause;
+		}
+		
+		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
 		int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
 
 		List<Account> qpAccounts = jpaApi.em()
 				.createNativeQuery(
-						"SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE " + whereCause,
+						sql,
 						Account.class)
 				.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 
@@ -545,22 +550,28 @@ public class CompanyController extends Controller {
 		}
 
 		Account dbAcc = jpaApi.em().find(Account.class, account.id);
-		String whereCause = "";
+		String companyIDCause = "";
 		for (int i = 0; i < dbAcc.companys.size(); i++) {
 			if (i == dbAcc.companys.size() - 1) {
-				whereCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
+				companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
 			} else {
-				whereCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
+				companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
 			}
 		}
 
-		String sql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE " + whereCause;
-		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(sql).getSingleResult()).intValue();
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2";
+		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2";
+		if(!Utils.isBlank(companyIDCause)){
+			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2 AND " + companyIDCause;
+			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2 AND " + companyIDCause;
+		}
+
+		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
 		int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
 
 		List<Account> inpectors = jpaApi.em()
 				.createNativeQuery(
-						"SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE " + whereCause,
+						sql,
 						Account.class)
 				.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 

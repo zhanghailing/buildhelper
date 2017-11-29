@@ -18,8 +18,6 @@
 	       			
 	       			if($(this).attr("name") === "isQECP"){
 		       			$('#qecp-no').parent().parent().addClass("hidden");
-		       		}else{
-		       			$('#qecp-no').parent().parent().removeClass("hidden");
 		       		}
 	       		}else{
 	       			$(this).parent().addClass('selected');
@@ -27,8 +25,6 @@
 	       			
 	       			if($(this).attr("name") === "isQECP"){
 		       			$('#qecp-no').parent().parent().removeClass("hidden");
-		       		}else{
-		       			$('#qecp-no').parent().parent().addClass("hidden");
 		       		}
 	       		}
 	       	});
@@ -36,28 +32,28 @@
 			$("#qp-account-form").validate({
 				ignore: [],
 		        rules: {
-			        	name:{
-			            	minlength: 2,
-			            	maxlength: 50,
-		            		required:true
+			        name:{
+		            	minlength: 2,
+		            	maxlength: 50,
+	            		required:true
 		           	},
 			        email:{
-		            		email: true,
-		            		required:true
+	            		email: true,
+	            		required:true
 		            },
 			        password:{
-			            	required:true
+		            	required:true
 		            },
 			        mobile:{
-			            	required: true
+		            	required: true
 		            },
 			        peNo:{
-			            	required: true
+		            	required: true
 		            },
-			        qecpNo:{
-			        		qecpRequired: true
+		            qecpNo:{
+		            	qecpRequired: true
 		            }
-	        		},
+        		},
 		        highlight: function (element) {
 		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 		        },
@@ -71,7 +67,11 @@
 		    });
 			
 			$.validator.addMethod("qecpRequired", function(value, element) {
-	            return $('#qecp-no').parent().parent().hasClass("hidden");
+				if($('#qecp-no').parent().parent().hasClass("hidden")){
+					return true;
+				}else{
+					return (!$('#qecp-no').parent().parent().hasClass("hidden") && ($('#qecp-no').val().length > 0));
+				}
 	        }, "QECP Required");
 			
 	   	});
@@ -214,32 +214,32 @@
 					</div>
 					
 					<div class="form-input">
-						<label class="subject-lbl selected">
-						   	<input type="radio" name="isCivil" class="form-control" value="1">
+						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isCivil){selected}}else{selected}">
+						   	<input type="radio" name="isCivil" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isCivil){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isCivil){checked}}>
 							<a class="radio-box">Civil
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="isQECP" class="form-control" value="0">
+						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isQECP){selected}}">
+						   	<input type="radio" name="isQECP" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isQECP){1}else{0}}else{0}">
 							<a class="radio-box">QECP
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="isGeo" class="form-control" value="0">
+						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){selected}}">
+						   	<input type="radio" name="isGeo" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isGeotechnical){1}else{0}}else{0}">
 							<a class="radio-box">Geotechnical
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="isElectric" class="form-control" value="0">
+						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isElectric){selected}}">
+						   	<input type="radio" name="isElectric" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isElectric){1}else{0}}else{0}">
 							<a class="radio-box">Electrical
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="isMechnical" class="form-control" value="0">
+						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isMechanical){selected}}">
+						   	<input type="radio" name="isMechnical" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isMechanical){1}else{0}}else{0}">
 							<a class="radio-box">Mechanical
 								<i class="icon-check"></i>
 							</a>
@@ -260,7 +260,7 @@
 					        </div>
 				        </td>
 				        <td>
-							<div class="form-group hidden">
+							<div class="form-group @if(qpAccount != null){@if(qpAccount.user.isQECP == false){hidden}}else{hidden}">
 					           <div class="form-label">	
 					              <label for="qecp-no">@messages.at("qecp_no"):</label>
 							   </div>	

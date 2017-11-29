@@ -99,7 +99,7 @@
 						<td>@qpAccounts(index).email</td>
 						<td>@qpAccounts(index).password</td>
 						<td>
-							<a href="" class="action-btn">Edit</a>
+							<a class="action-btn" href="@routes.CompanyController.createQPAccount(qpAccounts(index).id)">Edit</a>
 							<a id="acc-block-btn" class="action-btn" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockQPAccount()}else{@routes.AuthController.blockQPAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
 							<a href="" class="action-btn">Delete</a>
 						</td>

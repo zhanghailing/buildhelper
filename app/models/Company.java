@@ -51,6 +51,8 @@ public class Company {
 	@OneToOne(mappedBy = "company")
 	public Avatar logo;
 	
+	@Column(name="use_cus_lh", columnDefinition = "boolean default false")
+	public boolean useCustomizedLetterHead;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "acc_id")
