@@ -16,6 +16,9 @@ POST   	/login        			    	controllers.AuthController.login()
 GET   	/logout           		    	controllers.AuthController.logout()
 POST   	/signup           		    	controllers.AuthController.signup()
 
+POST	/block/account					controllers.AuthController.blockAccount()
+POST	/unblock/account				controllers.AuthController.unBlockAccount()
+POST	/delete/account					controllers.AuthController.deleteAccount()
 
 GET   	/companys           			controllers.CompanyController.companys(offset: Integer ?= 0)
 GET 	/create/company			   		controllers.CompanyController.createCompany(companyId: Long ?= 0)
@@ -26,11 +29,10 @@ POST 	/company/set/admin				controllers.CompanyController.assignAccountForCompan
 GET 	/qplist							controllers.CompanyController.qpList(offset: Integer ?= 0)
 GET 	/create/qp/account				controllers.CompanyController.createQPAccount(qpAccountId: Long ?= 0)
 POST	/save/qp/account				controllers.CompanyController.saveQPAccount()
-POST	/block/qp/account				controllers.AuthController.blockQPAccount()
-POST	/unblock/qp/account				controllers.AuthController.unBlockQPAccount()
-POST	/delete/account				controllers.AuthController.deleteAccount()
 GET 	/create/inspector/account		controllers.CompanyController.createInspectorAccount(inspectorAccountId: Long ?= 0)
 POST	/save/inspector/account			controllers.CompanyController.saveInspectorAccount()
 GET 	/inspectors						controllers.CompanyController.inspectors(offset: Integer ?= 0)
 GET 	/company						controllers.CompanyController.company()
+POST 	/save/company/basic				controllers.CompanyController.saveCompanyBasic()
+POST 	/upload/company/logo			controllers.CompanyController.uploadLogo()
 

@@ -123,39 +123,39 @@ public class AuthController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result blockQPAccount(){
+	public Result blockAccount(){
 		ResponseData responseData = new ResponseData();
 		
 		DynamicForm requestData = formFactory.form().bindFromRequest();
-		String qpAccountId = requestData.get("qpAccountId");
+		String accountId = requestData.get("accountId");
 		
-		Account qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
-		if(qpAccount == null) {
+		Account account = jpaApi.em().find(Account.class, Long.parseLong(accountId));
+		if(account == null) {
 			responseData.code = 4000;
 			responseData.message  = "The QP Account doesn't exist.";
 		}
 		
-		qpAccount.blocked = true;
-		jpaApi.em().persist(qpAccount);
+		account.blocked = true;
+		jpaApi.em().persist(account);
 		return ok(Json.toJson(responseData));
 	}
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result unBlockQPAccount(){
+	public Result unBlockAccount(){
 		ResponseData responseData = new ResponseData();
 		
 		DynamicForm requestData = formFactory.form().bindFromRequest();
-		String qpAccountId = requestData.get("qpAccountId");
+		String accountId = requestData.get("accountId");
 		
-		Account qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
-		if(qpAccount == null) {
+		Account account = jpaApi.em().find(Account.class, Long.parseLong(accountId));
+		if(account == null) {
 			responseData.code = 4000;
 			responseData.message  = "The QP Account doesn't exist.";
 		}
 		
-		qpAccount.blocked = false;
-		jpaApi.em().persist(qpAccount);
+		account.blocked = false;
+		jpaApi.em().persist(account);
 		return ok(Json.toJson(responseData));
 	}
 	

@@ -728,14 +728,24 @@ input.file-input{
 	display: block !important;
 }
 
-.company-right{
+#company-bacic-form{
     display: inline-block;
     vertical-align: top;
     padding-left: 25px;
 }
 
-.company-right input{
+#company-bacic-form .form-group{
 	width: 632px;
+}
+
+#company-bacic-form .form-input{
+	width: 100% !important;
+}
+
+#save-btn{
+	width: 57px;
+	height: 34px;
+	float: right;
 }
 
 /** Company End **/

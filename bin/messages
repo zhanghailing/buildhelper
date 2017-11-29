@@ -51,6 +51,7 @@ inspector_accounts=Inspector Accounts
 qp_company_info=QP Company Information
 customize_letterhead=Customize LetterHead
 create_company=Create Company
+save=Save
 
 error.file_size=File size cannot be more than 2MB!
 

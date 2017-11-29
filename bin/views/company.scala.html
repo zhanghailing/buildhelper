@@ -4,12 +4,132 @@
 
 @sidemenu(1){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
+	<script src="@routes.Assets.versioned("javascripts/jquery.ui.widget.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/jquery.iframe-transport.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/jquery.fileupload.js")" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(function(){
 			$('input[type="checkbox"]').on('click', function(){
 				$('input[type="checkbox"]').prop("checked", false);
+				$('input[type="checkbox"]').val("0");
 				$(this).prop("checked", true);
+				$(this).val("1");
 			});
+			
+			$('#save-btn').on('click', function(){
+				$('form#company-form').submit();
+			});
+			
+			$("#company-bacic-form").validate({
+		        rules: {
+		        	name:{
+		            	minlength: 2,
+		                maxlength: 50,
+		            	required:true
+		            },
+		            address:{
+		            	required: true
+		            },
+		            uenNo:{
+		            	required: true
+					},
+					phone:{
+						required: true
+					},
+					email:{
+						required: true
+					}
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        	var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner"></i>');
+		        	$('#save-btn').text('');
+		        	$('#save-btn').append(spinner);
+		        	$('#save-btn').attr("disabled", true); 
+		        	
+		        	var isCus = $('#cus-chx').val();
+		        	var formData = $(form).serializeArray();
+		        	formData.push({name: "useCustomizedLetterHead", value: isCus});
+		        	$.ajax({
+		                url: '@routes.CompanyController.saveCompanyBasic()',
+		                type: "POST",
+		                data: formData,
+		                success: function(response, status) {
+		                	var data = $.parseJSON(JSON.stringify(response));
+		                	
+		                	if(data.code != 0){
+		                		showAlertToast(data.message, "alert-danger");
+		                	}else{
+		                		showAlertToast(data.message, "alert-success");
+		                	}
+		                	
+		                	spinner.remove();
+		                	$('#save-btn').attr("disabled", false);
+		                	$('#save-btn').text('@messages.at("save")');
+		                },
+		                error: function(request, status, err){
+		                	showAlertToast(err, "alert-danger");
+		                	spinner.remove();
+		                	$('#save-btn').attr("disabled", false);
+		                	$('#save-btn').text('@messages.at("save")');
+		                }
+	                });
+		        }
+		    });
+			
+			$('#logo-uploader').fileupload({
+				dataType: 'json',
+				type: 'POST',
+				dropZone: $(this).parents('.uploader'),
+				maxFileSize: 1024 * 1024 * 2,
+				acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+				messages: {
+			        maxFileSize: 'File exceeds maximum allowed size of 2MB',
+			    },
+		        add: function (e, data) {
+		        	if (data.files && data.files[0]) {
+		                var reader = new FileReader();
+		                var inputEle = $(this);
+		                reader.onload = function(e) {
+		                	var uploaderEle = inputEle.closest('.uploader');
+		                	var uploadWrap = uploaderEle.find('.upload-wrap');
+		                	var avatarLink = uploaderEle.find('#logo-link');
+		                	var browserLink = uploaderEle.find('.browse-btn');
+		                	var spinner = $('<i class=\'glyphicon glyphicon-refresh glyphicon-spinner\'></i>');
+		                	
+		                	uploaderEle.removeClass('noborder');
+		                	avatarLink.hide();
+		                	uploadWrap.hide();
+		                	browserLink.removeClass('hidden');
+		                	uploaderEle.append(spinner);
+		                }
+		                reader.readAsDataURL(data.files[0]);
+		                data.submit();
+		        	}
+		        },
+		        done: function (e, data) {
+		        	var uploaderEle = $(this).parents('.uploader');
+		        	var uploadWrap = uploaderEle.find('.upload-wrap');
+		        	var avatarLink = uploaderEle.find('#avatar-link');
+		        	var browserLink = uploaderEle.find('.browse-btn');
+		        	var spinner = uploaderEle.find('.glyphicon-spinner');
+		        	
+		        	uploaderEle.addClass('noborder');
+		        	avatarLink.css('background-image', 'url(\'/company/show/logo?uuid='+ data.result.data.uuid + "&isLarge=false" +'\')');
+		        	spinner.remove();
+		        	avatarLink.show();
+		        	uploadWrap.removeClass('hidden');
+		        	browserLink.hide();
+		      	},
+		        fail: function (e, data) {
+		        	console.log("Error: " + data.jqXHR.responseText);
+		        }
+		    });
 	   	});
 	</script>
 	
@@ -20,7 +140,7 @@
 		<div class="form-group">
 			<div class="form-label">
 				<label class="chx-container">@messages.at("default_letterhead")
-				  <input type="checkbox" checked="checked">
+				  <input id="default-chx" type="checkbox" value="@if(company.useCustomizedLetterHead){0}else{1}" @if(company.useCustomizedLetterHead == false){checked}>
 				  <span class="checkmark"></span>
 				</label>
 			</div>
@@ -45,7 +165,7 @@
 		<div class="form-group">
 			<div class="form-label">
 				<label class="chx-container">@messages.at("customize_letterhead")
-				  <input type="checkbox" checked="">
+				  <input id="cus-chx" type="checkbox" value="@if(company.useCustomizedLetterHead){1}else{0}" @if(company.useCustomizedLetterHead){checked}>
 				  <span class="checkmark"></span>
 				</label>
 			</div>
@@ -63,10 +183,12 @@
 						<p>@messages.at("drop_image")</p>
 				    </div>
 				    <a class="browse-btn">@messages.at("browser_file")</a>
-					<input id="logo-uploader" class="file-input" type="file" name="logoImage"/>
+					<input id="logo-uploader" class="file-input" type="file" name="logoImage" data-url="@routes.CompanyController.uploadLogo()"/>
 				</div>
 			</div>
-			<div class="company-right">
+			
+			<form id="company-bacic-form">
+				<input type="hidden" name="companyId" value="@company.id"/>
 				<div class="form-group">
 			         <div class="form-label">
 			            <label for="cy-name"><b>*</b>@messages.at("company_name")</label>
@@ -74,16 +196,16 @@
 			         <div class="form-input">
 			            <input id="cy-name" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_company_name")" value="@if(company != null){@company.name}">
 			         </div>
-			      </div>
-			      <div class="form-group">
-			         <div id="addr-wrap" class="form-label">	
+				</div>
+				<div class="form-group">
+					<div id="addr-wrap" class="form-label">	
 			            <label for="addr"><b>*</b>@messages.at("address"):</label>
 			         </div>
 			         <div class="form-input">
 			            <input id="addr" type="text" class="form-control" name="address" placeholder="@messages.at("placeholder_address")" value="@if(company != null){@company.address}">
 			         </div>
-			      </div>
-			      
+				</div>
+				      
 			      <div class="form-group">
 			         <div id="uen-wrap" class="form-label">	
 			            <label for="une-no"><b>*</b>@messages.at("uen_no"):</label>
@@ -92,16 +214,16 @@
 			            <input id="une-no" type="text" class="form-control" name="uenNo" placeholder="@messages.at("placeholder_uen_no")" value="@if(company != null){@company.uenNo}">
 			         </div>
 			      </div>
-			      
+				      
 			      <div class="form-group">
 			         <div id="phone-wrap" class="form-label">	
 			            <label for="phone-no"><b>*</b>@messages.at("phone_no"):</label>
 			         </div>
 			         <div class="form-input">
-			            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")" value="@if(company != null){@company.phone}">
+		            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")" value="@if(company != null){@company.phone}">
 			         </div>
 			      </div>
-			      
+				      
 			      <div class="form-group">
 			         <div id="email-wrap" class="form-label">	
 			            <label for="email"><b>*</b>@messages.at("email"):</label>
@@ -110,7 +232,10 @@
 			            <input id="email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")" value="@if(company != null){@company.email}">
 			         </div>
 			      </div>
-			</div>
+			      <div class="form-group">
+			         <a id="save-btn" class="btn btn-success">@messages.at("save")</a>
+			      </div>
+			</form>
 		</div>
 	</div>
 }

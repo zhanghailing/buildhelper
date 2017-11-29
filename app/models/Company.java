@@ -62,4 +62,8 @@ public class Company {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
 	public List<Account> qpAccounts;
+	
+	public Company(){
+		this.useCustomizedLetterHead = false;
+	}
 }

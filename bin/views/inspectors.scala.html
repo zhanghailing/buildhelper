@@ -28,9 +28,45 @@
 		        }
 		    });
 		    
-		    $('#acc-block-btn').on('click', function(){
-		    		
-		    });
+		    $('.block-action').on('click', function(){
+	    		var accountId = $(this).data('id');
+	    		var url = $(this).data('url');
+	    		$.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                	accountId:accountId
+                },
+                success: function(response, status) {
+	                	var data = $.parseJSON(JSON.stringify(response));
+	                	if(data.code != 0){
+	                		showAlertToast(data.message, "alert-danger");
+	                	}else{
+	                		window.location.href = "@routes.CompanyController.inspectors(0)";
+	                	}
+	            }
+            });
+	    });
+	    
+	    $('.delete-action').on('click', function(){
+	    	var accountId = $(this).data('id');
+    		var url = $(this).data('url');
+    		$.ajax({
+            	url: url,
+            	type: "POST",
+                data: {
+                	accountId:accountId
+                },
+            	success: function(response, status) {
+                	var data = $.parseJSON(JSON.stringify(response));
+                	if(data.code != 0){
+                		showAlertToast(data.message, "alert-danger");
+                	}else{
+                		window.location.href = "@routes.CompanyController.inspectors(0)";
+            		}
+            	}
+            });
+	    });
 	   	});
 	</script>
 	<div class="dash-detail-header">
@@ -62,8 +98,8 @@
 						<td>@inspectors(index).password</td>
 						<td>
 							<a href="" class="action-btn">Edit</a>
-							<a id="acc-block-btn" class="action-btn">Block</a>
-							<a href="" class="action-btn">Delete</a>
+							<a class="action-btn block-action" data-id="@inspectors(index).id" data-url="@if(inspectors(index).blocked){@routes.AuthController.unBlockAccount()}else{@routes.AuthController.blockAccount()}">@if(inspectors(index).blocked){Unblock}else{Block}</a>
+							<a class="action-btn delete-action" data-id="@inspectors(index).id" data-url="@routes.AuthController.deleteAccount()">Delete</a>
 						</td>
 			        </tr>
 				}

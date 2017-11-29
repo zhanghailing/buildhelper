@@ -28,14 +28,14 @@
 		        }
 		    });
 		    
-		    $('#acc-block-btn').on('click', function(){
-		    		var qpAccountId = $(this).data('id');
+		    $('.block-action').on('click', function(){
+		    		var accountId = $(this).data('id');
 		    		var url = $(this).data('url');
 		    		$.ajax({
 	                url: url,
 	                type: "POST",
 	                data: {
-	                		qpAccountId:qpAccountId
+	                	accountId:accountId
 	                },
 	                success: function(response, status) {
 		                	var data = $.parseJSON(JSON.stringify(response));
@@ -48,27 +48,25 @@
 	            });
 		    });
 		    
-		    $('#acc-block-btn').on('click', function(){
-		    		var qpAccountId = $(this).data('id');
-		    		var url = $(this).data('url');
-		    		$.ajax({
-	                url: url,
-	                type: "POST",
+		    $('.delete-action').on('click', function(){
+		    	var accountId = $(this).data('id');
+	    		var url = $(this).data('url');
+	    		$.ajax({
+                	url: url,
+                	type: "POST",
 	                data: {
-	                		qpAccountId:qpAccountId
+	                	accountId:accountId
 	                },
-	                success: function(response, status) {
-		                	var data = $.parseJSON(JSON.stringify(response));
-		                	if(data.code != 0){
-		                		showAlertToast(data.message, "alert-danger");
-		                	}else{
-		                		window.location.href = "@routes.CompanyController.qpList(0)";
-		                	}
-		            }
+                	success: function(response, status) {
+	                	var data = $.parseJSON(JSON.stringify(response));
+	                	if(data.code != 0){
+	                		showAlertToast(data.message, "alert-danger");
+	                	}else{
+	                		window.location.href = "@routes.CompanyController.qpList(0)";
+                		}
+	            	}
 	            });
 		    });
-		    
-		    acc-delete-btn
 	   	});
 	</script>
 	<div class="dash-detail-header">
@@ -121,9 +119,9 @@
 						<td>@qpAccounts(index).email</td>
 						<td>@qpAccounts(index).password</td>
 						<td>
-							<a class="action-btn" href="@routes.CompanyController.createQPAccount(qpAccounts(index).id)">Edit</a>
-							<a id="acc-block-btn" class="action-btn" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockQPAccount()}else{@routes.AuthController.blockQPAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
-							<a id="acc-delete-btn" class="action-btn">Delete</a>
+							<a class="action-btn edit-action" href="@routes.CompanyController.createQPAccount(qpAccounts(index).id)">Edit</a>
+							<a class="action-btn block-action" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockAccount()}else{@routes.AuthController.blockAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
+							<a class="action-btn delete-action" data-id="@qpAccounts(index).id" data-url="@routes.AuthController.deleteAccount()">Delete</a>
 						</td>
 			        </tr>
 				}

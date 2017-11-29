@@ -51,6 +51,7 @@ inspector_accounts=监督人员账号
 qp_company_info=QP公司信息
 customize_letterhead=自定义信笺
 create_company=创建新公司
+save=保存
 
 error.file_size=上传的文件不可以超过2MB!
 

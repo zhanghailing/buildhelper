@@ -221,6 +221,94 @@ public class CompanyController extends Controller {
 
 		return redirect(routes.CompanyController.companys(0));
 	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result saveCompanyBasic() {
+		ResponseData responseData = new ResponseData();
+
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		} else {
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+			String companyId = requestData.get("companyId");
+			String name = requestData.get("name");
+			String uenNo = requestData.get("uenNo");
+			String email = requestData.get("email");
+			String phone = requestData.get("phone");
+			String address = requestData.get("address");
+			String useCustomizedLetterHead = Utils.isBlank(requestData.get("useCustomizedLetterHead")) ? "0" : requestData.get("useCustomizedLetterHead");
+			
+			Company company = null;
+			if (!Utils.isBlank(companyId)) {
+				company = jpaApi.em().find(Company.class, Long.parseLong(companyId));
+				if(company != null){
+					company.address = address;
+					company.name = name;
+					company.uenNo = uenNo;
+					company.email = email;
+					company.phone = phone;
+					company.useCustomizedLetterHead = useCustomizedLetterHead.equals("1") ? true : false;
+					jpaApi.em().persist(company);
+				}else{
+					responseData.code = 4000;
+					responseData.message = "The company doesn't exits.";
+				}
+			} else {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}
+		}
+
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result uploadLogo(){
+		ResponseData responseData = new ResponseData();
+//		MultipartFormData<File> body = request().body().asMultipartFormData();
+//	    FilePart<File> avatarFile = body.getFile("logoImage");
+//	    try {
+//		    if(avatarFile != null){
+//		    	try{
+//		    		Account account = (Account) ctx().args.get("account");
+//		    		
+//		    		TypedQuery<User> query = jpaApi.em()
+//							.createQuery("from User u where u.accountId = :accountId", User.class)
+//							.setParameter("accountId", account.id);
+//					User user = query.getSingleResult();
+//					
+//					if(user.avatars != null){
+//						for(Avatar avatar : user.avatars){
+//							avatar.deleteThumbnail();
+//							avatar.delete();
+//							jpaApi.em().remove(avatar);
+//						}
+//					}
+//					
+//					Avatar avatar = new Avatar(user, avatarFile.getFile());
+//					avatar.name = avatarFile.getFilename();
+//					jpaApi.em().persist(avatar);
+//					responseData.data = avatar;
+//					
+//					return ok(Utils.toJson(ResponseData.class, responseData, "*.user"));
+//		    	}catch(NoResultException e){
+//		    		responseData.code = 4000;
+//					responseData.message = "User does not exist.";
+//		    	}
+//		    }else{
+//		    	responseData.message = "Image file cannot be empty.";
+//		    	responseData.code = 4000;
+//		    }
+//	    } catch (IOException e) {
+//	    	responseData.message = e.getLocalizedMessage();
+//	    	responseData.code = 4001;
+//		}		
+		return ok(Json.toJson(responseData));
+	}
 
 	@Transactional
 	public Result showLetterHead(String uuid, boolean isLarge) {
@@ -354,20 +442,18 @@ public class CompanyController extends Controller {
 				List<FilePart<File>> fileParts = body.getFiles();
 
 				List<Document> documentWillDelete = user.documents;
-				if (user.documents != null && user.documents.size() > 0) {
-					if(documentWillDelete != null && documentWillDelete.size() > 0){
-						for (Document d : documentWillDelete) {
-							d.delete();
-							jpaApi.em().remove(d);
-						}
+				if(documentWillDelete != null && documentWillDelete.size() > 0){
+					for (Document d : documentWillDelete) {
+						d.delete();
+						jpaApi.em().remove(d);
 					}
+				}
 					
-					for (FilePart<File> filePart : fileParts) {
-						Document doc = new Document(user, filePart.getFile());
-						doc.name = filePart.getFilename();
-						jpaApi.em().persist(doc);
-					}
-				} 
+				for (FilePart<File> filePart : fileParts) {
+					Document doc = new Document(user, filePart.getFile());
+					doc.name = filePart.getFilename();
+					jpaApi.em().persist(doc);
+				}
 				
 				CompletableFuture.supplyAsync(() 
 						-> MailerService.getInstance()
@@ -404,11 +490,11 @@ public class CompanyController extends Controller {
 			}
 		}
 
-		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3";
-		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3";
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=3";
+		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=3";
 		if(!Utils.isBlank(companyIDCause)){
-			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3 AND " + companyIDCause;
-			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3 AND " + companyIDCause;
+			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=3 AND " + companyIDCause;
+			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=3 AND " + companyIDCause;
 		}
 		
 		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
@@ -502,32 +588,24 @@ public class CompanyController extends Controller {
 
 				MultipartFormData<File> body = request().body().asMultipartFormData();
 				List<FilePart<File>> fileParts = body.getFiles();
-				if (user.documents != null && user.documents.size() > 0) {
-					List<Document> documentWillDelete = user.documents;
-					for (FilePart<File> filePart : fileParts) {
-						for (Document document : user.documents) {
-							if (document.name.equals(filePart.getFilename())
-									&& document.size == filePart.getFile().length()) {
-								documentWillDelete.remove(document);
-								continue;
-							}
-						}
-						Document doc = new Document(user, filePart.getFile());
-						doc.name = filePart.getFilename();
-						jpaApi.em().persist(doc);
-					}
-
+				
+				List<Document> documentWillDelete = user.documents;
+				if(documentWillDelete != null && documentWillDelete.size() > 0){
 					for (Document d : documentWillDelete) {
 						d.delete();
 						jpaApi.em().remove(d);
 					}
-				} else {
-					for (FilePart<File> filePart : fileParts) {
-						Document doc = new Document(user, filePart.getFile());
-						doc.name = filePart.getFilename();
-						jpaApi.em().persist(doc);
-					}
 				}
+					
+				for (FilePart<File> filePart : fileParts) {
+					Document doc = new Document(user, filePart.getFile());
+					doc.name = filePart.getFilename();
+					jpaApi.em().persist(doc);
+				}
+				
+				CompletableFuture.supplyAsync(() 
+						-> MailerService.getInstance()
+						.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 			}
 		}
 
@@ -559,11 +637,11 @@ public class CompanyController extends Controller {
 			}
 		}
 
-		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.deleted=1 AND ac.id=cy.acc_id WHERE ac.acc_type=2";
-		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=2";
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.deleted=0 AND ac.id=cy.acc_id WHERE ac.acc_type=2";
+		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2";
 		if(!Utils.isBlank(companyIDCause)){
-			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=2 AND " + companyIDCause;
-			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=2 AND " + companyIDCause;
+			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2 AND " + companyIDCause;
+			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2 AND " + companyIDCause;
 		}
 
 		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
