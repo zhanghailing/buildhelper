@@ -29,10 +29,10 @@ public class AuthAction extends Action.Simple{
 			});
 			
 	        if (account != null) {
-	        	ctx.args.put("account", account);
-	        	return delegate.call(ctx);
+	        		ctx.args.put("account", account);
+	        		return delegate.call(ctx);
 	        }else{
-	        	return CompletableFuture.completedFuture(redirect(controllers.routes.AuthController.loginPage()));
+	        		return CompletableFuture.completedFuture(redirect(controllers.routes.AuthController.loginPage()));
 	        }
 		}
 	}

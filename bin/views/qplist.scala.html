@@ -47,6 +47,28 @@
 		            }
 	            });
 		    });
+		    
+		    $('#acc-block-btn').on('click', function(){
+		    		var qpAccountId = $(this).data('id');
+		    		var url = $(this).data('url');
+		    		$.ajax({
+	                url: url,
+	                type: "POST",
+	                data: {
+	                		qpAccountId:qpAccountId
+	                },
+	                success: function(response, status) {
+		                	var data = $.parseJSON(JSON.stringify(response));
+		                	if(data.code != 0){
+		                		showAlertToast(data.message, "alert-danger");
+		                	}else{
+		                		window.location.href = "@routes.CompanyController.qpList(0)";
+		                	}
+		            }
+	            });
+		    });
+		    
+		    acc-delete-btn
 	   	});
 	</script>
 	<div class="dash-detail-header">
@@ -101,7 +123,7 @@
 						<td>
 							<a class="action-btn" href="@routes.CompanyController.createQPAccount(qpAccounts(index).id)">Edit</a>
 							<a id="acc-block-btn" class="action-btn" data-id="@qpAccounts(index).id" data-url="@if(qpAccounts(index).blocked){@routes.AuthController.unBlockQPAccount()}else{@routes.AuthController.blockQPAccount()}">@if(qpAccounts(index).blocked){Unblock}else{Block}</a>
-							<a href="" class="action-btn">Delete</a>
+							<a id="acc-delete-btn" class="action-btn">Delete</a>
 						</td>
 			        </tr>
 				}

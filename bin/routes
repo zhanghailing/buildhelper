@@ -28,6 +28,7 @@ GET 	/create/qp/account				controllers.CompanyController.createQPAccount(qpAccou
 POST	/save/qp/account				controllers.CompanyController.saveQPAccount()
 POST	/block/qp/account				controllers.AuthController.blockQPAccount()
 POST	/unblock/qp/account				controllers.AuthController.unBlockQPAccount()
+POST	/delete/account				controllers.AuthController.deleteAccount()
 GET 	/create/inspector/account		controllers.CompanyController.createInspectorAccount(inspectorAccountId: Long ?= 0)
 POST	/save/inspector/account			controllers.CompanyController.saveInspectorAccount()
 GET 	/inspectors						controllers.CompanyController.inspectors(offset: Integer ?= 0)

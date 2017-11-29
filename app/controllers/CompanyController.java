@@ -404,11 +404,11 @@ public class CompanyController extends Controller {
 			}
 		}
 
-		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3";
-		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3";
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3";
+		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3";
 		if(!Utils.isBlank(companyIDCause)){
-			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3 AND " + companyIDCause;
-			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=3 AND " + companyIDCause;
+			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3 AND " + companyIDCause;
+			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=3 AND " + companyIDCause;
 		}
 		
 		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
@@ -559,11 +559,11 @@ public class CompanyController extends Controller {
 			}
 		}
 
-		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2";
-		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2";
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.deleted=1 AND ac.id=cy.acc_id WHERE ac.acc_type=2";
+		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=2";
 		if(!Utils.isBlank(companyIDCause)){
-			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2 AND " + companyIDCause;
-			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.acc_type=2 AND " + companyIDCause;
+			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=2 AND " + companyIDCause;
+			sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=1 AND ac.acc_type=2 AND " + companyIDCause;
 		}
 
 		int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();

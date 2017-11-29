@@ -70,6 +70,8 @@ public class Account{
 	
 	public boolean blocked;
 	
+	public boolean deleted;
+	
 	public Account(){}
 	
 	public Account(String email, String password){
@@ -79,16 +81,16 @@ public class Account{
 		this.creationDateTime = new Date();
 		this.token = Utils.genernateAcessToken(this.creationDateTime, this.email);
 		this.blocked = false;
+		this.deleted = false;
 	}
 	
 	public static Account findByToken(String token){
-		Account account = null;
 		try{
-			account = JPA.em().createQuery("from Account ac where ac.token = :token", Account.class)
+			Account account = JPA.em().createQuery("from Account ac where ac.token = :token", Account.class)
 					.setParameter("token", token).getSingleResult();
+			return account;
 		}catch(NoResultException e){
-			e.printStackTrace();
+			return null;
 		}
-		return account;
 	}
 }

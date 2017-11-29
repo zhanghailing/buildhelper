@@ -158,4 +158,24 @@ public class AuthController extends Controller{
 		jpaApi.em().persist(qpAccount);
 		return ok(Json.toJson(responseData));
 	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result deleteAccount(){
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String accountId = requestData.get("accountId");
+		
+		Account account = jpaApi.em().find(Account.class, Long.parseLong(accountId));
+		if(account == null) {
+			responseData.code = 4000;
+			responseData.message  = "Account doesn't exist.";
+		}
+		
+		account.deleted = true;
+		jpaApi.em().persist(account);
+		return ok(Json.toJson(responseData));
+	}
+	
 }
