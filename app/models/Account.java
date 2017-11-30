@@ -66,6 +66,7 @@ public class Account{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id")
+	@JsonIgnore
 	public Company company;
 	
 	public boolean blocked;

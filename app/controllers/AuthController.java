@@ -52,7 +52,8 @@ public class AuthController extends Controller{
 		String password = requestData.get("password");
 		
 		TypedQuery<Account> query = JPA.em().createQuery("from Account ac where ac.email = :email", Account.class)
-	            .setParameter("email", email);
+	            .setParameter("email", email)
+	            .setParameter("deleted", false);
 		try{
 			Account account = query.getSingleResult();
 			
@@ -60,8 +61,18 @@ public class AuthController extends Controller{
 				responseData.message = "The passowrd is incorrect.";
 				responseData.code = 4000;
 			}else{
-				session(AuthAction.LOGGED_KEY, account.token);
-				responseData.data = account;
+				if(account.deleted) {
+					responseData.message = "Your account was deleted.";
+					responseData.code = 4000;
+				}else {
+					if(account.blocked) {
+						responseData.message = "Your account was blocked.";
+						responseData.code = 4000;
+					}else {
+						session(AuthAction.LOGGED_KEY, account.token);
+						responseData.data = account;
+					}
+				}
 			}
 		}catch(NoResultException e){
 			responseData.message = "Account does not exist.";

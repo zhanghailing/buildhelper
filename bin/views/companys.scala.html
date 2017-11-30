@@ -62,7 +62,10 @@
 						<td>@companys(index).address</td>
 						<td>
 							<a class="action-btn" href="@routes.CompanyController.createCompany(companys(index).id)">Edit</a>
-							<a class="action-btn" data-toggle="modal" data-target="#set-admin-model" data-id="@companys(index).id">Admin</a>
+							<a class="action-btn" data-toggle="modal" data-target="#set-admin-model" 
+								data-id="@companys(index).id" 
+								data-email="@if(companys(index).account != null){@companys(index).account.email}"
+								data-password="@if(companys(index).account != null){@companys(index).account.password}>Admin</a>
 						</td> 
 			        </tr>
 				}

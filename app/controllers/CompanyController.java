@@ -62,9 +62,12 @@ public class CompanyController extends Controller {
 		}
 		
 		try{
-			cy = (Company) jpaApi.em()
+			List<Company> companys = jpaApi.em()
 				.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
-				.setParameter("accId", account.id).getSingleResult();
+				.setParameter("accId", account.id).getResultList();
+			if(companys.size() > 0) {
+				cy = companys.get(0);
+			}
 		}catch(NoResultException e){
 			responseData.code = 4000;
 			responseData.message = "Company doesn't exist.";
@@ -92,11 +95,12 @@ public class CompanyController extends Controller {
 			responseData.code = 4000;
 			responseData.message = "Company doesn't exist.";
 		} else {
-			if (company.account != null) {
-				responseData.code = 4000;
-				responseData.message = "The company already assigned to an administrator.";
-			} else {
-				if (AuthController.notExists(email)) {
+			if (AuthController.notExists(email)) {
+				if(company.account != null) {
+					company.account.email = email;
+					company.account.password = password;
+					jpaApi.em().persist(company.account);
+				}else {
 					Account account = new Account(email, password);
 					account.accType = AccountType.ADMIN;
 					jpaApi.em().persist(account);
@@ -107,10 +111,10 @@ public class CompanyController extends Controller {
 					CompletableFuture.supplyAsync(() 
 							-> MailerService.getInstance()
 							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
-				} else {
-					responseData.code = 4000;
-					responseData.message = "The email already exist.";
 				}
+			} else {
+				responseData.code = 4000;
+				responseData.message = "The email already exist.";
 			}
 		}
 
@@ -400,65 +404,73 @@ public class CompanyController extends Controller {
 			if (!Utils.isBlank(qpAccountId)) {
 				qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
 			} else {
-				qpAccount = new Account(email, password);
-				qpAccount.accType = AccountType.QP;
+				if(AuthController.notExists(email)) {
+					qpAccount = new Account(email, password);
+					qpAccount.accType = AccountType.QP;
+				}else {
+					responseData.code = 4000;
+					responseData.message = "Account already exists.";
+				}
 			}
+			
+			if(qpAccount != null) {
+				qpAccount.email = email;
+				qpAccount.password = password;
 
-			qpAccount.email = email;
-			qpAccount.password = password;
+				Company company = (Company) jpaApi.em()
+						.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
+						.setParameter("accId", account.id).getSingleResult();
 
-			Company company = (Company) jpaApi.em()
-					.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
-					.setParameter("accId", account.id).getSingleResult();
-
-			if (company == null) {
-				responseData.code = 4000;
-				responseData.message = "The account don't have company.";
-			} else {
-				qpAccount.company = company;
-				jpaApi.em().persist(qpAccount);
-
-				User user = null;
-				if (qpAccount.user != null) {
-					user = qpAccount.user;
+				if (company == null) {
+					responseData.code = 4000;
+					responseData.message = "The account don't have company.";
 				} else {
-					user = new User(qpAccount);
-				}
-				user.name = name;
-				user.alterEmail1 = alerEmail1;
-				user.alterEmail2 = alerEmail2;
-				user.officePhone = officePhone;
-				user.mobile = mobile;
-				user.isCivil = isCivil.equals("1") ? true : false;
-				user.isQECP = isQECP.equals("1") ? true : false;
-				user.isGeotechnical = isGeo.equals("1") ? true : false;
-				user.isElectric = isElectric.equals("1") ? true : false;
-				user.isMechanical = isMechnical.equals("1") ? true : false;
-				user.peNo = peNo;
-				user.qecpNo = qecpNo;
-				jpaApi.em().persist(user);
-				
-				MultipartFormData<File> body = request().body().asMultipartFormData();
-				List<FilePart<File>> fileParts = body.getFiles();
+					qpAccount.company = company;
+					jpaApi.em().persist(qpAccount);
 
-				List<Document> documentWillDelete = user.documents;
-				if(documentWillDelete != null && documentWillDelete.size() > 0){
-					for (Document d : documentWillDelete) {
-						d.delete();
-						jpaApi.em().remove(d);
+					User user = null;
+					if (qpAccount.user != null) {
+						user = qpAccount.user;
+					} else {
+						user = new User(qpAccount);
 					}
-				}
+					user.name = name;
+					user.alterEmail1 = alerEmail1;
+					user.alterEmail2 = alerEmail2;
+					user.officePhone = officePhone;
+					user.mobile = mobile;
+					user.isCivil = isCivil.equals("1") ? true : false;
+					user.isQECP = isQECP.equals("1") ? true : false;
+					user.isGeotechnical = isGeo.equals("1") ? true : false;
+					user.isElectric = isElectric.equals("1") ? true : false;
+					user.isMechanical = isMechnical.equals("1") ? true : false;
+					user.peNo = peNo;
+					user.qecpNo = qecpNo;
+					jpaApi.em().persist(user);
 					
-				for (FilePart<File> filePart : fileParts) {
-					Document doc = new Document(user, filePart.getFile());
-					doc.name = filePart.getFilename();
-					jpaApi.em().persist(doc);
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					List<FilePart<File>> fileParts = body.getFiles();
+
+					List<Document> documentWillDelete = user.documents;
+					if(documentWillDelete != null && documentWillDelete.size() > 0){
+						for (Document d : documentWillDelete) {
+							d.delete();
+							jpaApi.em().remove(d);
+						}
+					}
+						
+					for (FilePart<File> filePart : fileParts) {
+						Document doc = new Document(user, filePart.getFile());
+						doc.name = filePart.getFilename();
+						jpaApi.em().persist(doc);
+					}
+					
+					CompletableFuture.supplyAsync(() 
+							-> MailerService.getInstance()
+							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 				}
-				
-				CompletableFuture.supplyAsync(() 
-						-> MailerService.getInstance()
-						.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 			}
+
 		}
 
 		if (responseData.code != 0) {
@@ -554,59 +566,67 @@ public class CompanyController extends Controller {
 			if (!Utils.isBlank(inspectorAccountId)) {
 				inspectorAccount = jpaApi.em().find(Account.class, Long.parseLong(inspectorAccountId));
 			} else {
-				inspectorAccount = new Account(email, password);
-				inspectorAccount.accType = AccountType.INSPECTOR;
+				if(AuthController.notExists(email)) {
+					inspectorAccount = new Account(email, password);
+					inspectorAccount.accType = AccountType.INSPECTOR;
+				}else {
+					responseData.code = 4000;
+					responseData.message = "Email already exists.";
+				}
 			}
+			
+			if(inspectorAccount != null) {
+				inspectorAccount.email = email;
+				inspectorAccount.password = password;
 
-			inspectorAccount.email = email;
-			inspectorAccount.password = password;
+				Company company = (Company) jpaApi.em()
+						.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
+						.setParameter("accId", account.id).getSingleResult();
 
-			Company company = (Company) jpaApi.em()
-					.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
-					.setParameter("accId", account.id).getSingleResult();
-
-			if (company == null) {
-				responseData.code = 4000;
-				responseData.message = "The account don't have company.";
-			} else {
-				inspectorAccount.company = company;
-				jpaApi.em().persist(inspectorAccount);
-
-				User user = null;
-				if (inspectorAccount.user != null) {
-					user = inspectorAccount.user;
+				if (company == null) {
+					responseData.code = 4000;
+					responseData.message = "The account don't have company.";
 				} else {
-					user = new User(inspectorAccount);
-				}
-				user.name = name;
-				user.alterEmail1 = alerEmail1;
-				user.alterEmail2 = alerEmail2;
-				user.officePhone = officePhone;
-				user.mobile = mobile;
-				user.designation = designation;
-				jpaApi.em().persist(user);
+					inspectorAccount.company = company;
+					jpaApi.em().persist(inspectorAccount);
 
-				MultipartFormData<File> body = request().body().asMultipartFormData();
-				List<FilePart<File>> fileParts = body.getFiles();
-				
-				List<Document> documentWillDelete = user.documents;
-				if(documentWillDelete != null && documentWillDelete.size() > 0){
-					for (Document d : documentWillDelete) {
-						d.delete();
-						jpaApi.em().remove(d);
+					User user = null;
+					if (inspectorAccount.user != null) {
+						user = inspectorAccount.user;
+					} else {
+						user = new User(inspectorAccount);
 					}
-				}
+					user.name = name;
+					user.alterEmail1 = alerEmail1;
+					user.alterEmail2 = alerEmail2;
+					user.officePhone = officePhone;
+					user.mobile = mobile;
+					user.designation = designation;
+					jpaApi.em().persist(user);
+
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					List<FilePart<File>> fileParts = body.getFiles();
 					
-				for (FilePart<File> filePart : fileParts) {
-					Document doc = new Document(user, filePart.getFile());
-					doc.name = filePart.getFilename();
-					jpaApi.em().persist(doc);
+					List<Document> documentWillDelete = user.documents;
+					if(documentWillDelete != null && documentWillDelete.size() > 0){
+						for (Document d : documentWillDelete) {
+							d.delete();
+							jpaApi.em().remove(d);
+						}
+					}
+						
+					for (FilePart<File> filePart : fileParts) {
+						Document doc = new Document(user, filePart.getFile());
+						doc.name = filePart.getFilename();
+						jpaApi.em().persist(doc);
+					}
+					
+					CompletableFuture.supplyAsync(() 
+							-> MailerService.getInstance()
+							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 				}
-				
-				CompletableFuture.supplyAsync(() 
-						-> MailerService.getInstance()
-						.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 			}
+
 		}
 
 		if (responseData.code != 0) {
@@ -637,7 +657,7 @@ public class CompanyController extends Controller {
 			}
 		}
 
-		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.deleted=0 AND ac.id=cy.acc_id WHERE ac.acc_type=2";
+		String countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2";
 		String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2";
 		if(!Utils.isBlank(companyIDCause)){
 			countSql = "SELECT COUNT(*) FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2 AND " + companyIDCause;
@@ -654,6 +674,47 @@ public class CompanyController extends Controller {
 				.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 
 		return ok(inspectors.render(inpectors, pageIndex, totalAmount));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result manageEngineerOfCompany() {
+		ResponseData responseData = new ResponseData();
+
+		List<Account> engineers = null;
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			Account dbAcc = jpaApi.em().find(Account.class, account.id);
+			if(dbAcc == null) {
+				responseData.code = 4000;
+				responseData.message = "Accouunt doesn't exist.";
+			}else {
+				String companyIDCause = "";
+				for (int i = 0; i < dbAcc.companys.size(); i++) {
+					if (i == dbAcc.companys.size() - 1) {
+						companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
+					} else {
+						companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
+					}
+				}
+				
+				String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2";
+				if(!Utils.isBlank(companyIDCause)){
+					sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2 AND " + companyIDCause;
+				}
+				
+				engineers = jpaApi.em().createNativeQuery(sql,Account.class).getResultList();
+			}
+		}
+		
+		if(responseData.code != 0) {
+			return notFound(errorpage.render(responseData));
+		}
+		
+		return ok(managengineer.render(engineers));
 	}
 
 }

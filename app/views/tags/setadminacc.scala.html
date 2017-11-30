@@ -1,3 +1,4 @@
+
 <div class="modal fade" id="set-admin-model" role="dialog">
 	<div class="modal-dialog" role="document">
 	    <div class="modal-content">
@@ -30,7 +31,11 @@
 	$(function(){
 		$('#set-admin-model').on('show.bs.modal', function(e) {
 	        var id = $(e.relatedTarget).data('id');
+	        var email = $(e.relatedTarget).data('email');
+	        var password = $(e.relatedTarget).data('password');
 	        $('input[name=companyId]').val(id);
+	        $('input[name=email]').val(email);
+	        $('input[name=password]').val(password);
 	    });
 		
 		$("#admin-form").validate({
