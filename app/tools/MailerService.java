@@ -32,7 +32,7 @@ public class MailerService {
 	    props.put("mail.smtp.auth", "true");
 	    props.put("mail.smtp.EnableSSL.enable", "true");
 	    props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-	    props.setProperty("mail.smtp.socketFactory.fallbac k", "false");
+	    props.setProperty("mail.smtp.socketFactory.fallback", "false");
 	    props.setProperty("mail.smtp.port", "465");
 	    props.setProperty("mail.smtp.socketFactory.port", "465");
 	    

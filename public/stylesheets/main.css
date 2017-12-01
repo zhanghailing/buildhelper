@@ -538,7 +538,7 @@ ul.sidebar-menu li a.active > span{
 	width: 70%;
 }
 
-#company-form input[type=file]{
+.uploader input[type=file]{
 	position: absolute;
     top: 0;
     left: 0;
@@ -747,6 +747,11 @@ input.file-input{
 	height: 34px;
 	float: right;
 }
+
+#logo-uploader-wrapper i{
+	top: 40px;
+}
+
 
 /** Company End **/
 

@@ -273,44 +273,32 @@ public class CompanyController extends Controller {
 	@Transactional
 	public Result uploadLogo(){
 		ResponseData responseData = new ResponseData();
-//		MultipartFormData<File> body = request().body().asMultipartFormData();
-//	    FilePart<File> avatarFile = body.getFile("logoImage");
-//	    try {
-//		    if(avatarFile != null){
-//		    	try{
-//		    		Account account = (Account) ctx().args.get("account");
-//		    		
-//		    		TypedQuery<User> query = jpaApi.em()
-//							.createQuery("from User u where u.accountId = :accountId", User.class)
-//							.setParameter("accountId", account.id);
-//					User user = query.getSingleResult();
-//					
-//					if(user.avatars != null){
-//						for(Avatar avatar : user.avatars){
-//							avatar.deleteThumbnail();
-//							avatar.delete();
-//							jpaApi.em().remove(avatar);
-//						}
-//					}
-//					
-//					Avatar avatar = new Avatar(user, avatarFile.getFile());
-//					avatar.name = avatarFile.getFilename();
-//					jpaApi.em().persist(avatar);
-//					responseData.data = avatar;
-//					
-//					return ok(Utils.toJson(ResponseData.class, responseData, "*.user"));
-//		    	}catch(NoResultException e){
-//		    		responseData.code = 4000;
-//					responseData.message = "User does not exist.";
-//		    	}
-//		    }else{
-//		    	responseData.message = "Image file cannot be empty.";
-//		    	responseData.code = 4000;
-//		    }
-//	    } catch (IOException e) {
-//	    	responseData.message = e.getLocalizedMessage();
-//	    	responseData.code = 4001;
-//		}		
+		try {
+			MultipartFormData<File> body = request().body().asMultipartFormData();
+		    FilePart<File> logoPart = body.getFile("logoImage");
+			if(logoPart != null){
+				DynamicForm requestData = formFactory.form().bindFromRequest();
+		    	long companyId = Long.parseLong(requestData.get("companyId"));
+		    	
+				Company company = jpaApi.em().find(Company.class, companyId);
+				if(company == null){
+					responseData.message = "The Company cannot be found.";
+					responseData.code = 4000;
+				}else{
+					if (company.logo != null) {
+						company.logo.deleteThumbnail();
+						company.logo.delete();
+						jpaApi.em().remove(company.logo);
+					}
+					Avatar logo = new Avatar(company, logoPart.getFile());
+					jpaApi.em().persist(logo);
+					responseData.data = logo;
+				}	
+			}
+		}catch (IOException e) {
+			responseData.message = e.getLocalizedMessage();
+			responseData.code = 4001;
+		}
 		return ok(Json.toJson(responseData));
 	}
 
@@ -375,113 +363,6 @@ public class CompanyController extends Controller {
 
 	@With(AuthAction.class)
 	@Transactional
-	public Result saveQPAccount() {
-		ResponseData responseData = new ResponseData();
-
-		Account account = (Account) ctx().args.get("account");
-		if (account.accType != AccountType.ADMIN) {
-			responseData.code = 4000;
-			responseData.message = "You do not have permission.";
-		} else {
-			DynamicForm requestData = formFactory.form().bindFromRequest();
-			String qpAccountId = requestData.get("qpAccountId");
-			String name = requestData.get("name");
-			String email = requestData.get("email");
-			String password = requestData.get("password");
-			String alerEmail1 = requestData.get("alerEmail1");
-			String alerEmail2 = requestData.get("alerEmail2");
-			String officePhone = requestData.get("officePhone");
-			String mobile = requestData.get("mobile");
-			String isCivil = Utils.isBlank(requestData.get("isCivil")) ? "0" : requestData.get("isCivil");
-			String isQECP = Utils.isBlank(requestData.get("isQECP")) ? "0" : requestData.get("isQECP");
-			String isGeo = Utils.isBlank(requestData.get("isGeo")) ? "0" : requestData.get("isGeo");
-			String isElectric = Utils.isBlank(requestData.get("isElectric")) ? "0" : requestData.get("isElectric");
-			String isMechnical = Utils.isBlank(requestData.get("isMechnical")) ? "0" : requestData.get("isMechnical");
-			String peNo = requestData.get("peNo");
-			String qecpNo = requestData.get("qecpNo");
-			
-			Account qpAccount = null;
-			if (!Utils.isBlank(qpAccountId)) {
-				qpAccount = jpaApi.em().find(Account.class, Long.parseLong(qpAccountId));
-			} else {
-				if(AuthController.notExists(email)) {
-					qpAccount = new Account(email, password);
-					qpAccount.accType = AccountType.QP;
-				}else {
-					responseData.code = 4000;
-					responseData.message = "Account already exists.";
-				}
-			}
-			
-			if(qpAccount != null) {
-				qpAccount.email = email;
-				qpAccount.password = password;
-
-				Company company = (Company) jpaApi.em()
-						.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
-						.setParameter("accId", account.id).getSingleResult();
-
-				if (company == null) {
-					responseData.code = 4000;
-					responseData.message = "The account don't have company.";
-				} else {
-					qpAccount.company = company;
-					jpaApi.em().persist(qpAccount);
-
-					User user = null;
-					if (qpAccount.user != null) {
-						user = qpAccount.user;
-					} else {
-						user = new User(qpAccount);
-					}
-					user.name = name;
-					user.alterEmail1 = alerEmail1;
-					user.alterEmail2 = alerEmail2;
-					user.officePhone = officePhone;
-					user.mobile = mobile;
-					user.isCivil = isCivil.equals("1") ? true : false;
-					user.isQECP = isQECP.equals("1") ? true : false;
-					user.isGeotechnical = isGeo.equals("1") ? true : false;
-					user.isElectric = isElectric.equals("1") ? true : false;
-					user.isMechanical = isMechnical.equals("1") ? true : false;
-					user.peNo = peNo;
-					user.qecpNo = qecpNo;
-					jpaApi.em().persist(user);
-					
-					MultipartFormData<File> body = request().body().asMultipartFormData();
-					List<FilePart<File>> fileParts = body.getFiles();
-
-					List<Document> documentWillDelete = user.documents;
-					if(documentWillDelete != null && documentWillDelete.size() > 0){
-						for (Document d : documentWillDelete) {
-							d.delete();
-							jpaApi.em().remove(d);
-						}
-					}
-						
-					for (FilePart<File> filePart : fileParts) {
-						Document doc = new Document(user, filePart.getFile());
-						doc.name = filePart.getFilename();
-						jpaApi.em().persist(doc);
-					}
-					
-					CompletableFuture.supplyAsync(() 
-							-> MailerService.getInstance()
-							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
-				}
-			}
-
-		}
-
-		if (responseData.code != 0) {
-			return notFound(errorpage.render(responseData));
-		}
-		
-		return redirect(routes.CompanyController.qpList(0));
-	}
-
-	@With(AuthAction.class)
-	@Transactional
 	public Result qpList(int offset) {
 		ResponseData responseData = new ResponseData();
 
@@ -539,101 +420,6 @@ public class CompanyController extends Controller {
 		}
 
 		return ok(createinspectoraccount.render(inspectorAccount));
-	}
-
-	@With(AuthAction.class)
-	@Transactional
-	public Result saveInspectorAccount() {
-		ResponseData responseData = new ResponseData();
-
-		Account account = (Account) ctx().args.get("account");
-		if (account.accType != AccountType.ADMIN) {
-			responseData.code = 4000;
-			responseData.message = "You do not have permission.";
-		} else {
-			DynamicForm requestData = formFactory.form().bindFromRequest();
-			String inspectorAccountId = requestData.get("inpectorAccountId");
-			String name = requestData.get("name");
-			String email = requestData.get("email");
-			String password = requestData.get("password");
-			String alerEmail1 = requestData.get("alerEmail1");
-			String alerEmail2 = requestData.get("alerEmail2");
-			String officePhone = requestData.get("officePhone");
-			String mobile = requestData.get("mobile");
-			String designation = requestData.get("designation");
-
-			Account inspectorAccount = null;
-			if (!Utils.isBlank(inspectorAccountId)) {
-				inspectorAccount = jpaApi.em().find(Account.class, Long.parseLong(inspectorAccountId));
-			} else {
-				if(AuthController.notExists(email)) {
-					inspectorAccount = new Account(email, password);
-					inspectorAccount.accType = AccountType.INSPECTOR;
-				}else {
-					responseData.code = 4000;
-					responseData.message = "Email already exists.";
-				}
-			}
-			
-			if(inspectorAccount != null) {
-				inspectorAccount.email = email;
-				inspectorAccount.password = password;
-
-				Company company = (Company) jpaApi.em()
-						.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
-						.setParameter("accId", account.id).getSingleResult();
-
-				if (company == null) {
-					responseData.code = 4000;
-					responseData.message = "The account don't have company.";
-				} else {
-					inspectorAccount.company = company;
-					jpaApi.em().persist(inspectorAccount);
-
-					User user = null;
-					if (inspectorAccount.user != null) {
-						user = inspectorAccount.user;
-					} else {
-						user = new User(inspectorAccount);
-					}
-					user.name = name;
-					user.alterEmail1 = alerEmail1;
-					user.alterEmail2 = alerEmail2;
-					user.officePhone = officePhone;
-					user.mobile = mobile;
-					user.designation = designation;
-					jpaApi.em().persist(user);
-
-					MultipartFormData<File> body = request().body().asMultipartFormData();
-					List<FilePart<File>> fileParts = body.getFiles();
-					
-					List<Document> documentWillDelete = user.documents;
-					if(documentWillDelete != null && documentWillDelete.size() > 0){
-						for (Document d : documentWillDelete) {
-							d.delete();
-							jpaApi.em().remove(d);
-						}
-					}
-						
-					for (FilePart<File> filePart : fileParts) {
-						Document doc = new Document(user, filePart.getFile());
-						doc.name = filePart.getFilename();
-						jpaApi.em().persist(doc);
-					}
-					
-					CompletableFuture.supplyAsync(() 
-							-> MailerService.getInstance()
-							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
-				}
-			}
-
-		}
-
-		if (responseData.code != 0) {
-			return notFound(errorpage.render(responseData));
-		}
-
-		return redirect(routes.CompanyController.inspectors(0));
 	}
 
 	@With(AuthAction.class)

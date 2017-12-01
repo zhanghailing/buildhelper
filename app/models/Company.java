@@ -56,6 +56,7 @@ public class Company {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "acc_id")
+	@JsonIgnore
 	public Account account;
 	
 	@OneToMany(mappedBy = "company")

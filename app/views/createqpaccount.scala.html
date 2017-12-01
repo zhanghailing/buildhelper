@@ -113,7 +113,7 @@
 	</div>
 	
 	<div class="wrap-step wrap-step-2" style="display: block;">
-		@helper.form(action = routes.CompanyController.saveQPAccount(), 'id-> "qp-account-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
+		@helper.form(action = routes.AuthController.saveQPAccount(), 'id-> "qp-account-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
 			<div class="mod-form__block">
 			   <div class="mod-form__block-content">
 				  <input type="hidden" name="qpAccountId" value="@if(qpAccount != null){@qpAccount.id}"/>
@@ -150,13 +150,12 @@
 					              <label for="password">@messages.at("password"):</label>
 					           </div>
 					           <div class="form-input">
-					           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(qpAccount != null){@qpAccount.password}">
+					           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(qpAccount != null){@qpAccount.password}" autocomplete="off">
 					         	</div>
 					        </div>
 			      		</td>
 			      	</tr>
 			      </table>
-			      
 			      
 			      <p class="tb-header">@messages.at("personal_info")</p>
 			      <table class="tb-form">
@@ -215,31 +214,31 @@
 					
 					<div class="form-input">
 						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isCivil){selected}}else{selected}">
-						   	<input type="radio" name="isCivil" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isCivil){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isCivil){checked}}>
+						   	<input type="radio" name="isCivil" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isCivil){1}else{0}}else{1}" @if(qpAccount != null){@if(qpAccount.user.isCivil){checked}}else{checked}>
 							<a class="radio-box">Civil
 								<i class="icon-check"></i>
 							</a>
 						</label>
 						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isQECP){selected}}">
-						   	<input type="radio" name="isQECP" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isQECP){1}else{0}}else{0}">
+						   	<input type="radio" name="isQECP" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isQECP){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isQECP){checked}}>
 							<a class="radio-box">QECP
 								<i class="icon-check"></i>
 							</a>
 						</label>
 						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){selected}}">
-						   	<input type="radio" name="isGeo" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isGeotechnical){1}else{0}}else{0}">
+						   	<input type="radio" name="isGeo" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isGeotechnical){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){checked}}>
 							<a class="radio-box">Geotechnical
 								<i class="icon-check"></i>
 							</a>
 						</label>
 						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isElectric){selected}}">
-						   	<input type="radio" name="isElectric" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isElectric){1}else{0}}else{0}">
+						   	<input type="radio" name="isElectric" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isElectric){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isElectric){checked}}>
 							<a class="radio-box">Electrical
 								<i class="icon-check"></i>
 							</a>
 						</label>
 						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isMechanical){selected}}">
-						   	<input type="radio" name="isMechnical" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isMechanical){1}else{0}}else{0}">
+						   	<input type="radio" name="isMechnical" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isMechanical){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isMechanical){checked}}>
 							<a class="radio-box">Mechanical
 								<i class="icon-check"></i>
 							</a>

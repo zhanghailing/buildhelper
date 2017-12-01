@@ -69,9 +69,14 @@ public class Account{
 	@JsonIgnore
 	public Company company;
 	
+	@Column(columnDefinition = "boolean default false")
 	public boolean blocked;
 	
+	@Column(columnDefinition = "boolean default false")
 	public boolean deleted;
+	
+	@Column(columnDefinition = "boolean default true")
+	public boolean active;
 	
 	public Account(){}
 	
@@ -81,8 +86,6 @@ public class Account{
 		this.password = password;
 		this.creationDateTime = new Date();
 		this.token = Utils.genernateAcessToken(this.creationDateTime, this.email);
-		this.blocked = false;
-		this.deleted = false;
 	}
 	
 	public static Account findByToken(String token){

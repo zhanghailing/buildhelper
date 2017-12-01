@@ -112,10 +112,13 @@
 		                data.submit();
 		        	}
 		        },
+		        formData: {
+		        	companyId: @company.id
+	         	},
 		        done: function (e, data) {
 		        	var uploaderEle = $(this).parents('.uploader');
 		        	var uploadWrap = uploaderEle.find('.upload-wrap');
-		        	var avatarLink = uploaderEle.find('#avatar-link');
+		        	var avatarLink = uploaderEle.find('#logo-link');
 		        	var browserLink = uploaderEle.find('.browse-btn');
 		        	var spinner = uploaderEle.find('.glyphicon-spinner');
 		        	
@@ -152,13 +155,6 @@
 				        }
 				    }>
 				</a>
-				<div class="upload-wrap">
-					<i class="fa fa-picture-o" aria-hidden="true"></i>
-					<div class="upload-text">
-						<p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
-					</div>
-					<input id="lh-uploader" class="file-input" type="file" name="letterhead"/>
-				</div>
 			</div>
 		</div>
 		

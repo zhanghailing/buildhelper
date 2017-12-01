@@ -81,7 +81,7 @@
 	</div>
 	
 	<div class="wrap-step wrap-step-2" style="display: block;">
-		@helper.form(action = routes.CompanyController.saveInspectorAccount(), 'id-> "inspector-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
+		@helper.form(action = routes.AuthController.saveInspectorAccount(), 'id-> "inspector-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
 			<div class="mod-form__block">
 			   <div class="mod-form__block-content">
 				  <input type="hidden" name="qpAccountId" value="@if(inspectorAccount != null){@inspectorAccount.id}"/>
@@ -118,7 +118,7 @@
 					              <label for="password">@messages.at("password"):</label>
 					           </div>
 					           <div class="form-input">
-					           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(inspectorAccount != null){@inspectorAccount.password}">
+					           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(inspectorAccount != null){@inspectorAccount.password}" autocomplete="off">
 					         	</div>
 					        </div>
 			      		</td>

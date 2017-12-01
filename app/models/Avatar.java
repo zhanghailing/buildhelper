@@ -30,6 +30,7 @@ public class Avatar extends Image{
 
 	@OneToOne
 	@JoinColumn(name = "company_id")
+	@JsonIgnore
 	public Company company;
 	
 	@Column(name="thumbnail_uuid")
