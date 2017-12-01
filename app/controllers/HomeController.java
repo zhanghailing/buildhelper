@@ -32,7 +32,7 @@ import play.i18n.Messages;
 import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.*;
-import tools.MailerService;
+import services.MailerService;
 import tools.Utils;
 import views.html.*;
 

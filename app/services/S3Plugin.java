@@ -55,10 +55,10 @@ public class S3Plugin {
     }
     
     public static void createFolder(String bucketName, String folderName, AmazonS3 client) {
-    	ObjectMetadata metadata = new ObjectMetadata();
-    	metadata.setContentLength(0);
-    	InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
-    	PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,folderName, emptyContent, metadata);
-    	client.putObject(putObjectRequest);
+	    	ObjectMetadata metadata = new ObjectMetadata();
+	    	metadata.setContentLength(0);
+	    	InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
+	    	PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,folderName, emptyContent, metadata);
+	    	client.putObject(putObjectRequest);
     }
 }

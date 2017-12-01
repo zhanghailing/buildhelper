@@ -34,7 +34,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
-import tools.MailerService;
+import services.MailerService;
 import tools.Utils;
 import views.html.*;
 
@@ -47,7 +47,7 @@ public class AuthController extends Controller{
 	
 	
 	@Transactional
-	public Result loginPage(){		
+	public Result loginPage(){
 		return ok(loginpage.render());
 	}
 	
@@ -212,8 +212,7 @@ public class AuthController extends Controller{
 						}
 						
 						CompletableFuture.supplyAsync(() 
-								-> MailerService.getInstance()
-								.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
+								-> MailerService.getInstance().send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 					}else{
 						responseData.code = 4000;
 						responseData.message = "The mobile already exists.";
@@ -313,8 +312,7 @@ public class AuthController extends Controller{
 						}
 						
 						CompletableFuture.supplyAsync(() 
-								-> MailerService.getInstance()
-								.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
+								-> MailerService.getInstance().send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
 					}else{
 						responseData.code = 4000;
 						responseData.message = "The mobile already exists.";

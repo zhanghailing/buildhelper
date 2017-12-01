@@ -2,6 +2,7 @@ import com.google.inject.AbstractModule;
 
 import services.AtomicCounter;
 import services.Counter;
+import services.MailerService;
 import services.S3Plugin;
 import services.StartingJobs;
 
@@ -22,6 +23,7 @@ public class Module extends AbstractModule {
         bind(Counter.class).to(AtomicCounter.class);
         bind(StartingJobs.class).asEagerSingleton();
         bind(S3Plugin.class).asEagerSingleton();
+        bind(MailerService.class).asEagerSingleton();
     }
 
 }

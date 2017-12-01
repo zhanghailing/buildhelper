@@ -10,6 +10,7 @@ import play.db.jpa.JPAApi;
 import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Result;
+import services.MailerService;
 import tools.Utils;
 
 public class AuthAction extends Action.Simple{
@@ -20,6 +21,8 @@ public class AuthAction extends Action.Simple{
 	@Override
 	public CompletionStage<Result> call(Context ctx) {
 		String token = ctx.session().get(LOGGED_KEY);
+		
+		MailerService.getInstance().send("changming@orion.co.com", "lalala", "success");
 		
 		if(Utils.isBlank(token)){
 			return CompletableFuture.completedFuture(redirect(controllers.routes.AuthController.loginPage()));

@@ -24,6 +24,7 @@ import models.User;
 import play.Application;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
+import services.MailerService;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.db.jpa.JPAApi;
@@ -34,7 +35,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import tools.Constants;
-import tools.MailerService;
 import tools.Utils;
 import views.html.*;
 
