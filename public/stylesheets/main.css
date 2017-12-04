@@ -55,6 +55,14 @@ p.empty{
 	color: #777;
 }
 
+p.center{
+	text-align: center;
+}
+
+p.bold{
+	font-weight: 600;
+}
+
 @-webkit-keyframes autofill {
     to {
         color: #999;
@@ -754,6 +762,76 @@ input.file-input{
 
 
 /** Company End **/
+
+/** Add Engineer Start **/
+
+.eng-content{
+	width: 100%;
+	min-height: 100%;
+}
+
+.left-body{
+	position: absolute;
+    width: 40%;
+    padding: 0 30px;
+    min-height: 100%;
+    overflow: hidden;
+    outline: none;
+    z-index: 100;
+}
+
+.right-body{
+    width: 100%;
+    height: 100%;
+}
+
+.right-detail{
+	margin-left: 45%;
+    min-height: 100%;
+    padding-top: 93px;
+}
+
+.search-wrapper{
+	position: relative;
+	margin-bottom: 30px;
+}
+
+.search-bar-title{
+	color: #777;
+}
+
+.search-btn{
+    position: absolute;
+    right: 0;
+    top: 25px;
+}
+
+.eng-list{
+	padding:10px;
+   	border: 1px solid #ccc;
+   	max-height: 400px;
+   	overflow-y: scroll;
+}
+
+.eng-list > li{
+	height: 72px;
+	padding: 5px 0;
+	position: relative;
+	border-bottom: 1px solid #ccc;
+}
+
+.eng-list button{
+	position: absolute;
+	right: 0;
+	top: 19.5px;
+}
+
+.eng-info .spinner{
+	right: 18px;
+    top: 30px;
+}
+
+/** Add Engineer End **/
 
 /** Checkbox Start **/
 .chx-container {

@@ -40,6 +40,14 @@
 		                			window.location.href = "@routes.CompanyController.companys()";
 		                		}else if(data.data.accType === "ADMIN"){
 		                			window.location.href = "@routes.CompanyController.company()";
+		                		}else if(data.data.accType === "QP"){
+		                			if(data.data.isEngineer){
+		                				window.location.href = "@routes.ProjectController.projectAdmin()";
+		                			}
+		                		}else if(data.data.accType === "INSPECTOR"){
+									if(data.data.isEngineer){
+										window.location.href = "@routes.ProjectController.projectAdmin()";
+		                			}	
 		                		}
 		                	}
 		                	spinner.remove();

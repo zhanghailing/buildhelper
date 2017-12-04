@@ -52,6 +52,16 @@ qp_company_info=QP公司信息
 customize_letterhead=自定义信笺
 create_company=创建新公司
 save=保存
+active_auth_error=验证失败
+account_not_found=账号不存在
+cancel=取消
+delete=删除
+delete_acc_alert=注意! 你确定要删除这个账号?
+confirmation=请确认你的选择
+manage_project_engineer=项目工程师管理
+add_project_engineer=添加项目工程师
+enter_qp_inspector_name=请输入QP/Inspector的名字 ...
+create_project=创建项目
 
 error.file_size=上传的文件不可以超过2MB!
 

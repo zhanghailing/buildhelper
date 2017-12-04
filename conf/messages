@@ -52,6 +52,16 @@ qp_company_info=QP Company Information
 customize_letterhead=Customize LetterHead
 create_company=Create Company
 save=Save
+active_auth_error=Authentication failed
+account_not_found=Account cannot be found.
+cancel=Cancel
+delete=Delete
+delete_acc_alert=Warning! Are you sure to delete this account?
+confirmation=Confirmation
+manage_project_engineer=Manage Project Engineer
+add_project_engineer=Add Project Engineer
+create_project=Create Project
+
 
 error.file_size=File size cannot be more than 2MB!
 
