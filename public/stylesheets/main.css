@@ -833,6 +833,23 @@ input.file-input{
 
 /** Add Engineer End **/
 
+/** Create Project Start **/
+
+.pro-sec{
+	margin: 30px;
+}
+
+.full-width{
+	width: 100%;
+}
+
+.date-group{
+	width: 46%;
+	display: inline-block;
+}
+
+/** Create Project End **/
+
 /** Checkbox Start **/
 .chx-container {
     display: block;

@@ -62,6 +62,9 @@ manage_project_engineer=项目工程师管理
 add_project_engineer=添加项目工程师
 enter_qp_inspector_name=请输入QP/Inspector的名字 ...
 create_project=创建项目
+project_detail=项目详情
+project_title=项目标题
+placeholder_project_title=请输入项目的标题
 
 error.file_size=上传的文件不可以超过2MB!
 

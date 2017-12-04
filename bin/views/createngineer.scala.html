@@ -199,26 +199,28 @@
 		<div class="right-body">
 			<div class="right-detail">
 				<ul class="eng-list @if(engineers != null){@if(engineers.size == 0){hidden}}">
-					@for(index <- 0 until engineers.size){
-						<li data-id="@engineers(index).accountId">
-							<div class="eng-info">
-								<p class="name bold">@if(engineers(index).account.user != null){@engineers(index).account.user.name}</p>
-								<p>
-									@if(engineers(index).account.user != null){
-										@if(engineers(index).account.accType == 3){
-											PE No.: @engineers(index).account.user.peNo
-										}else{
-											@if(engineers(index).account.user.designation != null){
-												@engineers(index).account.user.designation
+					@if(engineers != null){
+						@for(index <- 0 until engineers.size){
+							<li data-id="@engineers(index).accountId">
+								<div class="eng-info">
+									<p class="name bold">@if(engineers(index).account.user != null){@engineers(index).account.user.name}</p>
+									<p>
+										@if(engineers(index).account.user != null){
+											@if(engineers(index).account.accType == 3){
+												PE No.: @engineers(index).account.user.peNo
 											}else{
-												Not Set
+												@if(engineers(index).account.user.designation != null){
+													@engineers(index).account.user.designation
+												}else{
+													Not Set
+												}
 											}
 										}
-									}
-								</p>
-							</div>
-							<button class="btn btn-primary remove-btn">Remove</button>
-						</li>
+									</p>
+								</div>
+								<button class="btn btn-primary remove-btn">Remove</button>
+							</li>
+						}
 					}
 				</ul>
 			</div>

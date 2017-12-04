@@ -61,6 +61,9 @@ confirmation=Confirmation
 manage_project_engineer=Manage Project Engineer
 add_project_engineer=Add Project Engineer
 create_project=Create Project
+project_detail=Project Detail
+project_title=Project Title
+placeholder_project_title=Fill in project title
 
 
 error.file_size=File size cannot be more than 2MB!

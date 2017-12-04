@@ -3,7 +3,6 @@ package services;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-import javax.inject.Inject;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -11,7 +10,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import play.Application;
 
 public class MailerService {
 	private static final String FROM = "niu2yue@gmail.com";
