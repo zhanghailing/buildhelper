@@ -20,6 +20,7 @@ POST	/save/inspector/account			controllers.AuthController.saveInspectorAccount()
 POST	/block/account					controllers.AuthController.blockAccount()
 POST	/unblock/account				controllers.AuthController.unBlockAccount()
 POST	/delete/account					controllers.AuthController.deleteAccount()
+GET		/account/active					controllers.AuthController.activeAccount(token: String ?= "")
 
 GET   	/companys           			controllers.CompanyController.companys(offset: Integer ?= 0)
 GET 	/create/company			   		controllers.CompanyController.createCompany(companyId: Long ?= 0)
@@ -34,5 +35,13 @@ GET 	/inspectors						controllers.CompanyController.inspectors(offset: Integer ?
 GET 	/company						controllers.CompanyController.company()
 POST 	/save/company/basic				controllers.CompanyController.saveCompanyBasic()
 POST 	/upload/company/logo			controllers.CompanyController.uploadLogo()
-GET		/engineers						controllers.CompanyController.manageEngineerOfCompany()
+GET		/engineers						controllers.CompanyController.engineers(offset: Integer ?= 0)
+GET 	/engineer/add					controllers.CompanyController.addEngineerPage()
+POST 	/add/engineer					controllers.CompanyController.addEngineer()
+POST 	/remove/engineer				controllers.CompanyController.removeEngineer()
+POST 	/search/account					controllers.CompanyController.searchAccount()
+
+GET		/project/admin					controllers.ProjectController.projectAdmin(offset: Integer ?= 0)
+GET		/create/project					controllers.ProjectController.createProject()
+
 

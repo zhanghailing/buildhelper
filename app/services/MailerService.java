@@ -16,18 +16,15 @@ import play.Application;
 public class MailerService {
 	private static final String FROM = "niu2yue@gmail.com";
 	private static final String FROMNAME = "Changming";
-	private static final String SMTP_USERNAME = "aws.ses.username";
-	private static final String SMTP_PASSWORD = "aws.ses.password";
+	private static final String SMTP_USERNAME = "AKIAJ37LSGDN5ZOLWDDA";
+	private static final String SMTP_PASSWORD = "Ap360D6PQP9YwDsrUygrcip81ynKO4TlfX/zTRu0zmOI";
 	private static final String HOST = "email-smtp.us-east-1.amazonaws.com";
 	private static MailerService mailerService;
-	private final Application application;
-	
-	@Inject
-    public MailerService(Application application){
-    		this.application = application;
-    }
 	
 	public static MailerService getInstance() {
+		if(mailerService == null){
+			mailerService = new MailerService();
+		}
 		return mailerService;
 	}
 	
@@ -83,7 +80,7 @@ public class MailerService {
 	        msg.setContent(body, "text/html");
 	        
 	        transport = session.getTransport();
-	        transport.connect(HOST, application.configuration().getString(SMTP_USERNAME), application.configuration().getString(SMTP_PASSWORD));
+	        transport.connect(HOST, SMTP_USERNAME, SMTP_PASSWORD);
             transport.sendMessage(msg, msg.getAllRecipients());
             
             result = "success";

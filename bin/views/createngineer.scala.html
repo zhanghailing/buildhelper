@@ -1,0 +1,247 @@
+@import tags._
+
+@(accounts: List[Account], engineers: List[Engineer])
+
+@sidemenu("admin", 4){
+	<script type="text/javascript">
+		$(function(){
+			var allItemlayout = $('ul.eng-list').children();
+			
+			$('input[name="name"]').on('input',function(e){
+			    var text = $(this).val();
+			    if(text === ''){
+			    	$('.left-body').find('ul.eng-list').children().remove();
+			    	allItemlayout.each(function() {
+			    		var id = $(this).data('id');
+			    		var ele = $('.right-body').find("li[data-id='" + id + "']");
+			    		if (ele.length == 0) {
+			    			$('.left-body').find('ul.eng-list').append($(this));
+			    		}
+			    	});
+			    }
+			});
+			
+			$('.right-detail > ul.eng-list').css('width', $('.left-body ul.eng-list').width());
+			
+			$('.search-btn').on('click', function(){
+				var name = $('input[name="name"]').val();
+		    	var accountId = $(this).data('id');
+		    	var url = $(this).data('url');
+	    		$.ajax({
+	                url: "@routes.CompanyController.searchAccount()",
+	                type: "POST",
+	                data: {
+	                	name: name
+	                },
+	                success: function(response, status) {
+		                var data = $.parseJSON(JSON.stringify(response));
+            	    	if(data.code == 0){
+            	    		if(data.data.length > 0){
+            	    			$('.left-body').find('ul.eng-list').children().remove();
+            	    			$.each(data.data, function(index, data){
+                	    			var item = "<li data-id='" + data.accountId + "'>";
+                	    			item += "<div class=\"eng-info\">";
+                	    			item += "<p class=\"name bold\">" + data.name + "</p>";
+                	    			item += "<p>";
+                	    			if(data.accType == 3){
+                	    				item += "PE No.:" + data.peNo;
+                	    			}else{
+                	    				item += data.designation;
+                	    			}
+                	    			item += "</p>";
+                	    			item += "</div>";
+                	    			item += "<button class=\"btn btn-primary add-btn\">Add</button>";
+                	    			item += "</li>";
+                	    			
+                	    			$('.left-body').find('ul.eng-list').append(item);
+                	    		});
+            	    		}
+	                	}else{
+	                		showAlertToast(data.message, "alert-warning");
+	                	}
+		            }
+	            });
+			});
+			
+			$(document).on("click",".add-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				var btn = $(this);
+				var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+				btn.after(spinner);
+	        	btn.css('color', '#337ab7');
+	        	btn.attr("disabled", true);
+	        	
+				$.ajax({
+	                url: "@routes.CompanyController.addEngineer()",
+	                type: "POST",
+	                data: {
+	                	accountId: id
+	                },
+	                success: function(response, status) {
+		                var data = $.parseJSON(JSON.stringify(response));
+            	    	if(data.code == 0){
+            	    		var leftLiLayout = $('.left-body').find('li[data-id="'+id+'"]');
+        					leftLiLayout.remove();
+        	    			
+        					var item = "<li data-id='" + data.data.accountId + "'>";
+        	    			item += "<div class=\"eng-info\">";
+        	    			item += "<p class=\"name bold\">" + data.data.name + "</p>";
+        	    			item += "<p>";
+        	    			if(data.data.accType == 3){
+        	    				item += "PE No.:" + data.data.peNo;
+        	    			}else{
+        	    				item += data.data.designation;
+        	    			}
+        	    			item += "</p>";
+        	    			item += "</div>";
+        	    			item += "<button class=\"btn btn-primary remove-btn\">Remove</button>";
+        	    			item += "</li>";
+        	    			
+        	    			$('.right-detail').find('ul.eng-list').append(item);
+        	    			$('.right-detail').find('ul.eng-list').removeClass('hidden');
+	                	}else{
+	                		showAlertToast(data.message, "alert-warning");
+	                	}
+            	    	
+            	    	spinner.remove();
+            	    	btn.css('color', 'white');
+            	    	btn.attr("disabled", false);
+		            }
+	            });
+		    });
+			
+			$(document).on("click",".remove-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				var btn = $(this);
+				var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+				btn.after(spinner);
+	        	btn.css('color', '#337ab7');
+	        	btn.attr("disabled", true);
+	        	
+				$.ajax({
+	                url: "@routes.CompanyController.removeEngineer()",
+	                type: "POST",
+	                data: {
+	                	accountId: id
+	                },
+	                success: function(response, status) {
+		                var data = $.parseJSON(JSON.stringify(response));
+            	    	if(data.code == 0){
+            	    		var rightLiLayout = $('.right-detail').find('li[data-id="'+id+'"]');
+            	    		rightLiLayout.remove();
+        	    			
+        					var item = "<li data-id='" + data.data.accountId + "'>";
+        	    			item += "<div class=\"eng-info\">";
+        	    			item += "<p class=\"name bold\">" + data.data.name + "</p>";
+        	    			item += "<p>";
+        	    			if(data.data.accType == 3){
+        	    				item += "PE No.:" + data.data.peNo;
+        	    			}else{
+        	    				item += data.data.designation;
+        	    			}
+        	    			item += "</p>";
+        	    			item += "</div>";
+        	    			item += "<button class=\"btn btn-primary add-btn\">Add</button>";
+        	    			item += "</li>";
+        	    			
+        	    			$('.left-body').find('ul.eng-list').append(item);
+	                	}else{
+	                		showAlertToast(data.message, "alert-warning");
+	                	}
+            	    	
+            	    	spinner.remove();
+            	    	btn.css('color', 'white');
+            	    	btn.attr("disabled", false);
+		            }
+	            });
+		    });
+	   	});
+	</script>
+	
+	<p class="center">@messages.at("manage_project_engineer")</p>
+	
+	<div class="eng-content">
+		<div class="left-body">
+			<div class="search-wrapper">
+				<p class="search-bar-title">Select Project Engineer</p>
+				<div class="line-form">
+		      		<input type="text" name="name" placeholder="@messages.at("enter_qp_inspector_name")">
+				</div>
+				<button class="btn btn-success search-btn">Search</button>
+			</div>
+			<ul class="eng-list">
+				@for(index <- 0 until accounts.size){
+					<li data-id="@accounts(index).id">
+						<div class="eng-info">
+							<p class="name bold">@if(accounts(index).user != null){@accounts(index).user.name}</p>
+							<p>
+								@if(accounts(index).user != null){
+									@if(accounts(index).accType == 3){
+										PE No.: @accounts(index).user.peNo
+									}else{
+										@if(accounts(index).user.designation != null){
+											@accounts(index).user.designation
+										}else{
+											Not Set
+										}
+									}
+								}
+							</p>
+						</div>
+						<button class="btn btn-primary add-btn">Add</button>
+					</li>
+				}
+			</ul>
+		</div>
+		
+		<div class="right-body">
+			<div class="right-detail">
+				<ul class="eng-list @if(engineers != null){@if(engineers.size == 0){hidden}}">
+					@for(index <- 0 until engineers.size){
+						<li data-id="@engineers(index).accountId">
+							<div class="eng-info">
+								<p class="name bold">@if(engineers(index).account.user != null){@engineers(index).account.user.name}</p>
+								<p>
+									@if(engineers(index).account.user != null){
+										@if(engineers(index).account.accType == 3){
+											PE No.: @engineers(index).account.user.peNo
+										}else{
+											@if(engineers(index).account.user.designation != null){
+												@engineers(index).account.user.designation
+											}else{
+												Not Set
+											}
+										}
+									}
+								</p>
+							</div>
+							<button class="btn btn-primary remove-btn">Remove</button>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+	</div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

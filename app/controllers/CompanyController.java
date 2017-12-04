@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,15 +13,15 @@ import javax.inject.Provider;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
+import ModelVOs.AccountVO;
 import actions.AuthAction;
 import models.Account;
 import models.AccountType;
 import models.Avatar;
 import models.Company;
-import models.Document;
+import models.Engineer;
 import models.LetterHead;
 import models.ResponseData;
-import models.User;
 import play.Application;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
@@ -371,7 +372,7 @@ public class CompanyController extends Controller {
 			responseData.code = 4000;
 			responseData.message = "You do not have permission.";
 		}
-
+		
 		Account dbAcc = jpaApi.em().find(Account.class, account.id);
 
 		String companyIDCause = "";
@@ -464,43 +465,241 @@ public class CompanyController extends Controller {
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result manageEngineerOfCompany() {
+	public Result engineers(int offset) {
 		ResponseData responseData = new ResponseData();
 
-		List<Account> engineers = null;
 		Account account = (Account) ctx().args.get("account");
 		if (account.accType != AccountType.ADMIN) {
 			responseData.code = 4000;
 			responseData.message = "You do not have permission.";
-		}else {
-			Account dbAcc = jpaApi.em().find(Account.class, account.id);
-			if(dbAcc == null) {
-				responseData.code = 4000;
-				responseData.message = "Accouunt doesn't exist.";
-			}else {
+		}else{
+
+			int totalAmount = 0;
+			int pageIndex = 1;
+
+			List<Account> engineerList = null;
+			return ok(engineers.render(engineerList, pageIndex, totalAmount));
+		}
+		return notFound(errorpage.render(responseData)); 
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result searchAccount(){
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+    	String name = requestData.get("name");
+    	
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+			Account adminAccount = jpaApi.em().find(Account.class, account.id);
+			if (adminAccount != null) {
 				String companyIDCause = "";
-				for (int i = 0; i < dbAcc.companys.size(); i++) {
-					if (i == dbAcc.companys.size() - 1) {
-						companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "'";
+				for (int i = 0; i < adminAccount.companys.size(); i++) {
+					if (i == adminAccount.companys.size() - 1) {
+						companyIDCause += "ac.company_id='" + adminAccount.companys.get(i).id + "'";
 					} else {
-						companyIDCause += "ac.company_id='" + dbAcc.companys.get(i).id + "' AND ";
+						companyIDCause += "ac.company_id='" + adminAccount.companys.get(i).id + "' AND ";
 					}
 				}
-				
-				String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2";
+
+				String sql = "SELECT * FROM account ac LEFT JOIN user u ON ac.id=u.account_id "
+						+ "WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2) "
+						+ "AND REPLACE(u.name, ' ', '') LIKE '%" + name.trim() + "%'";
 				if(!Utils.isBlank(companyIDCause)){
-					sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.acc_type=2 AND " + companyIDCause;
+					sql = "SELECT * FROM account ac LEFT JOIN user u ON ac.id=u.account_id "
+							+ "WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2) "
+							+ "AND REPLACE(u.name, ' ', '') LIKE '%" + name.trim() + "%' AND " + companyIDCause;
 				}
+
+				List<Account> accounts = jpaApi.em().createNativeQuery(sql, Account.class).getResultList();
+				List<Engineer> engineers = jpaApi.em().createQuery("FROM Engineer e WHERE e.company = :company", Engineer.class)
+						.setParameter("company", adminAccount.companys.get(0))
+						.getResultList();				
 				
-				engineers = jpaApi.em().createNativeQuery(sql,Account.class).getResultList();
+				List<Account> accountAdded = new ArrayList<Account>();
+				for(Account acc : accounts){
+					for(Engineer eng : engineers){
+						if(eng.accountId == acc.id){
+							accountAdded.add(acc);
+							break;
+						}
+					}
+				}
+				accounts.removeAll(accountAdded);
+				
+				List<AccountVO> accountVOs = new ArrayList<AccountVO>();
+				for(Account acc : accounts){
+					AccountVO accVo = new AccountVO(acc);
+					accountVOs.add(accVo);
+				}
+				responseData.data = accountVOs;
+			}else{
+				responseData.code = 4000;
+				responseData.message = "Account cannot be found.";
 			}
 		}
 		
-		if(responseData.code != 0) {
-			return notFound(errorpage.render(responseData));
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result addEngineerPage(){
+		ResponseData responseData = new ResponseData();
+
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+			Account adminAccount = jpaApi.em().find(Account.class, account.id);
+			if (adminAccount != null) {
+				String companyIDCause = "";
+				for (int i = 0; i < adminAccount.companys.size(); i++) {
+					if (i == adminAccount.companys.size() - 1) {
+						companyIDCause += "ac.company_id='" + adminAccount.companys.get(i).id + "'";
+					} else {
+						companyIDCause += "ac.company_id='" + adminAccount.companys.get(i).id + "' AND ";
+					}
+				}
+
+				String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2)";
+				if(!Utils.isBlank(companyIDCause)){
+					sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2) AND " + companyIDCause;
+				}
+
+				List<Account> accounts = jpaApi.em().createNativeQuery(sql, Account.class).getResultList();
+				
+				List<Engineer> engineers = jpaApi.em().createQuery("FROM Engineer e WHERE e.company = :company", Engineer.class)
+						.setParameter("company", adminAccount.companys.get(0))
+						.getResultList();				
+				
+				List<Account> accountAdded = new ArrayList<Account>();
+				for(Account acc : accounts){
+					for(Engineer eng : engineers){
+						if(eng.accountId == acc.id){
+							accountAdded.add(acc);
+							break;
+						}
+					}
+				}
+				
+				accounts.removeAll(accountAdded);
+				return ok(createngineer.render(accounts, engineers));
+			}else{
+				responseData.code = 4000;
+				responseData.message = "Account cannot be found.";
+			}
 		}
-		
-		return ok(managengineer.render(engineers));
+
+		return notFound(errorpage.render(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result addEngineer(){
+		ResponseData responseData = new ResponseData();
+
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+	    	long accountId = Long.parseLong(requestData.get("accountId"));
+			Account engineerAccount = jpaApi.em().find(Account.class, accountId);
+			if (engineerAccount != null) {
+				List<Company> companys = jpaApi.em()
+						.createNativeQuery("select * from company cy where cy.acc_id=:accId", Company.class)
+						.setParameter("accId", account.id).getResultList();
+					if(companys.size() > 0) {
+						Company cy = companys.get(0);
+						Engineer engineer = new Engineer(engineerAccount, cy);
+						jpaApi.em().persist(engineer);
+						
+						AccountVO accVO = new AccountVO(engineerAccount);
+						responseData.data = accVO;
+					}else{
+						responseData.code = 4000;
+						responseData.message = "Company cannot be found.";
+					}
+			}else{
+				responseData.code = 4000;
+				responseData.message = "Account cannot be found.";
+			}
+		}
+
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result removeEngineer(){
+		ResponseData responseData = new ResponseData();
+
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+	    	long accountId = Long.parseLong(requestData.get("accountId"));
+	    	Account engineerAccount = jpaApi.em().find(Account.class, accountId);
+	    	
+			Engineer engineer = jpaApi.em().find(Engineer.class, accountId);
+			if (engineer != null) {
+				AccountVO accVO = new AccountVO(engineerAccount);
+				responseData.data = accVO;
+				engineerAccount.engineer = null;
+				jpaApi.em().remove(engineer);
+			}else{
+				responseData.code = 4000;
+				responseData.message = "Engineer cannot be found.";
+			}
+		}
+		return ok(Json.toJson(responseData));
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

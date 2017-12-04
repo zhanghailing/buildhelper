@@ -59,6 +59,21 @@ public class Account{
 	@JsonIgnore
 	public User user;
 	
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@JsonIgnore
+	public Engineer engineer;
+	
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@JsonIgnore
+	public Client client;
+	
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.ALL)
+	@LazyToOne(LazyToOneOption.NO_PROXY)
+	@JsonIgnore
+	public Builder builder;
+	
 	@OneToMany(mappedBy = "account")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
