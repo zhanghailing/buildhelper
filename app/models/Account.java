@@ -84,6 +84,11 @@ public class Account{
 	@JsonIgnore
 	public Company company;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+	@JsonIgnore
+    public Project project;
+	
 	@Column(columnDefinition = "boolean default false")
 	public boolean blocked;
 	

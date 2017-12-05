@@ -43,5 +43,8 @@ POST 	/search/account					controllers.CompanyController.searchAccount()
 
 GET		/project/admin					controllers.ProjectController.projectAdmin(offset: Integer ?= 0)
 GET		/create/project					controllers.ProjectController.createProject()
+POST 	/search/qp						controllers.ProjectController.searchQP()
+POST 	/search/inspector						controllers.ProjectController.searchInspector()
+POST 	/save/project						controllers.ProjectController.saveProject()
 
 

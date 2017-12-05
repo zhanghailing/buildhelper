@@ -1,5 +1,12 @@
 package models;
 
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +22,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import play.db.jpa.JPA;
+import services.MailerService;
+import tools.Utils;
 
 @Entity
 @Table(name="client")
@@ -47,5 +58,74 @@ public class Client {
     @JoinColumn(name = "project_id")
 	@JsonIgnore
     public Project project;
+	
+	public Client() {}
+	
+	public Client(Account account, Project project) {
+		this.account = account;
+		this.project = project;
+	}
+	
+	public static void initClient(String clientCompany, Project project, Map<String, String> data) throws ParseException{
+		Iterator<String> iterator = data.keySet().iterator();
+		Map<Integer, String> clientEmailMap = new HashMap<>();
+	    Map<Integer, String> clientPasswordMap = new HashMap<>();
+	    Map<Integer, String> clientNameMap = new HashMap<>();
+	    Map<Integer, String> clientHpNoMap = new HashMap<>();
+	    Map<Integer, String> clientNotifyMap = new HashMap<>();
+	    
+	    String key;
+	    while(iterator.hasNext()){
+		    	key = iterator.next();
+		    	if(key.contains("clientEmail")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		clientEmailMap.put(pos, data.get(key));
+		    	}
+		    	
+		    	if(key.contains("clientPassword")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		clientPasswordMap.put(pos, data.get(key));
+		    	}
+		    	
+		    	if(key.contains("clientName")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		clientNameMap.put(pos, data.get(key));
+		    	}
+		    	
+		    	if(key.contains("clientHpNo")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		clientHpNoMap.put(pos, data.get(key));
+		    	}
+		    	
+		    	if(key.contains("clientNotify")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		clientNotifyMap.put(pos, data.get(key));
+		    	}
+	    }
+	    
+	    for(int i = 0; i < clientEmailMap.size(); i++){
+	    		Account account = new Account(clientEmailMap.get(i), clientPasswordMap.get(i));
+	    		account.accType = AccountType.CLIENT;
+	    		JPA.em().persist(account);
+	    		
+	    		String useNotifyStr = Utils.isBlank(clientNotifyMap.get(i)) ? "0" : clientNotifyMap.get(i);
+	    		Client client = new Client(account, project);
+	    		client.companyName = clientCompany;
+	    		client.name = clientNameMap.get(i);
+	    		client.hpNo = clientHpNoMap.get(i);
+	    		client.isNotify = useNotifyStr.equals("1") ? true : false;
+	    		JPA.em().persist(client);
+	    }
+	}
 	
 }

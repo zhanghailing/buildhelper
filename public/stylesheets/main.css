@@ -893,6 +893,16 @@ input.file-input{
 	font-size: 1.2em;
 }
 
+#project-form input[type="submit"]{
+	float: right;
+	margin-right: 30px;
+}
+
+p.work-type{
+	margin:0;
+	padding:0;
+}
+
 /** Create Project End **/
 
 /** Checkbox Start **/

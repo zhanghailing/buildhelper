@@ -31,8 +31,7 @@
 	                url: "@routes.CompanyController.searchAccount()",
 	                type: "POST",
 	                data: {
-	                	name: name,
-	                	type: 0
+	                	name: name
 	                },
 	                success: function(response, status) {
 		                var data = $.parseJSON(JSON.stringify(response));
@@ -228,23 +227,3 @@
 		</div>
 	</div>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

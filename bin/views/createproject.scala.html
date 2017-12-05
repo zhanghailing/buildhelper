@@ -182,11 +182,13 @@
 		    });
 			
 			$('#client-model').on('hidden.bs.modal', function () {
-			    $('input').val('');
+			    $('.modal input[type="text"]').val('');
+			    $('.modal input[type="password"]').val('');
 			})
 			
 			$('#builder-model').on('hidden.bs.modal', function () {
-			    $('input').val('');
+				$('.modal input[type="text"]').val('');
+			    $('.modal input[type="password"]').val('');
 			})
 			
 			$.validator.addMethod("logoRequired", function(value, element) {
@@ -197,244 +199,489 @@
 	            return $("#lh-link").css('background-image') !== 'none';
 	        }, "LetterHead Required");
 			
+			var allQPItemlayout = $('ul.qp-list.eng-list').children();
+			var allInspectorItemlayout = $('ul.inspector-list.eng-list').children();
+			$('.qp-body input[name="name"]').on('input',function(e){
+			    var text = $(this).val();
+			    if(text === ''){
+				    	$('.qp-body.left-body').find('ul.eng-list').children().remove();
+				    	allQPItemlayout.each(function() {
+				    		var id = $(this).data('id');
+				    		var ele = $('.qp-body.right-body').find("li[data-id='" + id + "']");
+				    		if (ele.length == 0) {
+				    			$('.qp-body.left-body').find('ul.eng-list').append($(this));
+				    		}
+				    	});
+			    }
+			});
 			
+			$('.inspector-body input[name="name"]').on('input',function(e){
+			    var text = $(this).val();
+			    if(text === ''){
+				    	$('.inspector-body.left-body').find('ul.eng-list').children().remove();
+				    	allInspectorItemlayout.each(function() {
+				    		var id = $(this).data('id');
+				    		var ele = $('.inspector-body.right-body').find("li[data-id='" + id + "']");
+				    		if (ele.length == 0) {
+				    			$('.inspector-body.left-body').find('ul.eng-list').append($(this));
+				    		}
+				    	});
+			    }
+			});
+			
+			$('#qp-search').on('click', function(){
+				var name = $('.qp-body').find('input[name="name"]').val();
+			    	var accountId = $(this).data('id');
+			    	var url = $(this).data('url');
+		    		$.ajax({
+	                		url: "@routes.ProjectController.searchQP()",
+		                type: "POST",
+		                data: {
+			                	name: name,
+			                	type: 3
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+			            	    	if(data.code == 0){
+			            	    		if(data.data.length > 0){
+			            	    			$('.qp-body.left-body').find('ul.eng-list').children().remove();
+			            	    			$.each(data.data, function(index, data){
+			                	    			var item = "<li data-id='" + data.accountId + "'>";
+			                	    			item += "<div class=\"eng-info\">";
+			                	    			item += "<p class=\"name bold\">" + data.name + "</p>";
+			                	    			item += "<p>";
+			                	    			if(data.accType == 3){
+			                	    				item += "PE No.:" + data.peNo;
+			                	    			}else{
+			                	    				item += data.designation;
+			                	    			}
+			                	    			item += "</p>";
+			                	    			item += "</div>";
+			                	    			item += "<button class=\"btn btn-primary add-btn\">Add</button>";
+			                	    			item += "</li>";
+			                	    			
+			                	    			$('.qp-body.left-body').find('ul.eng-list').append(item);
+			                	    		});
+			            	    		}
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+			            }
+		            });
+				});
+			
+			$('#inspector-search').on('click', function(){
+				var name = $('.inspector-body').find('input[name="name"]').val();
+			    	var accountId = $(this).data('id');
+			    	var url = $(this).data('url');
+		    		$.ajax({
+	                		url: "@routes.ProjectController.searchInspector()",
+		                type: "POST",
+		                data: {
+			                	name: name,
+			                	type: 2
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+			            	    	if(data.code == 0){
+			            	    		if(data.data.length > 0){
+			            	    			$('.inspector-body.left-body').find('ul.eng-list').children().remove();
+			            	    			$.each(data.data, function(index, data){
+			                	    			var item = "<li data-id='" + data.accountId + "'>";
+			                	    			item += "<div class=\"eng-info\">";
+			                	    			item += "<p class=\"name bold\">" + data.name + "</p>";
+			                	    			item += "<p>";
+			                	    			item += data.designation;
+			                	    			item += "</p>";
+			                	    			item += "</div>";
+			                	    			item += "<button class=\"btn btn-primary add-btn\">Add</button>";
+			                	    			item += "</li>";
+			                	    			
+			                	    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+			                	    		});
+			            	    		}
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+			            }
+		            });
+				});
+			
+			$(document).on("click","#qp-add-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				var leftLiLayout = $('.qp-body.left-body').find('li[data-id="'+id+'"]');
+					leftLiLayout.remove();
+					
+				var name = leftLiLayout.find('p.name').text();
+    				var peNo = leftLiLayout.find('p.name').next().text();
+				var item = "<li data-id='" +id + "'>";
+		    			item += "<div class=\"eng-info\">";
+		    			item += "<p class=\"name bold\">" + name + "</p>";
+		    			item += "<p>";
+		    			item += "PE No.:" + peNo;
+		    			item += "</p>";
+		    			item += "</div>";
+		    			item += "<button class=\"btn btn-primary remove-btn\">Remove</button>";
+		    			item += "</li>";
+		    			
+		    			$('.qp-body > .right-detail').find('ul.eng-list').append(item);
+		    			$('.qp-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+		        	
+		    });
+			
+			$(document).on("click","#inspector-add-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				var leftLiLayout = $('.inspector-body.left-body').find('li[data-id="'+id+'"]');
+					leftLiLayout.remove();
+					
+				var name = leftLiLayout.find('p.name').text();
+    				var peNo = leftLiLayout.find('p.name').next().text();
+				var item = "<li data-id='" +id + "'>";
+		    			item += "<div class=\"eng-info\">";
+		    			item += "<p class=\"name bold\">" + name + "</p>";
+		    			item += "<p>";
+		    			item += peNo;
+		    			item += "</p>";
+		    			item += "</div>";
+		    			item += "<button class=\"btn btn-primary remove-btn\">Remove</button>";
+		    			item += "</li>";
+		    			
+		    			$('.inspector-body > .right-detail').find('ul.eng-list').append(item);
+		    			$('.inspector-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+		    });
+			
+			$(document).on("click",".qp-body .remove-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				var rightLiLayout = $('.qp-body.right-body').find('li[data-id="'+id+'"]');
+					rightLiLayout.remove();
+				
+				var name = rightLiLayout.find('p.name').text();
+    				var peNo = rightLiLayout.find('p.name').next().text();
+    				
+				var item = "<li data-id='" + id + "'>";
+		    			item += "<div class=\"eng-info\">";
+		    			item += "<p class=\"name bold\">" + name + "</p>";
+		    			item += "<p>";
+		    			item += "PE No.:" + peNo;
+		    			item += "</p>";
+		    			item += "</div>";
+		    			item += "<button id=\"qp-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		    			item += "</li>";
+		    			
+		    			$('.qp-body.left-body').find('ul.eng-list').append(item);
+		    			if($('.qp-body.right-body').find('ul.eng-list').children().length == 0){
+		    				$('.qp-body.right-body').find('ul.eng-list').addClass('hidden');
+		    			}
+		    });
+			
+			$(document).on("click",".inspector-body .remove-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				var rightLiLayout = $('.inspector-body.right-body').find('li[data-id="'+id+'"]');
+					rightLiLayout.remove();
+				
+				var name = rightLiLayout.find('p.name').text();
+    				var peNo = rightLiLayout.find('p.name').next().text();
+    				
+				var item = "<li data-id='" + id + "'>";
+		    			item += "<div class=\"eng-info\">";
+		    			item += "<p class=\"name bold\">" + name + "</p>";
+		    			item += "<p>";
+		    			item += peNo;
+		    			item += "</p>";
+		    			item += "</div>";
+		    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		    			item += "</li>";
+		    			
+		    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+		    			
+		    			if($('.inspector-body.right-body').find('ul.eng-list').children().length == 0){
+		    				$('.inspector-body.right-body').find('ul.eng-list').addClass('hidden');
+		    			}
+		    });
+			
+			$("#project-form").validate({
+				ignore: [],
+		        rules: {
+		        		title:{
+		            		minlength: 2,
+		                	maxlength: 50,
+		            		required:true
+		            },
+		            startDate:{
+		            		required:true
+		            },
+		            endDate:{
+		            		required:true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        		
+		        		var liQPItems = $('.qp-body.right-body').find('ul.eng-list').children();
+		        		if(liQPItems.length > 0){
+		        			var qpBuilderBlk = '<div class="qp-inputs">';
+			        		
+		        			liQPItems.each(function() {
+					    		var id = $(this).data('id');
+					    		qpBuilderBlk += '<input type="hidden" name="qpAccounts[]" value="' + id + '"/>';
+					    		
+					    	});
+			        		
+		        			qpBuilderBlk += '</div>';
+				        	
+				        	$('#team-detail').append(qpBuilderBlk);
+		        		}
+		        		
+		        		var liInspectorItems = $('.inspector-body.right-body').find('ul.eng-list').children();
+		        		if(liInspectorItems.length > 0){
+		        			var inspectorBuilderBlk = '<div class="inspector-inputs">';
+			        		
+		        			liInspectorItems.each(function() {
+					    		var id = $(this).data('id');
+					    		inspectorBuilderBlk += '<input type="hidden" name="inspectorAccounts[]" value="' + id + '"/>';
+					    		
+					    	});
+			        		
+		        			inspectorBuilderBlk += '</div>';
+				        	
+				        	$('#team-detail').append(inspectorBuilderBlk);
+		        		}
+		        		
+		        		$('input[type=submit]').attr("disabled", true);
+		        		form.submit();
+		        		
+		        		return false;
+		        }
+		    });
 	   	});
 	</script>
 	<p class="center">Add MOM Project</p>
 	
-	<section id="pro-detail" class="pro-sec">
-		<p class="tb-header center">@messages.at("project_detail")</p>
-		<div class="sec-body">
-			<div class="form-group">
-				<div class="form-label">
-		            <label for="pro-title">@messages.at("project_title")</label>
-		         </div>
-		         <div class="form-input full-width">
-		            <input id="pro-title" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_project_title")">
-		         </div>
-	      	</div>
-	      	
-	      	<div class="form-group date-group">
-				<label>Starting Date</label>
-				<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD">
-			</div>
-			
-			<div class="form-group date-group right-align">
-				<label>Ending Date</label>
-				<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD">
-			</div>
-			
-			<div class="form-group">
-				<div class="form-label branch-lbl">
-					<label>@messages.at("select_type_of_work")</label>
+	<form id="project-form" action="@routes.ProjectController.saveProject()" method="POST">
+		<section id="pro-detail" class="pro-sec">
+			<p class="tb-header center">@messages.at("project_detail")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("project_title")</label>
+			         </div>
+			         <div class="form-input full-width">
+			            <input id="pro-title" type="text" class="form-control" name="title" placeholder="@messages.at("placeholder_project_title")">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group date-group">
+					<label>Starting Date</label>
+					<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD">
 				</div>
-						
-				<div class="form-input">
-					<label class="subject-lbl selected">
-					   	<input type="radio" name="gondola" class="form-control" value="1" checked>
-						<a class="radio-box">Gondola
-							<i class="icon-check"></i>
-						</a>
-					</label>
-					<label class="subject-lbl">
-					   	<input type="radio" name="mcwp" class="form-control" value="0">
-						<a class="radio-box">MCWP
-							<i class="icon-check"></i>
-						</a>
-					</label>
-					<label class="subject-lbl">
-					   	<input type="radio" name="scaffold" class="form-control" value="0">
-						<a class="radio-box">Scaffold
-							<i class="icon-check"></i>
-						</a>
-					</label>
-					<label class="subject-lbl">
-					   	<input type="radio" name="formwork" class="form-control" value="0">
-						<a class="radio-box">Formwork
-							<i class="icon-check"></i>
-						</a>
-					</label>
+				
+				<div class="form-group date-group right-align">
+					<label>Ending Date</label>
+					<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD">
 				</div>
-			</div>
-			
-			<div class="form-group">
-				<div class="form-label">
-					<label class="chx-container">@messages.at("default_letterhead")
-					  <input id="use-lh-chx" type="checkbox" value="0">
-					  <span class="checkmark"></span>
-					</label>
-				</div>
-			</div>
-		</div>
-		
-	</section>
-	
-	<section id="client" class="pro-sec">
-		<p class="tb-header center">@messages.at("developer_client")</p>
-		<div class="sec-body">
-			<div class="form-group">
-				<div class="form-label">
-		            <label for="pro-title">@messages.at("company_name")</label>
-		         </div>
-		         <div class="form-input full-width">
-		            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")">
-		         </div>
-	      	</div>
-	      	
-	      	<div class="form-group">
-				<div class="form-label">
-		            <label for="pro-title">@messages.at("person_in_charge")</label>
-		         </div>
-		         <div class="form-input full-width row">
-		            <div class="acc-group col col-xs-6 col-md-3 col-sm-3">
-		            	<div class="acc-info">
-		            		<p class="acc-name bold">Lu Guanyi</p>
-		            		<p class="acc-designation">Project Manager</p>
-		            		<p class="acc-email">E-mail:gab@@gtop.com</p>
-		            		<p class="acc-hp">HP No.:+65 89475876</p>
-		            		<p class="acc-notify">Notify? <span class="green">Yes</span></p>
-		            		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
-		            	</div>
-		            </div>
-		            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
-		            	<div class="acc-info">
-		            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
-		            	</div>
-		            </div>
-		         </div>
-	      	</div>
-		</div>
-	</section>
-	
-	<section id="builder" class="pro-sec">
-		<p class="tb-header center">@messages.at("builder_contractor")</p>
-		<div class="sec-body">
-			<div class="form-group">
-				<div class="form-label">
-		            <label for="pro-title">@messages.at("company_name")</label>
-		         </div>
-		         <div class="form-input full-width">
-		            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")">
-		         </div>
-	      	</div>
-	      	
-	      	<div class="form-group">
-				<div class="form-label">
-		            <label for="pro-title">@messages.at("person_in_charge")</label>
-		         </div>
-		         <div class="form-input full-width row">
-		            <div class="acc-group col col-xs-6 col-md-3 col-sm-3">
-		            	<div class="acc-info">
-		            		<p class="acc-name bold">Lu Guanyi</p>
-		            		<p class="acc-designation">Project Manager</p>
-		            		<p class="acc-email">E-mail:gab@@gtop.com</p>
-		            		<p class="acc-hp">HP No.:+65 89475876</p>
-		            		<p class="acc-notify">Notify? <span class="green">Yes</span></p>
-		            		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
-		            	</div>
-		            </div>
-		            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
-		            	<div class="acc-info">
-		            		<a class="add-btn" data-toggle="modal" data-target="#builder-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
-		            	</div>
-		            </div>
-		         </div>
-	      	</div>
-		</div>
-	</section>
-	
-	
-	<section id="team-detail" class="pro-sec">
-		<p class="tb-header center">@messages.at("qp_team")</p>
-		<div class="sec-body">
-			<div class="eng-content">
-				<div class="left-body">
-					<div class="search-wrapper">
-						<p class="search-bar-title">Select QP</p>
-						<div class="line-form">
-				      		<input type="text" name="name" placeholder="Enter QP's name">
-						</div>
-						<button class="btn btn-success search-btn">Search</button>
+				
+				<div class="form-group">
+					<div class="form-label branch-lbl">
+						<label>@messages.at("select_type_of_work")</label>
 					</div>
-					<ul class="eng-list">
-						@for(index <- 0 until qpList.size){
-							<li data-id="@qpList(index).id">
-								<div class="eng-info">
-									<p class="name bold">@if(qpList(index).user != null){@qpList(index).user.name}</p>
-									<p>
-										@if(qpList(index).user != null){
-											@if(qpList(index).accType == 3){
+							
+					<div class="form-input">
+						<label class="subject-lbl selected">
+						   	<input type="radio" name="gondola" class="form-control" value="1" checked>
+							<a class="radio-box">Gondola
+								<i class="icon-check"></i>
+							</a>
+						</label>
+						<label class="subject-lbl">
+						   	<input type="radio" name="mcwp" class="form-control" value="0">
+							<a class="radio-box">MCWP
+								<i class="icon-check"></i>
+							</a>
+						</label>
+						<label class="subject-lbl">
+						   	<input type="radio" name="scaffold" class="form-control" value="0">
+							<a class="radio-box">Scaffold
+								<i class="icon-check"></i>
+							</a>
+						</label>
+						<label class="subject-lbl">
+						   	<input type="radio" name="formwork" class="form-control" value="0">
+							<a class="radio-box">Formwork
+								<i class="icon-check"></i>
+							</a>
+						</label>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="form-label">
+						<label class="chx-container">Use Company Letterhead
+						  <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="0">
+						  <span class="checkmark"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			
+		</section>
+		
+		<section id="client" class="pro-sec">
+			<p class="tb-header center">@messages.at("developer_client")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input full-width">
+			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("person_in_charge")</label>
+			         </div>
+			         <div class="form-input full-width row">
+			            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+			            	<div class="acc-info">
+			            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+			            	</div>
+			            </div>
+			         </div>
+		      	</div>
+			</div>
+		</section>
+		
+		<section id="builder" class="pro-sec">
+			<p class="tb-header center">@messages.at("builder_contractor")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input full-width">
+			            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("person_in_charge")</label>
+			         </div>
+			         <div class="form-input full-width row">
+			            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+			            	<div class="acc-info">
+			            		<a class="add-btn" data-toggle="modal" data-target="#builder-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+			            	</div>
+			            </div>
+			         </div>
+		      	</div>
+			</div>
+		</section>
+		
+		
+		<section id="team-detail" class="pro-sec">
+			<p class="tb-header center">@messages.at("qp_team")</p>
+			<div class="sec-body">
+				<div class="eng-content">
+					<div class="qp-body left-body">
+						<div class="search-wrapper">
+							<p class="search-bar-title">Select QP</p>
+							<div class="line-form">
+					      		<input type="text" name="name" placeholder="Enter QP's name">
+							</div>
+							<button id="qp-search" class="btn btn-success search-btn">Search</button>
+						</div>
+						<ul class="qp-list eng-list">
+							@for(index <- 0 until qpList.size){
+								<li data-id="@qpList(index).id" 
+									data-name="@if(qpList(index).user != null){@qpList(index).user.name}"
+									data-pe="">
+									<div class="eng-info">
+										<p class="name bold">@if(qpList(index).user != null){@qpList(index).user.name}</p>
+										<p>
+											@if(qpList(index).user != null){
 												PE No.: @qpList(index).user.peNo
 											}else{
-												@if(qpList(index).user.designation != null){
-													@qpList(index).user.designation
-												}else{
-													Not Set
-												}
+												Not Set
 											}
-										}
-									</p>
-								</div>
-								<button class="btn btn-primary add-btn">Add</button>
-							</li>
-						}
-					</ul>
-				</div>
-				
-				<div class="right-body">
-					<div class="right-detail">
-						<ul class="eng-list hidden">
-							
+										</p>
+									</div>
+									<button id="qp-add-btn" class="btn btn-primary add-btn">Add</button>
+								</li>
+							}
 						</ul>
 					</div>
-				</div>
-			</div>
-			
-			
-			<div class="eng-content">
-				<div class="left-body">
-					<div class="search-wrapper">
-						<p class="search-bar-title">Select Inspector</p>
-						<div class="line-form">
-				      		<input type="text" name="name" placeholder="Enter Inspector's name">
+					
+					<div class="qp-body right-body">
+						<div class="right-detail">
+							<ul class="eng-list hidden">
+								
+							</ul>
 						</div>
-						<button class="btn btn-success search-btn">Search</button>
 					</div>
-					<ul class="eng-list">
-						@for(index <- 0 until inspectors.size){
-							<li data-id="@inspectors(index).id">
-								<div class="eng-info">
-									<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
-									<p>
-										@if(inspectors(index).user != null){
-											@if(inspectors(index).accType == 3){
-												PE No.: @inspectors(index).user.peNo
-											}else{
-												@if(inspectors(index).user.designation != null){
-													@inspectors(index).user.designation
-												}else{
-													Not Set
-												}
-											}
-										}
-									</p>
-								</div>
-								<button class="btn btn-primary add-btn">Add</button>
-							</li>
-						}
-					</ul>
 				</div>
 				
-				<div class="right-body">
-					<div class="right-detail">
-						<ul class="eng-list hidden">
-							
+				
+				<div class="eng-content">
+					<div class="inspector-body left-body">
+						<div class="search-wrapper">
+							<p class="search-bar-title">Select Inspector</p>
+							<div class="line-form">
+					      		<input type="text" name="name" placeholder="Enter Inspector's name">
+							</div>
+							<button id="inspector-search" class="btn btn-success search-btn">Search</button>
+						</div>
+						<ul class="inspector-list eng-list">
+							@for(index <- 0 until inspectors.size){
+								<li data-id="@inspectors(index).id">
+									<div class="eng-info">
+										<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
+										<p>
+											@if(inspectors(index).user != null){
+												@if(inspectors(index).accType == 3){
+													PE No.: @inspectors(index).user.peNo
+												}else{
+													@if(inspectors(index).user.designation != null){
+														@inspectors(index).user.designation
+													}else{
+														Not Set
+													}
+												}
+											}
+										</p>
+									</div>
+									<button id="inspector-add-btn" class="btn btn-primary add-btn">Add</button>
+								</li>
+							}
 						</ul>
+					</div>
+					
+					<div class="inspector-body right-body">
+						<div class="right-detail">
+							<ul class="eng-list hidden">
+								
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
+		</section>
+		
+		<div class="form-group form-submit">
+		   <input class="btn btn-success" type="submit" value="Submit"/>
+		   <div style="clear: both;"></div>
 		</div>
-	</section>
+	</form>
 	
 	
 	<div class="modal fade" id="client-model" role="dialog">
