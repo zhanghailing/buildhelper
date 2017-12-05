@@ -490,6 +490,7 @@ public class CompanyController extends Controller {
 		
 		DynamicForm requestData = formFactory.form().bindFromRequest();
     	String name = requestData.get("name");
+    	int type = Integer.parseInt(requestData.get("type"));
     	
 		Account account = (Account) ctx().args.get("account");
 		if (account.accType != AccountType.ADMIN) {
@@ -506,14 +507,23 @@ public class CompanyController extends Controller {
 						companyIDCause += "ac.company_id='" + adminAccount.companys.get(i).id + "' AND ";
 					}
 				}
+				
+				String typeWhere = null;
+				if(type == 2){
+					typeWhere = "ac.acc_type=2";
+				}else if(type == 3){
+					typeWhere = "ac.acc_type=3";
+				}else{
+					typeWhere = "(ac.acc_type=3 OR ac.acc_type=2)";
+				}
 
 				String sql = "SELECT * FROM account ac LEFT JOIN user u ON ac.id=u.account_id "
-						+ "WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2) "
-						+ "AND REPLACE(u.name, ' ', '') LIKE '%" + name.trim() + "%'";
+						+ "WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND " + typeWhere
+						+ " AND REPLACE(u.name, ' ', '') LIKE '%" + name.trim() + "%'";
 				if(!Utils.isBlank(companyIDCause)){
 					sql = "SELECT * FROM account ac LEFT JOIN user u ON ac.id=u.account_id "
-							+ "WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2) "
-							+ "AND REPLACE(u.name, ' ', '') LIKE '%" + name.trim() + "%' AND " + companyIDCause;
+							+ "WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND " + typeWhere
+							+ " AND REPLACE(u.name, ' ', '') LIKE '%" + name.trim() + "%' AND " + companyIDCause;
 				}
 
 				List<Account> accounts = jpaApi.em().createNativeQuery(sql, Account.class).getResultList();

@@ -21,6 +21,7 @@ import tools.Constants;
 import tools.Utils;
 import views.html.*;
 
+@SuppressWarnings("unchecked")
 public class ProjectController extends Controller{
 	@Inject private FormFactory formFactory;
 	@Inject private JPAApi jpaApi;
@@ -62,7 +63,13 @@ public class ProjectController extends Controller{
 			responseData.code = 4000;
 			responseData.message = "You do not have permission.";
 		}else{
-			return ok(createproject.render(engineer));
+			String qpSql = "SELECT * FROM account ac WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND ac.acc_type=3 AND ac.company_id = " + engineer.company.id;
+			List<Account> qpList = jpaApi.em().createNativeQuery(qpSql, Account.class).getResultList();
+			
+			String inspectorSql = "SELECT * FROM account ac WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND ac.acc_type=2 AND ac.company_id = " + engineer.company.id;
+			List<Account> inspectors = jpaApi.em().createNativeQuery(inspectorSql, Account.class).getResultList();
+			
+			return ok(createproject.render(engineer, qpList, inspectors));
 		}
 
 		return notFound(errorpage.render(responseData));

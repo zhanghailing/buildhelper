@@ -64,6 +64,15 @@ create_project=Create Project
 project_detail=Project Detail
 project_title=Project Title
 placeholder_project_title=Fill in project title
+select_type_of_work=Select Type Of Work
+developer_client=Developer/Client
+person_in_charge=Person In Charge
+add_client_developer=Add Developer/Client
+placeholder_hp=Fill in HP No.
+notify=Notify
+builder_contractor=Builder/Contractor
+add_builder_contractor=Add Builder/Contractor
+qp_team=QP Team
 
 
 error.file_size=File size cannot be more than 2MB!

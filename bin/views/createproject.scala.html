@@ -1,7 +1,7 @@
 @import tags._
 @import tools.Constants
 
-@(engineer: Engineer)
+@(engineer: Engineer, qpList: List[Account], inspectors: List[Account])
 
 @sidemenu("engineer", 5){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -21,36 +21,550 @@
 			$(document).on('focus',".enddatepicker", function(){
 			    $(this).datetimepicker();
 			});
+			
+			$('input[type="radio"]').on('click', function(){
+	       		if($(this).parent().hasClass("selected") && $(".subject-lbl.selected").length > 1){
+	       			$(this).parent().removeClass('selected');
+	       			$(this).val("0");
+	       		}else{
+	       			$(this).parent().addClass('selected');
+	       			$(this).val("1");
+	       		}
+	       	});
+			
+			$('#use-lh-chx').on('click', function(){
+				if($(this).is(':checked')){
+					$('#use-lh-chx').val("1");
+				}else{
+					$('#use-lh-chx').val("0");
+				}
+			});
+			
+			$('#client-notify-chx').on('click', function(){
+				if($(this).is(':checked')){
+					$(this).val("1");
+				}else{
+					$(this).val("0");
+				}
+			});
+			
+			$('#builder-notify-chx').on('click', function(){
+				if($(this).is(':checked')){
+					$(this).val("1");
+				}else{
+					$(this).val("0");
+				}
+			});
+			
+			$("#client-form").validate({
+				ignore: [],
+		        rules: {
+		        	clientName:{
+		            	minlength: 2,
+		                maxlength: 50,
+		            	required:true
+		            },
+		            clientPassword:{
+		            	required:true
+		            },
+		            clientEmail:{
+		            	email:true,
+		            	required:true
+		            },
+		            clientHpNo:{
+		            	required:true
+		            },
+		            clientDesignation:{
+		            	required:true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        	var clientEmail = $('input[name=clientEmail]').val();
+		        	var clientPassword = $('input[name=clientPassword]').val();
+		        	var clientName = $('input[name=clientName]').val();
+		        	var clientHpNo = $('input[name=clientHpNo]').val();
+		        	var clientDesignation =  $('input[name=clientDesignation]').val();
+		        	var notify = ($('#client-notify-chx').is(':checked') ? '1' : '0');
+		        	
+		        	var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+		        		clientBlk += '<div class="acc-info">';
+		        		clientBlk += '<p class="acc-name bold">' + clientName + '</p>';
+		        		clientBlk += '<p class="acc-designation">' + clientDesignation + '</p>';
+		        		clientBlk += '<p class="acc-email">' + clientEmail + '</p>';
+		        		clientBlk += '<p class="acc-hp">' + clientHpNo + '</p>';
+		        		clientBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
+		        		clientBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+		        		clientBlk += '</div>';
+		        		
+		        		clientBlk += '<div class="client-inputs">';
+		        		clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
+		        		clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
+			        	clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
+			        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
+			        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
+			        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
+			        	clientBlk += '</div>';
+		        		clientBlk += '</div>';
+			        	
+	        		$('#add-client-btn-wrapper').before(clientBlk);
+		        	$('#client-model').modal('hide');
+		        	return false;
+		        }
+		    });
+			
+			
+			$("#builder-form").validate({
+				ignore: [],
+		        rules: {
+		        	builderName:{
+		            	minlength: 2,
+		                maxlength: 50,
+		            	required:true
+		            },
+		            builderPassword:{
+		            	required:true
+		            },
+		            builderEmail:{
+		            	email:true,
+		            	required:true
+		            },
+		            builderHpNo:{
+		            	required:true
+		            },
+		            builderDesignation:{
+		            	required:true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        	var builderEmail = $('input[name=builderEmail]').val();
+		        	var builderPassword = $('input[name=builderPassword]').val();
+		        	var builderName = $('input[name=builderName]').val();
+		        	var builderHpNo = $('input[name=builderHpNo]').val();
+		        	var builderDesignation =  $('input[builderDesignation]').val();
+		        	var notify = ($('#builder-notify-chx').is(':checked') ? '1' : '0');
+		        	
+		        	var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+		        	builderBlk += '<div class="acc-info">';
+		        	builderBlk += '<p class="acc-name bold">' + builderName + '</p>';
+		        	builderBlk += '<p class="acc-designation">' + builderDesignation + '</p>';
+		        	builderBlk += '<p class="acc-email">' + builderEmail + '</p>';
+		        	builderBlk += '<p class="acc-hp">' + builderHpNo + '</p>';
+		        	builderBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
+		        	builderBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+		        	builderBlk += '</div>';
+		        		
+		        	builderBlk += '<div class="builder-inputs">';
+		        	builderBlk += '<input type="hidden" name="builderEmail[]" value="' + builderEmail + '"/>';
+		        	builderBlk += '<input type="hidden" name="builderPassword[]" value="' + builderPassword + '"/>';
+		        	builderBlk += '<input type="hidden" name="builderName[]" value="' + builderName + '"/>';
+		        	builderBlk += '<input type="hidden" name="builderHpNo[]" value="' + builderHpNo + '"/>';
+		        	builderBlk += '<input type="hidden" name="builderDesignation[]" value="' + builderDesignation + '"/>';
+		        	builderBlk += '<input type="hidden" name="builderNotify[]" value="' + notify + '"/>';
+		        	builderBlk += '</div>';
+		        	builderBlk += '</div>';
+			        	
+	        		$('#add-builder-btn-wrapper').before(builderBlk);
+		        	$('#builder-model').modal('hide');
+		        	return false;
+		        }
+		    });
+			
+			$('#client-model').on('hidden.bs.modal', function () {
+			    $('input').val('');
+			})
+			
+			$('#builder-model').on('hidden.bs.modal', function () {
+			    $('input').val('');
+			})
+			
+			$.validator.addMethod("logoRequired", function(value, element) {
+	            return $("#logo-link").css('background-image') !== 'none';
+	        }, "Logo Required");
+			
+			$.validator.addMethod("letterHeadRequired", function(value, element) {
+	            return $("#lh-link").css('background-image') !== 'none';
+	        }, "LetterHead Required");
+			
+			
 	   	});
 	</script>
 	<p class="center">Add MOM Project</p>
 	
 	<section id="pro-detail" class="pro-sec">
 		<p class="tb-header center">@messages.at("project_detail")</p>
-		<div class="form-group">
-			<div class="form-label">
-	            <label for="pro-title">@messages.at("project_title")</label>
-	         </div>
-	         <div class="form-input full-width">
-	            <input id="pro-title" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_project_title")">
-	         </div>
-      	</div>
-      	
-      	<div class="form-group date-group">
-			<label>Starting Date</label>
-			<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD">
+		<div class="sec-body">
+			<div class="form-group">
+				<div class="form-label">
+		            <label for="pro-title">@messages.at("project_title")</label>
+		         </div>
+		         <div class="form-input full-width">
+		            <input id="pro-title" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_project_title")">
+		         </div>
+	      	</div>
+	      	
+	      	<div class="form-group date-group">
+				<label>Starting Date</label>
+				<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD">
+			</div>
+			
+			<div class="form-group date-group right-align">
+				<label>Ending Date</label>
+				<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD">
+			</div>
+			
+			<div class="form-group">
+				<div class="form-label branch-lbl">
+					<label>@messages.at("select_type_of_work")</label>
+				</div>
+						
+				<div class="form-input">
+					<label class="subject-lbl selected">
+					   	<input type="radio" name="gondola" class="form-control" value="1" checked>
+						<a class="radio-box">Gondola
+							<i class="icon-check"></i>
+						</a>
+					</label>
+					<label class="subject-lbl">
+					   	<input type="radio" name="mcwp" class="form-control" value="0">
+						<a class="radio-box">MCWP
+							<i class="icon-check"></i>
+						</a>
+					</label>
+					<label class="subject-lbl">
+					   	<input type="radio" name="scaffold" class="form-control" value="0">
+						<a class="radio-box">Scaffold
+							<i class="icon-check"></i>
+						</a>
+					</label>
+					<label class="subject-lbl">
+					   	<input type="radio" name="formwork" class="form-control" value="0">
+						<a class="radio-box">Formwork
+							<i class="icon-check"></i>
+						</a>
+					</label>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="form-label">
+					<label class="chx-container">@messages.at("default_letterhead")
+					  <input id="use-lh-chx" type="checkbox" value="0">
+					  <span class="checkmark"></span>
+					</label>
+				</div>
+			</div>
 		</div>
-		
-		<div class="form-group date-group right-align">
-			<label>Ending Date</label>
-			<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD">
-		</div>
-		
 		
 	</section>
 	
+	<section id="client" class="pro-sec">
+		<p class="tb-header center">@messages.at("developer_client")</p>
+		<div class="sec-body">
+			<div class="form-group">
+				<div class="form-label">
+		            <label for="pro-title">@messages.at("company_name")</label>
+		         </div>
+		         <div class="form-input full-width">
+		            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")">
+		         </div>
+	      	</div>
+	      	
+	      	<div class="form-group">
+				<div class="form-label">
+		            <label for="pro-title">@messages.at("person_in_charge")</label>
+		         </div>
+		         <div class="form-input full-width row">
+		            <div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+		            	<div class="acc-info">
+		            		<p class="acc-name bold">Lu Guanyi</p>
+		            		<p class="acc-designation">Project Manager</p>
+		            		<p class="acc-email">E-mail:gab@@gtop.com</p>
+		            		<p class="acc-hp">HP No.:+65 89475876</p>
+		            		<p class="acc-notify">Notify? <span class="green">Yes</span></p>
+		            		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+		            	</div>
+		            </div>
+		            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+		            	<div class="acc-info">
+		            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+		            	</div>
+		            </div>
+		         </div>
+	      	</div>
+		</div>
+	</section>
 	
+	<section id="builder" class="pro-sec">
+		<p class="tb-header center">@messages.at("builder_contractor")</p>
+		<div class="sec-body">
+			<div class="form-group">
+				<div class="form-label">
+		            <label for="pro-title">@messages.at("company_name")</label>
+		         </div>
+		         <div class="form-input full-width">
+		            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")">
+		         </div>
+	      	</div>
+	      	
+	      	<div class="form-group">
+				<div class="form-label">
+		            <label for="pro-title">@messages.at("person_in_charge")</label>
+		         </div>
+		         <div class="form-input full-width row">
+		            <div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+		            	<div class="acc-info">
+		            		<p class="acc-name bold">Lu Guanyi</p>
+		            		<p class="acc-designation">Project Manager</p>
+		            		<p class="acc-email">E-mail:gab@@gtop.com</p>
+		            		<p class="acc-hp">HP No.:+65 89475876</p>
+		            		<p class="acc-notify">Notify? <span class="green">Yes</span></p>
+		            		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+		            	</div>
+		            </div>
+		            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+		            	<div class="acc-info">
+		            		<a class="add-btn" data-toggle="modal" data-target="#builder-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+		            	</div>
+		            </div>
+		         </div>
+	      	</div>
+		</div>
+	</section>
+	
+	
+	<section id="team-detail" class="pro-sec">
+		<p class="tb-header center">@messages.at("qp_team")</p>
+		<div class="sec-body">
+			<div class="eng-content">
+				<div class="left-body">
+					<div class="search-wrapper">
+						<p class="search-bar-title">Select QP</p>
+						<div class="line-form">
+				      		<input type="text" name="name" placeholder="Enter QP's name">
+						</div>
+						<button class="btn btn-success search-btn">Search</button>
+					</div>
+					<ul class="eng-list">
+						@for(index <- 0 until qpList.size){
+							<li data-id="@qpList(index).id">
+								<div class="eng-info">
+									<p class="name bold">@if(qpList(index).user != null){@qpList(index).user.name}</p>
+									<p>
+										@if(qpList(index).user != null){
+											@if(qpList(index).accType == 3){
+												PE No.: @qpList(index).user.peNo
+											}else{
+												@if(qpList(index).user.designation != null){
+													@qpList(index).user.designation
+												}else{
+													Not Set
+												}
+											}
+										}
+									</p>
+								</div>
+								<button class="btn btn-primary add-btn">Add</button>
+							</li>
+						}
+					</ul>
+				</div>
+				
+				<div class="right-body">
+					<div class="right-detail">
+						<ul class="eng-list hidden">
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="eng-content">
+				<div class="left-body">
+					<div class="search-wrapper">
+						<p class="search-bar-title">Select Inspector</p>
+						<div class="line-form">
+				      		<input type="text" name="name" placeholder="Enter Inspector's name">
+						</div>
+						<button class="btn btn-success search-btn">Search</button>
+					</div>
+					<ul class="eng-list">
+						@for(index <- 0 until inspectors.size){
+							<li data-id="@inspectors(index).id">
+								<div class="eng-info">
+									<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
+									<p>
+										@if(inspectors(index).user != null){
+											@if(inspectors(index).accType == 3){
+												PE No.: @inspectors(index).user.peNo
+											}else{
+												@if(inspectors(index).user.designation != null){
+													@inspectors(index).user.designation
+												}else{
+													Not Set
+												}
+											}
+										}
+									</p>
+								</div>
+								<button class="btn btn-primary add-btn">Add</button>
+							</li>
+						}
+					</ul>
+				</div>
+				
+				<div class="right-body">
+					<div class="right-detail">
+						<ul class="eng-list hidden">
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	
+	<div class="modal fade" id="client-model" role="dialog">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title">@messages.at("add_client_developer")</h4>
+		      	</div>
+		      	<form id="client-form">
+			      	<div class="modal-body">
+				    	<div class="form-group">
+			    			<label>@messages.at("email")</label>
+			      			<input class="form-control" type="text" name="clientEmail" placeholder="@messages.at("placeholder_email")"/>
+			      		</div>
+				      	<div class="form-group">
+				      		<label>Password</label>	
+				      		<input class="form-control" type="password" name="clientPassword" placeholder="@messages.at("placeholder_password")"/>
+				      	</div>
+				      	<div class="form-group">
+				      		<label>Name</label>	
+				      		<input class="form-control" type="text" name="clientName" placeholder="@messages.at("placeholder_name")"/>
+				      	</div>
+				      	<div class="form-group">
+				      		<label>HP NO.</label>	
+				      		<input class="form-control" type="text" name="clientHpNo" placeholder="@messages.at("placeholder_hp")"/>
+				      	</div>
+				      	<div class="form-group">
+				      		<label>@messages.at("designation")</label>	
+				      		<input class="form-control" type="text" name="clientDesignation" placeholder="@messages.at("placeholder_designation")"/>
+				      	</div>
+				      	<div class="form-group">
+							<div class="form-label">
+								<label class="chx-container">@messages.at("notify")
+								  <input id="client-notify-chx" type="checkbox" value="0">
+								  <span class="checkmark"></span>
+								</label>
+							</div>
+						</div>
+			      	</div>
+			      	<div class="modal-footer">
+				      	<div class="form-group">
+				        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+				        </div>
+			      	</div>
+		      	</form>
+	    	</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="builder-model" role="dialog">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title">@messages.at("add_builder_contractor")</h4>
+		      	</div>
+		      	<form id="builder-form">
+			      	<div class="modal-body">
+				    	<div class="form-group">
+			    			<label>@messages.at("email")</label>
+			      			<input class="form-control" type="text" name="builderEmail" placeholder="@messages.at("placeholder_email")"/>
+			      		</div>
+				      	<div class="form-group">
+				      		<label>Password</label>	
+				      		<input class="form-control" type="password" name="builderPassword" placeholder="@messages.at("placeholder_password")"/>
+				      	</div>
+				      	<div class="form-group">
+				      		<label>Name</label>	
+				      		<input class="form-control" type="text" name="builderName" placeholder="@messages.at("placeholder_name")"/>
+				      	</div>
+				      	<div class="form-group">
+				      		<label>HP NO.</label>	
+				      		<input class="form-control" type="text" name="builderHpNo" placeholder="@messages.at("placeholder_hp")"/>
+				      	</div>
+				      	<div class="form-group">
+				      		<label>@messages.at("designation")</label>	
+				      		<input class="form-control" type="text" name="builderDesignation" placeholder="@messages.at("placeholder_designation")"/>
+				      	</div>
+				      	<div class="form-group">
+							<div class="form-label">
+								<label class="chx-container">@messages.at("notify")
+								  <input id="builder-notify-chx" type="checkbox" value="0">
+								  <span class="checkmark"></span>
+								</label>
+							</div>
+						</div>
+			      	</div>
+			      	<div class="modal-footer">
+				      	<div class="form-group">
+				        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+				        </div>
+			      	</div>
+		      	</form>
+	    	</div>
+		</div>
+	</div>
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

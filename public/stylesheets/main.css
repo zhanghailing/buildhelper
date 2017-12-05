@@ -63,6 +63,10 @@ p.bold{
 	font-weight: 600;
 }
 
+.form-group{
+	margin-bottom: 20px !important;
+}
+
 @-webkit-keyframes autofill {
     to {
         color: #999;
@@ -767,7 +771,7 @@ input.file-input{
 
 .eng-content{
 	width: 100%;
-	min-height: 100%;
+	min-height: 500px;
 }
 
 .left-body{
@@ -837,6 +841,7 @@ input.file-input{
 
 .pro-sec{
 	margin: 30px;
+	background-color: #fafafa;
 }
 
 .full-width{
@@ -844,8 +849,48 @@ input.file-input{
 }
 
 .date-group{
-	width: 46%;
+	width: 48%;
 	display: inline-block;
+}
+
+.sec-body{
+	padding: 15px 30px;
+}
+
+.acc-group{
+	padding: 15px;
+}
+
+.acc-info{
+	background-color: white;
+	padding: 10px;
+	min-height: 130px;
+	position: relative;
+}
+
+.acc-info > p{
+	text-align: center;
+	margin:0;
+}
+
+.acc-info > a.add-btn{
+	position: absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
+	font-size: 5.0em;
+}
+
+.acc-info > a.minus-btn{
+	position: absolute;
+	color: red;
+	top: -12px;
+    right: -6px;
+    font-size: 1.5em;
+}
+
+.acc-name{
+	font-size: 1.2em;
 }
 
 /** Create Project End **/

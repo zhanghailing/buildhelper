@@ -65,6 +65,15 @@ create_project=创建项目
 project_detail=项目详情
 project_title=项目标题
 placeholder_project_title=请输入项目的标题
+select_type_of_work=选择工作种类
+developer_client=开发人员/客户
+person_in_charge=监管人员
+add_client_developer=添加开发人员／客户
+placeholder_hp=请填写这个人的联系号码
+notify=通知
+builder_contractor=构建者／协调者
+add_builder_contractor=增添构建者／协调者
+qp_team=QP 小组
 
 error.file_size=上传的文件不可以超过2MB!
 
