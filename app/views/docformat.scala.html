@@ -1,0 +1,32 @@
+@import tags._
+
+@(docFormats: List[DocFormat])
+
+@sidemenu("admin", 6){
+	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
+	<script type="text/javascript">
+		$(function(){
+			
+	   	});
+	</script>
+	<div class="dash-tab-header">
+		<ul class="tab-bar">
+			<li>
+				<a class="tab-link">BCA</a>
+			</li>
+			<li class="active">
+				<a class="tab-link">MOM</a>
+			</li>
+			<li>
+				<a class="tab-link">PUB</a>
+			</li>
+			<li>
+				<a class="tab-link">SCDF</a>
+			</li>
+			<li>
+				<a class="tab-link">OTHERS</a>
+			</li>
+		</ul>
+	</div>
+	
+}

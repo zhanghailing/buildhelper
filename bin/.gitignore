@@ -4,3 +4,6 @@
 /controllers/
 /actions/
 /models/
+/META-INF/
+/filters/
+/tools/

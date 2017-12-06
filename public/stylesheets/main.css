@@ -905,6 +905,42 @@ p.work-type{
 
 /** Create Project End **/
 
+/** Dash Tab Bar Start **/
+
+.dash-tab-header{
+	margin-top: -15px;
+	background-color: #fafafa;
+}
+
+.tab-bar > li{
+	display: inline-block;
+}
+
+.tab-bar > li:hover{
+	background-color: #707070;
+}
+
+a.tab-link{
+	display: block;
+	padding: 15px 20px;
+	color: #777 !important;
+	text-decoration: none;
+}
+
+a.tab-link:hover{
+	color: white !important;
+}
+
+.tab-bar > li.active{
+	background-color: #707070;
+}
+
+.tab-bar > li.active a{
+	color: white !important;
+}
+
+/** Dash Tab Bar End **/
+
 /** Checkbox Start **/
 .chx-container {
     display: block;

@@ -40,6 +40,7 @@ GET 	/engineer/add					controllers.CompanyController.addEngineerPage()
 POST 	/add/engineer					controllers.CompanyController.addEngineer()
 POST 	/remove/engineer				controllers.CompanyController.removeEngineer()
 POST 	/search/account					controllers.CompanyController.searchAccount()
+GET 		/doc/formats					controllers.CompanyController.documentFormat()
 
 GET		/project/admin					controllers.ProjectController.projectAdmin(offset: Integer ?= 0)
 GET		/create/project					controllers.ProjectController.createProject()

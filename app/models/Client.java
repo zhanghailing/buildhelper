@@ -1,11 +1,9 @@
 package models;
 
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +22,6 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.db.jpa.JPA;
-import services.MailerService;
 import tools.Utils;
 
 @Entity

@@ -19,6 +19,7 @@ import models.Account;
 import models.AccountType;
 import models.Avatar;
 import models.Company;
+import models.DocFormat;
 import models.Engineer;
 import models.LetterHead;
 import models.ResponseData;
@@ -663,6 +664,23 @@ public class CompanyController extends Controller {
 			}
 		}
 		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result documentFormat(){
+		ResponseData responseData = new ResponseData();
+
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+		    	List<DocFormat> docFormats = jpaApi.em().createQuery("FROM DocFormat", DocFormat.class).getResultList();
+		    	return ok(docformat.render(docFormats));
+		}
+		
+		return notFound(errorpage.render(responseData));
 	}
 
 }
