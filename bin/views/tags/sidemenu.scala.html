@@ -41,7 +41,7 @@
 				        </li>
 				
 				        <li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 4){class="active"} href="@routes.CompanyController.engineers(0)">
+				            <a @if(section == 4){class="active"} href="@routes.ProjectController.projectOfCompany(0)">
 				                <i></i>
 				                <span>Project Engineer</span>
 				            </a>
@@ -63,13 +63,13 @@
 		        
 		        @if(portal == "engineer"){
 		        	<li class="sub-menu dcjq-parent-li">
-			            <a @if(section == 5){class="active"} href="@routes.ProjectController.projectAdmin()">
+			            <a @if(section == 5){class="active"} href="@routes.ProjectController.projectOfEngineer(0)">
 			                <i></i>
 			                <span>Project Admin</span>
 			            </a>
 			        </li>
 			        <li class="sub-menu dcjq-parent-li">
-			            <a @if(section == 8){class="active"} href="@routes.ProjectController.projectAdmin()">
+			            <a @if(section == 8){class="active"} href="">
 			                <i></i>
 			                <span>Project Execution</span>
 			            </a>

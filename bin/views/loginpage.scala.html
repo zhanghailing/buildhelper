@@ -42,11 +42,11 @@
 		                			window.location.href = "@routes.CompanyController.company()";
 		                		}else if(data.data.accType === "QP"){
 		                			if(data.data.isEngineer){
-		                				window.location.href = "@routes.ProjectController.projectAdmin()";
+		                				window.location.href = "@routes.ProjectController.projectOfEngineer()";
 		                			}
 		                		}else if(data.data.accType === "INSPECTOR"){
 									if(data.data.isEngineer){
-										window.location.href = "@routes.ProjectController.projectAdmin()";
+										window.location.href = "@routes.ProjectController.projectOfEngineer()";
 		                			}	
 		                		}
 		                	}

@@ -1,11 +1,11 @@
 package controllers;
 
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
 import ModelVOs.AccountVO;
 import actions.AuthAction;
@@ -13,8 +13,10 @@ import models.Account;
 import models.AccountType;
 import models.Builder;
 import models.Client;
+import models.Company;
 import models.Engineer;
 import models.Project;
+import models.ProjectStatus;
 import models.ResponseData;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -35,7 +37,7 @@ public class ProjectController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result projectAdmin(int offset){
+	public Result projectOfEngineer(int offset){
 		ResponseData responseData = new ResponseData();
 
 		Account account = (Account) ctx().args.get("account");
@@ -51,10 +53,68 @@ public class ProjectController extends Controller{
 			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
 
 			List<Project> projects = jpaApi.em()
-					.createNativeQuery("SELECT * FROM project pro WHERE pro.engineer_id=:engineerId", Project.class)
+					.createNativeQuery("SELECT * FROM project pro WHERE pro.engineer_id=:engineerId AND pro.is_archived = :isArchived", Project.class)
 					.setParameter("engineerId", engineer.account.id)
+					.setParameter("isArchived", false)
 					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-			return ok(projectadmin.render(projects, pageIndex,totalAmount));
+			return ok(projectofengineer.render(projects, pageIndex,totalAmount));
+		}
+		return notFound(errorpage.render(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result projectOfCompany(int offset){
+		ResponseData responseData = new ResponseData();
+
+		Account account = (Account) ctx().args.get("account");
+		if (account.accType != AccountType.ADMIN) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+			try {
+				Company company = jpaApi.em().createQuery("FROM Company cy WHERE cy.acc_id = :accountId", Company.class)
+						.setParameter("accountId", account.id)
+						.getSingleResult();
+				
+				List<Engineer> engineers = jpaApi.em()
+						.createQuery("FROM Engineer eng LEFT JOIN Account ac ON ac.id = eng.accountId WHERE eng.company = :company AND ac.blocked = :blocked AND ac.deleted = :deleted AND ac.active = :active", Engineer.class)
+						.setParameter("company", company)
+						.setParameter("blocked", false)
+						.setParameter("deleted", false)
+						.setParameter("active", true)
+						.getResultList();
+				
+				String engineerIDCause = "";
+				for (int i = 0; i < engineers.size(); i++) {
+					if (i == engineers.size() - 1) {
+						engineerIDCause += "pro.engineer_id='" + engineers.get(i).accountId + "'";
+					} else {
+						engineerIDCause += "pro.engineer_id='" + engineers.get(i).accountId + "' AND ";
+					}
+				}
+				
+				String countSql = "SELECT COUNT(*) FROM project pro";
+				String sql = "SELECT * FROM project pro";
+				if(!Utils.isBlank(engineerIDCause)){
+					if(engineerIDCause.contains("AND")) {
+						engineerIDCause = engineerIDCause.substring(0, engineerIDCause.length() - 5);
+					}
+					countSql = countSql + " WHERE " + engineerIDCause;
+					sql = sql + " WHERE " + engineerIDCause;
+				}
+				
+				int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
+				int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+				
+				List<Project> projects = jpaApi.em().createNativeQuery(sql, Project.class)
+						.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
+				
+				return ok(projectofcompany.render(projects, pageIndex, totalAmount));
+			}catch(NoResultException e) {
+				responseData.code = 4000;
+				responseData.message = "Cannot find the company.";
+			}
 		}
 		return notFound(errorpage.render(responseData));
 	}
@@ -182,7 +242,7 @@ public class ProjectController extends Controller{
 				Project.initQP(project, requestData.data());
 				Project.initInspector(project, requestData.data());
 				
-				return redirect(routes.ProjectController.projectAdmin(0));
+				return redirect(routes.ProjectController.projectOfEngineer(0));
 			}
 		}catch (Exception e) {
 			responseData.code = 4001;
@@ -191,7 +251,90 @@ public class ProjectController extends Controller{
 		
 		return notFound(errorpage.render(responseData));
 	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result archiveProject(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		
+		if(Utils.isBlank(projectId)) {
+			responseData.code = 4000;
+			responseData.message = "Missing Parameter.";
+		}else {
+			Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+			if(project != null) {
+				if(project.isValidateAccount(engineerAccount)) {
+					project.isArchived = true;
+					jpaApi.em().persist(project);
+					
+				}else {
+					responseData.code = 4000;
+					responseData.message = "Account is not validated";
+				}
+			}else {
+				responseData.code = 4000;
+				responseData.message = "Project doesn't not exist.";
+			}
+		}
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result projectCompleted(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(Utils.isBlank(projectId)) {
+			responseData.code = 4000;
+			responseData.message = "Missing Parameter.";
+		}else {
+			Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+			if(project != null) {
+				if(project.isValidateAccount(engineerAccount)) {
+					project.status = ProjectStatus.COMPLETE;
+					jpaApi.em().persist(project);
+					
+				}else {
+					responseData.code = 4000;
+					responseData.message = "Account is not validated";
+				}
+			}else {
+				responseData.code = 4000;
+				responseData.message = "Project doesn't not exist.";
+			}
+		}
+		return ok(Json.toJson(responseData));
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

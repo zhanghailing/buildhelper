@@ -45,19 +45,24 @@ public class Project {
 	@Column(name="end_date")
 	public Date endDate;
 	
-	@Column(name="is_gondola")
+	@Column(name="is_gondola", columnDefinition = "boolean default false")
 	public boolean isGondola;
 	
-	@Column(name="is_mcwp")
+	@Column(name="is_mcwp", columnDefinition = "boolean default false")
 	public boolean isMCWP;
 	
-	@Column(name="is_scaffold")
+	@Column(name="is_scaffold", columnDefinition = "boolean default false")
 	public boolean isScaffold;
 	
-	@Column(name="is_formwork")
+	@Column(name="is_formwork", columnDefinition = "boolean default false")
 	public boolean isFormwork;
 	
-	@Column(name="use_lh")
+	public ProjectStatus status;
+	
+	@Column(name="is_archived", columnDefinition = "boolean default false")
+	public boolean isArchived;
+	
+	@Column(name="use_lh", columnDefinition = "boolean default false")
 	public boolean useLetterHead;
 	
 	@OneToMany(mappedBy = "project")
@@ -81,6 +86,7 @@ public class Project {
 	public Project(Engineer engineer, String title) {
 		this.engineer = engineer;
 		this.title = title;
+		this.status = ProjectStatus.NEW;
 	}
 	
 	public static void initQP(Project project, Map<String, String> data) throws ParseException{
@@ -125,6 +131,13 @@ public class Project {
 	    		account.project = project;
 	    		JPA.em().persist(account);
 	    }
+	}
+	
+	public boolean isValidateAccount(Account account) {
+		if(account.engineer == null || account.blocked || account.deleted || !account.active) {
+			return false;
+		}
+		return true;
 	}
 
 }

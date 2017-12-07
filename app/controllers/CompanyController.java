@@ -466,31 +466,31 @@ public class CompanyController extends Controller {
 		return ok(inspectors.render(inpectors, pageIndex, totalAmount));
 	}
 	
-	@With(AuthAction.class)
-	@Transactional
-	public Result engineers(int offset) {
-		ResponseData responseData = new ResponseData();
-
-		Account account = (Account) ctx().args.get("account");
-		Account adminAccount = jpaApi.em().find(Account.class, account.id);
-		if (adminAccount.accType != AccountType.ADMIN) {
-			responseData.code = 4000;
-			responseData.message = "You do not have permission.";
-		}else{
-
-			int totalAmount = ((BigInteger) jpaApi.em()
-					.createNativeQuery("SELECT COUNT(*) FROM engineer en WHERE en.company_id = :companyId")
-					.setParameter("companyId", adminAccount.companys.get(0).id).getSingleResult()).intValue();
-			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
-
-			List<Engineer> engineerList = jpaApi.em()
-					.createNativeQuery("SELECT * FROM engineer en WHERE en.company_id = :companyId",Engineer.class)
-					.setParameter("companyId", adminAccount.companys.get(0))
-					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-			return ok(engineers.render(engineerList, pageIndex, totalAmount));
-		}
-		return notFound(errorpage.render(responseData)); 
-	}
+//	@With(AuthAction.class)
+//	@Transactional
+//	public Result engineers(int offset) {
+//		ResponseData responseData = new ResponseData();
+//
+//		Account account = (Account) ctx().args.get("account");
+//		Account adminAccount = jpaApi.em().find(Account.class, account.id);
+//		if (adminAccount.accType != AccountType.ADMIN) {
+//			responseData.code = 4000;
+//			responseData.message = "You do not have permission.";
+//		}else{
+//
+//			int totalAmount = ((BigInteger) jpaApi.em()
+//					.createNativeQuery("SELECT COUNT(*) FROM engineer en WHERE en.company_id = :companyId")
+//					.setParameter("companyId", adminAccount.companys.get(0).id).getSingleResult()).intValue();
+//			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+//
+//			List<Engineer> engineerList = jpaApi.em()
+//					.createNativeQuery("SELECT * FROM engineer en WHERE en.company_id = :companyId",Engineer.class)
+//					.setParameter("companyId", adminAccount.companys.get(0))
+//					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
+//			return ok(engineers.render(engineerList, pageIndex, totalAmount));
+//		}
+//		return notFound(errorpage.render(responseData)); 
+//	}
 	
 	@With(AuthAction.class)
 	@Transactional

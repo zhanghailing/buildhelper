@@ -1,7 +1,7 @@
 @import tags._
 @import tools.Constants
 
-@(engineers: List[Engineer], pageIndex: Integer, totalAmount: Integer)
+@(projects: List[Project], pageIndex: Integer, totalAmount: Integer)
 
 @sidemenu("admin", 4){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -34,7 +34,7 @@
 		<a class="btn btn-success create-btn" href="@routes.CompanyController.addEngineerPage()">@messages.at("add_project_engineer")</a>
 	</div>
 	
-	@if(engineers == null || engineers.size == 0){
+	@if(projects == null || projects.size == 0){
 		<p class="empty">Sorry, You don't have any company～</p>
 	}else{
 		<table class="table table-striped table-hover lesson-table">
@@ -48,34 +48,33 @@
 		      </tr>
 		    </thead>
 		    <tbody>
-		    	@for(index <- 0 until engineers.size){
+		    		@for(index <- 0 until projects.size){
 				    <tr class="paginate">
-						<td>@engineers(index).account.user.name</td>
-						<td>@if(engineers(index).projects != null){@if(engineers(index).projects.size() > 0){@engineers(index).projects(0).title}}</td>
+						<td>@projects(index).engineer.account.user.name</td>
+						<td>@projects(index).title</td>
 						<td>MOM</td>
-						<td>@if(engineers(index).projects != null){@if(engineers(index).projects.size() > 0){
-								<p>
-									@if(engineers(index).projects(0).isGondola){
-										Gondola
-									}
-								</p>
-								<p>
-									@if(engineers(index).projects(0).isMCWP){
-										MCWP
-									}
-								</p>
-								<p>
-									@if(engineers(index).projects(0).isScaffold){
-										Scaffold
-									}
-								</p>
-								<p>
-									@if(engineers(index).projects(0).isFormwork){
-										Formwork
-									}
-								</p>
-							
-							}}</td>
+						<td>
+							<p>
+								@if(projects(index).isGondola){
+									Gondola
+								}
+							</p>
+							<p>
+								@if(projects(index).isMCWP){
+									MCWP
+								}
+							</p>
+							<p>
+								@if(projects(index).isScaffold){
+									Scaffold
+								}
+							</p>
+							<p>
+								@if(projects(index).isFormwork){
+									Formwork
+								}
+							</p>
+						</td>
 						<td class="greeb">Live</td> 
 			        </tr>
 				}

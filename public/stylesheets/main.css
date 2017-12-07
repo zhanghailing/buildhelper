@@ -57,6 +57,17 @@ a:focus, ul:focus, button:focus{
     border-radius: 50%;
 }
 
+a.action-btn{
+	color: black;
+	padding: 4px 8px;
+	display: inline-block;
+	border: 1px solid black;
+}
+
+a.disabled{
+	color: #777;
+}
+
 p.empty{
 	text-align: center;
 	color: #777;
