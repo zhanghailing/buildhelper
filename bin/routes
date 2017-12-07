@@ -40,12 +40,27 @@ GET 	/engineer/add					controllers.CompanyController.addEngineerPage()
 POST 	/add/engineer					controllers.CompanyController.addEngineer()
 POST 	/remove/engineer				controllers.CompanyController.removeEngineer()
 POST 	/search/account					controllers.CompanyController.searchAccount()
-GET 		/doc/formats					controllers.CompanyController.documentFormat()
+GET 	/doc/formats					controllers.CompanyController.documentFormat()
+GET		/download/file					controllers.CompanyController.downloadFile(uuid: String ?= "")
+GET		/download/doc/thumbnail			controllers.CompanyController.downloadDocThumbnail(uuid: String ?= "")
 
 GET		/project/admin					controllers.ProjectController.projectAdmin(offset: Integer ?= 0)
 GET		/create/project					controllers.ProjectController.createProject()
 POST 	/search/qp						controllers.ProjectController.searchQP()
-POST 	/search/inspector						controllers.ProjectController.searchInspector()
-POST 	/save/project						controllers.ProjectController.saveProject()
+POST 	/search/inspector				controllers.ProjectController.searchInspector()
+POST 	/save/project					controllers.ProjectController.saveProject()
+
+GET 	/mom/checklist/formwork			controllers.DocFormatController.momChecklistFormWork()
+GET 	/mom/checklist/gondola			controllers.DocFormatController.momChecklistGondola()
+GET 	/mom/checklist/mcwp				controllers.DocFormatController.momChecklistMCWP()
+GET 	/mom/checklist/scaffold			controllers.DocFormatController.momChecklistScaffold()
+GET 	/mom/cos/scaffold				controllers.DocFormatController.momCOSScaffold()
+GET 	/mom/cos/gondola				controllers.DocFormatController.momCOSGondola()
+GET 	/mom/cos/mcwp					controllers.DocFormatController.momCOSMCWP()
+GET 	/mom/cos/formwork				controllers.DocFormatController.momCOSFormwork()
+
+
+
+
 
 

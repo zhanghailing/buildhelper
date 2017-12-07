@@ -184,9 +184,9 @@ public class ProjectController extends Controller{
 				
 				return redirect(routes.ProjectController.projectAdmin(0));
 			}
-		}catch (ParseException e) {
+		}catch (Exception e) {
 			responseData.code = 4001;
-			responseData.message = e.getLocalizedMessage();
+			responseData.message = e.getMessage();
 		}
 		
 		return notFound(errorpage.render(responseData));

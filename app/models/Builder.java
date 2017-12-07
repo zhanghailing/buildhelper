@@ -21,6 +21,7 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.AuthController;
 import play.db.jpa.JPA;
 import tools.Utils;
 
@@ -63,7 +64,7 @@ public class Builder {
 		this.project = project;
 	}
 	
-	public static void initBuilder(String companyName, Project project, Map<String, String> data) throws ParseException{
+	public static void initBuilder(String companyName, Project project, Map<String, String> data) throws Exception{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> builderEmailMap = new HashMap<>();
 	    Map<Integer, String> builderPasswordMap = new HashMap<>();
@@ -111,6 +112,9 @@ public class Builder {
 	    }
 	    
 	    for(int i = 0; i < builderEmailMap.size(); i++){
+		    	if(!AuthController.notExists(builderEmailMap.get(i))){
+	    			throw new Exception("Account already exist."); 
+	    		}
 	    		Account account = new Account(builderEmailMap.get(i), builderPasswordMap.get(i));
 	    		account.accType = AccountType.CONTRACTOR;
 	    		JPA.em().persist(account);

@@ -3,7 +3,9 @@ package controllers;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -470,15 +472,21 @@ public class CompanyController extends Controller {
 		ResponseData responseData = new ResponseData();
 
 		Account account = (Account) ctx().args.get("account");
-		if (account.accType != AccountType.ADMIN) {
+		Account adminAccount = jpaApi.em().find(Account.class, account.id);
+		if (adminAccount.accType != AccountType.ADMIN) {
 			responseData.code = 4000;
 			responseData.message = "You do not have permission.";
 		}else{
 
-			int totalAmount = 0;
-			int pageIndex = 1;
+			int totalAmount = ((BigInteger) jpaApi.em()
+					.createNativeQuery("SELECT COUNT(*) FROM engineer en WHERE en.company_id = :companyId")
+					.setParameter("companyId", adminAccount.companys.get(0).id).getSingleResult()).intValue();
+			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
 
-			List<Account> engineerList = null;
+			List<Engineer> engineerList = jpaApi.em()
+					.createNativeQuery("SELECT * FROM engineer en WHERE en.company_id = :companyId",Engineer.class)
+					.setParameter("companyId", adminAccount.companys.get(0))
+					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 			return ok(engineers.render(engineerList, pageIndex, totalAmount));
 		}
 		return notFound(errorpage.render(responseData)); 
@@ -681,6 +689,45 @@ public class CompanyController extends Controller {
 		}
 		
 		return notFound(errorpage.render(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result downloadFile(String uuid){
+		ResponseData responseData = new ResponseData();
+		TypedQuery<DocFormat> query = jpaApi.em()
+				.createQuery("from DocFormat df where df.uuid = :uuid", DocFormat.class)
+				.setParameter("uuid", uuid);
+		
+		try{
+			DocFormat docFile = query.getSingleResult();
+			InputStream fileStream = docFile.download();
+			return ok(fileStream).withHeader("Content-Disposition", "filename=" + URLEncoder.encode(docFile.department + "_" + docFile.docType + "_" + docFile.workType, "UTF-8"));
+		}catch(NoResultException | UnsupportedEncodingException e){
+			responseData.message = "Image cannot be found.";
+	    	responseData.code = 4000;
+		}
+		return ok(Json.toJson(responseData));
+	}
+	
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result downloadDocThumbnail(String uuid){
+		ResponseData responseData = new ResponseData();
+		TypedQuery<DocFormat> query = jpaApi.em()
+				.createQuery("from DocFormat df where df.uuid = :uuid", DocFormat.class)
+				.setParameter("uuid", uuid);
+		
+		try{
+			DocFormat docFile = query.getSingleResult();
+			InputStream fileStream = docFile.download();
+			return ok(fileStream).withHeader("Content-Disposition", "filename=" + URLEncoder.encode(docFile.thumbnialUUID, "UTF-8"));
+		}catch(NoResultException | UnsupportedEncodingException e){
+			responseData.message = "Image cannot be found.";
+	    	responseData.code = 4000;
+		}
+		return ok(Json.toJson(responseData));
 	}
 
 }

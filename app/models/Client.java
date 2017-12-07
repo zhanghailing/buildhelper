@@ -21,6 +21,7 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.AuthController;
 import play.db.jpa.JPA;
 import tools.Utils;
 
@@ -63,7 +64,7 @@ public class Client {
 		this.project = project;
 	}
 	
-	public static void initClient(String clientCompany, Project project, Map<String, String> data) throws ParseException{
+	public static void initClient(String clientCompany, Project project, Map<String, String> data) throws Exception{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> clientEmailMap = new HashMap<>();
 	    Map<Integer, String> clientPasswordMap = new HashMap<>();
@@ -111,6 +112,9 @@ public class Client {
 	    }
 	    
 	    for(int i = 0; i < clientEmailMap.size(); i++){
+	    		if(!AuthController.notExists(clientEmailMap.get(i))){
+	    			throw new Exception("Account already exist."); 
+	    		}
 	    		Account account = new Account(clientEmailMap.get(i), clientPasswordMap.get(i));
 	    		account.accType = AccountType.CLIENT;
 	    		JPA.em().persist(account);
