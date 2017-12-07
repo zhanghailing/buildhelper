@@ -1,7 +1,7 @@
 @import tags._
 @import tools.Constants
 
-@(engineer: Engineer, qpList: List[Account], inspectors: List[Account])
+@(project: Project, qpList: List[Account], inspectors: List[Account])
 
 @sidemenu("engineer", 5){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -475,7 +475,7 @@
 			            <label for="pro-title">@messages.at("project_title")</label>
 			         </div>
 			         <div class="form-input full-width">
-			            <input id="pro-title" type="text" class="form-control" name="title" placeholder="@messages.at("placeholder_project_title")">
+			            <input id="pro-title" type="text" class="form-control" name="title" placeholder="@messages.at("placeholder_project_title")" value="@if(project != null){@project.title}">
 			         </div>
 		      	</div>
 		      	

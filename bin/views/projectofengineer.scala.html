@@ -124,7 +124,7 @@
 							@projects(index).endDate
 						</td>
 						<td>
-							<a class="edit-action action-btn" href="">Edit</a>
+							<a class="edit-action action-btn" href="@routes.ProjectController.createProject(projects(index).id)">Edit</a>
 							<a class="archive-action action-btn" data-id="@projects(index).id" data-url="@routes.ProjectController.archiveProject()">Archive</a>
 							<a class="complete-action action-btn" data-id="@projects(index).id" data-url="@routes.ProjectController.projectCompleted()">Complete</a>
 						</td>
