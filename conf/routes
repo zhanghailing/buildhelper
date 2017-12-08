@@ -46,7 +46,7 @@ GET		/download/doc/thumbnail			controllers.CompanyController.downloadDocThumbnai
 
 GET		/engineer/projects				controllers.ProjectController.projectOfEngineer(offset: Integer ?= 0)
 GET		/company/projects				controllers.ProjectController.projectOfCompany(offset: Integer ?= 0)
-GET		/create/project					controllers.ProjectController.createProject()
+GET		/create/project					controllers.ProjectController.createProject(projectId: Long ?= 0)
 POST 	/search/qp						controllers.ProjectController.searchQP()
 POST 	/search/inspector				controllers.ProjectController.searchInspector()
 POST 	/save/project					controllers.ProjectController.saveProject()

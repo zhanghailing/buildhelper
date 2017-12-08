@@ -73,13 +73,13 @@ public class ProjectController extends Controller{
 			responseData.message = "You do not have permission.";
 		}else{
 			try {
-				Company company = jpaApi.em().createQuery("FROM Company cy WHERE cy.acc_id = :accountId", Company.class)
-						.setParameter("accountId", account.id)
+				Company company = jpaApi.em().createQuery("FROM Company cy WHERE cy.account = :account", Company.class)
+						.setParameter("account", account)
 						.getSingleResult();
 				
 				List<Engineer> engineers = jpaApi.em()
-						.createQuery("FROM Engineer eng LEFT JOIN Account ac ON ac.id = eng.accountId WHERE eng.company = :company AND ac.blocked = :blocked AND ac.deleted = :deleted AND ac.active = :active", Engineer.class)
-						.setParameter("company", company)
+						.createNativeQuery("SELECT * FROM engineer eng LEFT JOIN account ac ON ac.id = eng.account_id WHERE eng.company_id = :companyId AND ac.blocked = :blocked AND ac.deleted = :deleted AND ac.active = :active", Engineer.class)
+						.setParameter("companyId", company.id)
 						.setParameter("blocked", false)
 						.setParameter("deleted", false)
 						.setParameter("active", true)
@@ -90,19 +90,20 @@ public class ProjectController extends Controller{
 					if (i == engineers.size() - 1) {
 						engineerIDCause += "pro.engineer_id='" + engineers.get(i).accountId + "'";
 					} else {
-						engineerIDCause += "pro.engineer_id='" + engineers.get(i).accountId + "' AND ";
+						engineerIDCause += "pro.engineer_id='" + engineers.get(i).accountId + "' OR ";
 					}
 				}
+				
+				System.out.println("------> " + engineerIDCause);
 				
 				String countSql = "SELECT COUNT(*) FROM project pro";
 				String sql = "SELECT * FROM project pro";
 				if(!Utils.isBlank(engineerIDCause)){
-					if(engineerIDCause.contains("AND")) {
-						engineerIDCause = engineerIDCause.substring(0, engineerIDCause.length() - 5);
-					}
 					countSql = countSql + " WHERE " + engineerIDCause;
 					sql = sql + " WHERE " + engineerIDCause;
 				}
+				
+				
 				
 				int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
 				int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
@@ -121,7 +122,7 @@ public class ProjectController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result createProject() {
+	public Result createProject(long projectId) {
 		ResponseData responseData = new ResponseData();
 
 		Account account = (Account) ctx().args.get("account");
@@ -136,7 +137,12 @@ public class ProjectController extends Controller{
 			String inspectorSql = "SELECT * FROM account ac WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND ac.acc_type=2 AND ac.company_id = " + engineer.company.id;
 			List<Account> inspectors = jpaApi.em().createNativeQuery(inspectorSql, Account.class).getResultList();
 			
-			return ok(createproject.render(engineer, qpList, inspectors));
+			Project project = null;
+			if(projectId > 0){
+				project = jpaApi.em().find(Project.class, projectId);
+			}
+			
+			return ok(createproject.render(project, qpList, inspectors));
 		}
 
 		return notFound(errorpage.render(responseData));

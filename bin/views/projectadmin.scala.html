@@ -27,56 +27,6 @@
 		            $('form#page-form').submit();
 		        }
 		    });
-		    
-		    $('.archive-action').on('click', function(){
-		    		var projectId = $(this).data('id');
-		    		var url = $(this).data('url');
-		    		
-		    		if(!$(this).hasClass('disabled')){
-		    			$(this).addClass("disabled");
-		    			$.ajax({
-		                url: url,
-		                type: "POST",
-		                data: {
-		                		projectId: projectId
-		                },
-		                success: function(response, status) {
-			                	var data = $.parseJSON(JSON.stringify(response));
-			                	if(data.code != 0){
-			                		showAlertToast(data.message, "alert-danger");
-			                	}else{
-			                		window.location.href = "@routes.ProjectController.projectOfEngineer(0)";
-			                	}
-			                	$(this).removeClass("disabled");
-			            }
-		            });		    			
-		    		}
-		    });
-		    
-		    $('.complete-action').on('click', function(){
-		    		var projectId = $(this).data('id');
-		    		var url = $(this).data('url');
-		    		
-		    		if(!$(this).hasClass('disabled')){
-		    			$(this).addClass("disabled");
-		    			$.ajax({
-		                url: url,
-		                type: "POST",
-		                data: {
-		                		projectId: projectId
-		                },
-		                success: function(response, status) {
-			                	var data = $.parseJSON(JSON.stringify(response));
-			                	if(data.code != 0){
-			                		showAlertToast(data.message, "alert-danger");
-			                	}else{
-			                		window.location.href = "@routes.ProjectController.projectOfEngineer(0)";
-			                	}
-			                	$(this).removeClass("disabled");
-			            }
-		            });		    			
-		    		}
-		    });
 	   	});
 	</script>
 	<div class="dash-detail-header">
@@ -124,9 +74,9 @@
 							@projects(index).endDate
 						</td>
 						<td>
-							<a class="edit-action action-btn" href="@routes.ProjectController.createProject(projects(index).id)">Edit</a>
-							<a class="archive-action action-btn" data-id="@projects(index).id" data-url="@routes.ProjectController.archiveProject()">Archive</a>
-							<a class="complete-action action-btn" data-id="@projects(index).id" data-url="@routes.ProjectController.projectCompleted()">Complete</a>
+							<a class="action-btn" href="">Edit</a>
+							<a class="action-btn" href="">Archive</a>
+							<a class="action-btn" href="">Complete</a>
 						</td>
 			        </tr>
 				}
