@@ -600,6 +600,15 @@ public class ProjectController extends Controller{
 		return notFound(errorpage.render(responseData));
 	}
 	
+	@With(AuthAction.class)
+	@Transactional
+	public Result drawingFile(){
+		ResponseData responseData = new ResponseData();
+		
+		return ok(uploaddrawfile.render());
+	}
+	 
+	
 }
 
 

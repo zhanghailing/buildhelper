@@ -83,6 +83,10 @@ public class Project {
 	@JsonIgnore
     public Engineer engineer;
 	
+	@OneToMany(mappedBy = "project")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<DrawingFile> drawings;
+	
 	public Project() {}
 	public Project(Engineer engineer, String title) {
 		this.engineer = engineer;

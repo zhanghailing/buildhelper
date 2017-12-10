@@ -75,7 +75,7 @@ public class LetterHead extends Image{
 		}
 		
 		Thumbnails.of(file)
-	    .size(200, 200)
+	    .size(400, 50)
 	    .outputFormat("jpg")
 	    .toFile(thumbnailFile);
 		
