@@ -20,6 +20,7 @@ import models.ProjectStatus;
 import models.ResponseData;
 import play.data.DynamicForm;
 import play.data.FormFactory;
+import play.db.jpa.JPA;
 import play.db.jpa.JPAApi;
 import play.db.jpa.Transactional;
 import play.libs.Json;
@@ -94,15 +95,12 @@ public class ProjectController extends Controller{
 					}
 				}
 				
-				System.out.println("------> " + engineerIDCause);
-				
 				String countSql = "SELECT COUNT(*) FROM project pro";
 				String sql = "SELECT * FROM project pro";
 				if(!Utils.isBlank(engineerIDCause)){
 					countSql = countSql + " WHERE " + engineerIDCause;
 					sql = sql + " WHERE " + engineerIDCause;
 				}
-				
 				
 				
 				int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
@@ -215,6 +213,7 @@ public class ProjectController extends Controller{
 		ResponseData responseData = new ResponseData();
 
 		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
 		String projectTitle = requestData.get("title");
 		String startDate = requestData.get("startDate");
 		String endDate = requestData.get("endDate");
@@ -233,21 +232,40 @@ public class ProjectController extends Controller{
 				responseData.code = 4000;
 				responseData.message = "You do not have permission.";
 			}else{
-				Project project = new Project(adminAccount.engineer, projectTitle);
-				project.startDate = Utils.parse("yyyy-MM-dd", startDate);
-				project.endDate = Utils.parse("yyyy-MM-dd", endDate);
-				project.isGondola = gondola.equals("1") ? true : false;
-				project.isMCWP = mcwp.equals("1") ? true : false;
-				project.isScaffold = scaffold.equals("1") ? true : false;
-				project.isFormwork = formwork.equals("1") ? true : false;
-				project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
-				jpaApi.em().persist(project);
-				
-				Client.initClient(clientCompanyName, project, requestData.data());
-				Builder.initBuilder(builderCompanyName, project, requestData.data());
-				Project.initQP(project, requestData.data());
-				Project.initInspector(project, requestData.data());
-				
+				Project project = null;
+				if(!Utils.isBlank(projectId)) {
+					project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+					if(project == null) {
+						responseData.code = 4000;
+						responseData.message = "The project doesn't exist.";
+					}else {
+						project.title = projectTitle;
+						project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+						project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+						project.isGondola = gondola.equals("1") ? true : false;
+						project.isMCWP = mcwp.equals("1") ? true : false;
+						project.isScaffold = scaffold.equals("1") ? true : false;
+						project.isFormwork = formwork.equals("1") ? true : false;
+						project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+						jpaApi.em().persist(project);
+						return redirect(routes.ProjectController.projectOfEngineer(0));
+					}
+				}else {
+					project = new Project(adminAccount.engineer, projectTitle);
+					project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+					project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+					project.isGondola = gondola.equals("1") ? true : false;
+					project.isMCWP = mcwp.equals("1") ? true : false;
+					project.isScaffold = scaffold.equals("1") ? true : false;
+					project.isFormwork = formwork.equals("1") ? true : false;
+					project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+					jpaApi.em().persist(project);
+					
+					Client.initClient(clientCompanyName, project, requestData.data());
+					Builder.initBuilder(builderCompanyName, project, requestData.data());
+					Project.initQP(project, requestData.data());
+					Project.initInspector(project, requestData.data());
+				}
 				return redirect(routes.ProjectController.projectOfEngineer(0));
 			}
 		}catch (Exception e) {
@@ -260,6 +278,241 @@ public class ProjectController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
+	public Result addClient(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
+		String clientEmail = requestData.get("clientEmail");
+		String clientPassword = requestData.get("clientPassword");
+		String clientName = requestData.get("clientName");
+		String clientHpNo = requestData.get("clientHpNo");
+		String clientDesignation = requestData.get("clientDesignation");
+		String clientCompanyName = requestData.get("clientCompanyName");
+		String clientNotify =  Utils.isBlank(requestData.get("clientNotify")) ? "0" : requestData.get("clientNotify");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			if(Utils.isBlank(projectId)) {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}else {
+				Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+				if(project == null) {
+					responseData.code = 4000;
+					responseData.message = "Project doesn't exits.";
+				}else {
+					if(!AuthController.notExists(clientEmail)){
+			    			responseData.message = "Account already exist.";
+			    			responseData.code = 4000;
+					}else {
+						Account clientAccount = new Account(clientEmail, clientPassword);
+				    		account.accType = AccountType.CLIENT;
+				    		JPA.em().persist(clientAccount);
+				    		
+				    		String useNotifyStr = Utils.isBlank(clientNotify) ? "0" : clientNotify;
+				    		Client client = new Client(clientAccount, project);
+				    		client.companyName = clientCompanyName;
+				    		client.name = clientName;
+				    		client.designation = clientDesignation;
+				    		client.hpNo = clientHpNo;
+				    		client.isNotify = useNotifyStr.equals("1") ? true : false;
+				    		JPA.em().persist(client);
+				    		
+				    		responseData.data = client;
+					}
+				}
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result addBuilder(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
+		String builderEmail = requestData.get("clientEmail");
+		String builderPassword = requestData.get("builderPassword");
+		String builderName = requestData.get("builderName");
+		String builderHpNo = requestData.get("builderHpNo");
+		String builderDesignation = requestData.get("builderDesignation");
+		String builderCompanyName = requestData.get("builderCompanyName");
+		String builderNotify =  Utils.isBlank(requestData.get("builderNotify")) ? "0" : requestData.get("builderNotify");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			if(Utils.isBlank(projectId)) {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}else {
+				Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+				if(project == null) {
+					responseData.code = 4000;
+					responseData.message = "Project doesn't exits.";
+				}else {
+					if(!AuthController.notExists(builderEmail)){
+			    			responseData.message = "Account already exist.";
+			    			responseData.code = 4000;
+					}else {
+						Account builderAccount = new Account(builderEmail, builderPassword);
+				    		account.accType = AccountType.CLIENT;
+				    		JPA.em().persist(builderAccount);
+				    		
+				    		String useNotifyStr = Utils.isBlank(builderNotify) ? "0" : builderNotify;
+				    		Builder builder = new Builder(builderAccount, project);
+				    		builder.companyName = builderCompanyName;
+				    		builder.name = builderName;
+				    		builder.designation = builderDesignation;
+				    		builder.hpNo = builderHpNo;
+				    		builder.isNotify = useNotifyStr.equals("1") ? true : false;
+				    		JPA.em().persist(builder);
+				    		
+				    		responseData.data = builder;
+					}
+				}
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result removeClient(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String clientId = requestData.get("clientId");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			if(Utils.isBlank(clientId)) {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}else {
+				Client client = jpaApi.em().find(Client.class, Long.parseLong(clientId));
+				jpaApi.em().remove(client.account);
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result removeBuilder(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String builderId = requestData.get("builderId");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			if(Utils.isBlank(builderId)) {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}else {
+				Builder builder = jpaApi.em().find(Builder.class, Long.parseLong(builderId));
+				jpaApi.em().remove(builder.account);
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
+	
+
+	@With(AuthAction.class)
+	@Transactional
+	public Result addTeam(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
+		String teamAccountId = requestData.get("teamAccountId");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			if(Utils.isBlank(projectId) || Utils.isBlank(teamAccountId)) {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}else {
+				Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+				if(project == null) {
+					responseData.code = 4000;
+					responseData.message = "Project doesn't exist.";
+				}else {
+					Account teamAccount = jpaApi.em().find(Account.class, Long.parseLong(teamAccountId));
+					if(teamAccount == null) {
+						responseData.code = 4000;
+						responseData.message = "Team account doesn't exist.";
+					}else {
+						teamAccount.projectsJoined.add(project);
+			    			jpaApi.em().persist(teamAccount);
+					}
+				}
+			}
+		}
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result removeTeam(){
+		ResponseData responseData = new ResponseData();
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String projectId = requestData.get("projectId");
+		String teamAccountId = requestData.get("teamAccountId");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else {
+			if(Utils.isBlank(projectId) || Utils.isBlank(teamAccountId)) {
+				responseData.code = 4000;
+				responseData.message = "Missing parameters.";
+			}else {
+				Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+				if(project == null) {
+					responseData.code = 4000;
+					responseData.message = "Project doesn't exist.";
+				}else {
+					Account teamAccount = jpaApi.em().find(Account.class, Long.parseLong(teamAccountId));
+					if(teamAccount == null) {
+						responseData.code = 4000;
+						responseData.message = "Team account doesn't exist.";
+					}else {
+						teamAccount.projectsJoined.remove(project);
+			    			jpaApi.em().persist(teamAccount);
+					}
+				}
+			}
+		}
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
 	public Result archiveProject(){
 		ResponseData responseData = new ResponseData();
 		DynamicForm requestData = formFactory.form().bindFromRequest();
@@ -267,7 +520,6 @@ public class ProjectController extends Controller{
 		
 		Account account = (Account) ctx().args.get("account");
 		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
-		
 		if(Utils.isBlank(projectId)) {
 			responseData.code = 4000;
 			responseData.message = "Missing Parameter.";
@@ -319,6 +571,33 @@ public class ProjectController extends Controller{
 			}
 		}
 		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result projectExecution(int offset){
+		ResponseData responseData = new ResponseData();
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount.engineer == null) {
+			responseData.code = 4000;
+			responseData.message = "You don't have permission.";
+		}else{
+			int totalAmount = ((BigInteger) jpaApi.em()
+					.createNativeQuery("SELECT COUNT(*) FROM project pro WHERE pro.engineer_id = :engineerId")
+					.setParameter("engineerId", engineerAccount.id)
+					.getSingleResult()).intValue();
+			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+
+			List<Project> projects = jpaApi.em()
+					.createNativeQuery("SELECT * FROM project pro WHERE pro.engineer_id=:engineerId AND pro.is_archived = :isArchived", Project.class)
+					.setParameter("engineerId", engineerAccount.id)
+					.setParameter("isArchived", false)
+					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
+			return ok(projectexecution.render(projects, pageIndex,totalAmount));
+		}
+		return notFound(errorpage.render(responseData));
 	}
 	
 }

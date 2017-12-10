@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -73,7 +74,7 @@ public class Project {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Builder> builders;
 	
-	@OneToMany(mappedBy = "project")
+	@ManyToMany(mappedBy = "projectsJoined")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Account> teamAccounts;
 	
@@ -106,7 +107,7 @@ public class Project {
 	    
 	    for(int i = 0; i < qpAccountMap.size(); i++){
 	    		Account account = JPA.em().find(Account.class, Long.parseLong(qpAccountMap.get(i)));
-	    		account.project = project;
+	    		account.projectsJoined.add(project);
 	    		JPA.em().persist(account);
 	    }
 	}
@@ -128,7 +129,7 @@ public class Project {
 	    
 	    for(int i = 0; i < inspectorAccountMap.size(); i++){
 	    		Account account = JPA.em().find(Account.class, Long.parseLong(inspectorAccountMap.get(i)));
-	    		account.project = project;
+	    		account.projectsJoined.add(project);
 	    		JPA.em().persist(account);
 	    }
 	}

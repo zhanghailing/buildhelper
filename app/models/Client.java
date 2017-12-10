@@ -71,6 +71,7 @@ public class Client {
 	    Map<Integer, String> clientNameMap = new HashMap<>();
 	    Map<Integer, String> clientHpNoMap = new HashMap<>();
 	    Map<Integer, String> clientNotifyMap = new HashMap<>();
+	    Map<Integer, String> clientDesignationMap = new HashMap<>();
 	    
 	    String key;
 	    while(iterator.hasNext()){
@@ -109,6 +110,13 @@ public class Client {
 		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
 		    		clientNotifyMap.put(pos, data.get(key));
 		    	}
+		    	
+		    	if(key.contains("clientDesignation")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		clientDesignationMap.put(pos, data.get(key));
+		    	}
 	    }
 	    
 	    for(int i = 0; i < clientEmailMap.size(); i++){
@@ -124,6 +132,7 @@ public class Client {
 	    		client.companyName = clientCompany;
 	    		client.name = clientNameMap.get(i);
 	    		client.hpNo = clientHpNoMap.get(i);
+	    		client.designation = clientDesignationMap.get(i);
 	    		client.isNotify = useNotifyStr.equals("1") ? true : false;
 	    		JPA.em().persist(client);
 	    }

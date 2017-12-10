@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
@@ -84,10 +86,11 @@ public class Account{
 	@JsonIgnore
 	public Company company;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "project_team", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
-    public Project project;
+    public List<Project> projectsJoined;
 	
 	@Column(columnDefinition = "boolean default false")
 	public boolean blocked;

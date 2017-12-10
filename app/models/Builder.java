@@ -71,6 +71,7 @@ public class Builder {
 	    Map<Integer, String> builderNameMap = new HashMap<>();
 	    Map<Integer, String> builderHpNoMap = new HashMap<>();
 	    Map<Integer, String> builderNotifyMap = new HashMap<>();
+	    Map<Integer, String> builderDesignationMap = new HashMap<>();
 	    
 	    String key;
 	    while(iterator.hasNext()){
@@ -103,6 +104,13 @@ public class Builder {
 		    		builderHpNoMap.put(pos, data.get(key));
 		    	}
 		    	
+		    	if(key.contains("builderDesignation")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		builderDesignationMap.put(pos, data.get(key));
+		    	}
+		    	
 		    	if(key.contains("builderNotify")){
 		    		int startIdx = key.indexOf("[") + 1;
 		    		int endIdx = key.indexOf("]");
@@ -124,6 +132,7 @@ public class Builder {
 	    		builder.companyName = companyName;
 	    		builder.name = builderNameMap.get(i);
 	    		builder.hpNo = builderHpNoMap.get(i);
+	    		builder.designation = builderDesignationMap.get(i);
 	    		builder.isNotify = useNotifyStr.equals("1") ? true : false;
 	    		JPA.em().persist(builder);
 	    }

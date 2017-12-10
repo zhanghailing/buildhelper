@@ -796,7 +796,7 @@ input.file-input{
 	position: absolute;
     width: 40%;
     padding: 0 30px;
-    min-height: 100%;
+    min-height: 400px;
     overflow: hidden;
     outline: none;
     z-index: 100;
@@ -804,7 +804,7 @@ input.file-input{
 
 .right-body{
     width: 100%;
-    height: 100%;
+    min-height: 400px;
 }
 
 .right-detail{
@@ -919,6 +919,12 @@ input.file-input{
 p.work-type{
 	margin:0;
 	padding:0;
+}
+
+.acc-group i.spinner{
+	color: black;
+	top: 45%;
+    left: 45%;
 }
 
 /** Create Project End **/

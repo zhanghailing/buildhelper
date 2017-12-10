@@ -85,39 +85,79 @@
 		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		        },
 		        submitHandler: function(form) {
-		        	var clientEmail = $('input[name=clientEmail]').val();
-		        	var clientPassword = $('input[name=clientPassword]').val();
-		        	var clientName = $('input[name=clientName]').val();
-		        	var clientHpNo = $('input[name=clientHpNo]').val();
-		        	var clientDesignation =  $('input[name=clientDesignation]').val();
-		        	var notify = ($('#client-notify-chx').is(':checked') ? '1' : '0');
-		        	
-		        	var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
-		        		clientBlk += '<div class="acc-info">';
-		        		clientBlk += '<p class="acc-name bold">' + clientName + '</p>';
-		        		clientBlk += '<p class="acc-designation">' + clientDesignation + '</p>';
-		        		clientBlk += '<p class="acc-email">' + clientEmail + '</p>';
-		        		clientBlk += '<p class="acc-hp">' + clientHpNo + '</p>';
-		        		clientBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
-		        		clientBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
-		        		clientBlk += '</div>';
-		        		
-		        		clientBlk += '<div class="client-inputs">';
-		        		clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
-		        		clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
-			        	clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
-			        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
-			        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
-			        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
-			        	clientBlk += '</div>';
-		        		clientBlk += '</div>';
-			        	
-	        		$('#add-client-btn-wrapper').before(clientBlk);
-		        	$('#client-model').modal('hide');
-		        	return false;
+			        	var projectInput = $('#client-model').find('input[name="projectId"]');
+			        	if(projectInput.length == 1){
+			        		var projectId = projectInput.val();
+			        		$.ajax({
+		            			url: "@routes.ProjectController.addClient()",
+			                type: "POST",
+			                data: $(form).serialize(),
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				            	    			clientBlk += '<input class=\"client-id\" type=\"hidden\" name=\"clientId\" value="' + data.data.accountId + '">';
+							        		clientBlk += '<div class="acc-info">';
+							        		clientBlk += '<p class="acc-name bold">' + data.data.name + '</p>';
+							        		clientBlk += '<p class="acc-designation">' + data.data.designation + '</p>';
+							        		clientBlk += '<p class="acc-email">' + data.data.account.email + '</p>';
+							        		clientBlk += '<p class="acc-hp">' + data.data.hpNo + '</p>';
+							        		clientBlk += '<p class="acc-notify">Notify? <span class="green">' + (data.data.notify ? 'Yes' : 'No') + '</span></p>';
+							        		clientBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+							        		clientBlk += '</div>';
+							        		
+							        		clientBlk += '<div class="client-inputs">';
+							        		clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
+							        		clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
+								        	clientBlk += '</div>';
+							        		clientBlk += '</div>';
+							        		
+							        		$('#add-client-btn-wrapper').before(clientBlk);
+								        	$('#client-model').modal('hide');
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+			        	}else{
+			        		var clientEmail = $('input[name=clientEmail]').val();
+				        	var clientPassword = $('input[name=clientPassword]').val();
+				        	var clientName = $('input[name=clientName]').val();
+				        	var clientHpNo = $('input[name=clientHpNo]').val();
+				        	var clientDesignation =  $('input[name=clientDesignation]').val();
+				        	var notify = ($('#client-notify-chx').is(':checked') ? '1' : '0');
+				        	
+				        	var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				        		clientBlk += '<div class="acc-info">';
+				        		clientBlk += '<p class="acc-name bold">' + clientName + '</p>';
+				        		clientBlk += '<p class="acc-designation">' + clientDesignation + '</p>';
+				        		clientBlk += '<p class="acc-email">' + clientEmail + '</p>';
+				        		clientBlk += '<p class="acc-hp">' + clientHpNo + '</p>';
+				        		clientBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
+				        		clientBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+				        		clientBlk += '</div>';
+				        		
+				        		clientBlk += '<div class="client-inputs">';
+				        		clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
+				        		clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
+					        	clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
+					        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
+					        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
+					        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
+					        	clientBlk += '</div>';
+				        		clientBlk += '</div>';
+					        	
+			        		$('#add-client-btn-wrapper').before(clientBlk);
+				        	$('#client-model').modal('hide');
+			        	}
+			        
+			        	return false;
 		        }
 		    });
-			
 			
 			$("#builder-form").validate({
 				ignore: [],
@@ -148,36 +188,76 @@
 		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		        },
 		        submitHandler: function(form) {
-		        	var builderEmail = $('input[name=builderEmail]').val();
-		        	var builderPassword = $('input[name=builderPassword]').val();
-		        	var builderName = $('input[name=builderName]').val();
-		        	var builderHpNo = $('input[name=builderHpNo]').val();
-		        	var builderDesignation =  $('input[builderDesignation]').val();
-		        	var notify = ($('#builder-notify-chx').is(':checked') ? '1' : '0');
-		        	
-		        	var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
-		        	builderBlk += '<div class="acc-info">';
-		        	builderBlk += '<p class="acc-name bold">' + builderName + '</p>';
-		        	builderBlk += '<p class="acc-designation">' + builderDesignation + '</p>';
-		        	builderBlk += '<p class="acc-email">' + builderEmail + '</p>';
-		        	builderBlk += '<p class="acc-hp">' + builderHpNo + '</p>';
-		        	builderBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
-		        	builderBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
-		        	builderBlk += '</div>';
-		        		
-		        	builderBlk += '<div class="builder-inputs">';
-		        	builderBlk += '<input type="hidden" name="builderEmail[]" value="' + builderEmail + '"/>';
-		        	builderBlk += '<input type="hidden" name="builderPassword[]" value="' + builderPassword + '"/>';
-		        	builderBlk += '<input type="hidden" name="builderName[]" value="' + builderName + '"/>';
-		        	builderBlk += '<input type="hidden" name="builderHpNo[]" value="' + builderHpNo + '"/>';
-		        	builderBlk += '<input type="hidden" name="builderDesignation[]" value="' + builderDesignation + '"/>';
-		        	builderBlk += '<input type="hidden" name="builderNotify[]" value="' + notify + '"/>';
-		        	builderBlk += '</div>';
-		        	builderBlk += '</div>';
-			        	
-	        		$('#add-builder-btn-wrapper').before(builderBlk);
-		        	$('#builder-model').modal('hide');
-		        	return false;
+			        	var projectInput = $('#builder-model').find('input[name="projectId"]');
+			        	if(projectInput.length == 1){
+			        		var projectId = projectInput.val();
+			        		$.ajax({
+		            			url: "@routes.ProjectController.addBuilder()",
+			                type: "POST",
+			                data: $(form).serialize(),
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				            	    			builderBlk += '<input class=\"builder-id\" type=\"hidden\" name=\"builderId\" value="' + data.data.accountId + '">';
+				            	    			builderBlk += '<div class="acc-info">';
+							        		builderBlk += '<p class="acc-name bold">' + data.data.name + '</p>';
+							        		builderBlk += '<p class="acc-designation">' + data.data.designation + '</p>';
+							        		builderBlk += '<p class="acc-email">' + data.data.account.email + '</p>';
+							        		builderBlk += '<p class="acc-hp">' + data.data.hpNo + '</p>';
+							        		builderBlk += '<p class="acc-notify">Notify? <span class="green">' + (data.data.notify ? 'Yes' : 'No') + '</span></p>';
+							        		builderBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+							        		builderBlk += '</div>';
+							        		
+							        		builderBlk += '<div class="builder-inputs">';
+							        		builderBlk += '<input type="hidden" name="builderEmail[]" value="' + builderEmail + '"/>';
+							        		builderBlk += '<input type="hidden" name="builderPassword[]" value="' + builderPassword + '"/>';
+							        		builderBlk += '<input type="hidden" name="builderName[]" value="' + builderName + '"/>';
+								        	builderBlk += '<input type="hidden" name="builderHpNo[]" value="' + builderHpNo + '"/>';
+								        	builderBlk += '<input type="hidden" name="builderDesignation[]" value="' + builderDesignation + '"/>';
+								        	builderBlk += '<input type="hidden" name="builderNotify[]" value="' + notify + '"/>';
+								        	builderBlk += '</div>';
+								        	builderBlk += '</div>';
+							        		
+							        		$('#add-builder-btn-wrapper').before(builderBlk);
+								        	$('#builder-model').modal('hide');
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+			        	}else{
+			        		var builderEmail = $('input[name=builderEmail]').val();
+				        	var builderPassword = $('input[name=builderPassword]').val();
+				        	var builderName = $('input[name=builderName]').val();
+				        	var builderHpNo = $('input[name=builderHpNo]').val();
+				        	var builderDesignation =  $('input[builderDesignation]').val();
+				        	var notify = ($('#builder-notify-chx').is(':checked') ? '1' : '0');
+				        	
+				        	var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				        	builderBlk += '<div class="acc-info">';
+				        	builderBlk += '<p class="acc-name bold">' + builderName + '</p>';
+				        	builderBlk += '<p class="acc-designation">' + builderDesignation + '</p>';
+				        	builderBlk += '<p class="acc-email">' + builderEmail + '</p>';
+				        	builderBlk += '<p class="acc-hp">' + builderHpNo + '</p>';
+				        	builderBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
+				        	builderBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+				        	builderBlk += '</div>';
+				        		
+				        	builderBlk += '<div class="builder-inputs">';
+				        	builderBlk += '<input type="hidden" name="builderEmail[]" value="' + builderEmail + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderPassword[]" value="' + builderPassword + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderName[]" value="' + builderName + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderHpNo[]" value="' + builderHpNo + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderDesignation[]" value="' + builderDesignation + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderNotify[]" value="' + notify + '"/>';
+				        	builderBlk += '</div>';
+				        	builderBlk += '</div>';
+					        	
+			        		$('#add-builder-btn-wrapper').before(builderBlk);
+				        	$('#builder-model').modal('hide');
+			        	}
+			        	return false;
 		        }
 		    });
 			
@@ -229,7 +309,8 @@
 			    }
 			});
 			
-			$('#qp-search').on('click', function(){
+			$('#qp-search').on('click', function(e){
+				e.preventDefault();
 				var name = $('.qp-body').find('input[name="name"]').val();
 			    	var accountId = $(this).data('id');
 			    	var url = $(this).data('url');
@@ -257,7 +338,7 @@
 			                	    			}
 			                	    			item += "</p>";
 			                	    			item += "</div>";
-			                	    			item += "<button class=\"btn btn-primary add-btn\">Add</button>";
+			                	    			item += "<button id=\"qp-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
 			                	    			item += "</li>";
 			                	    			
 			                	    			$('.qp-body.left-body').find('ul.eng-list').append(item);
@@ -270,7 +351,8 @@
 		            });
 				});
 			
-			$('#inspector-search').on('click', function(){
+			$('#inspector-search').on('click', function(e){
+				e.preventDefault();
 				var name = $('.inspector-body').find('input[name="name"]').val();
 			    	var accountId = $(this).data('id');
 			    	var url = $(this).data('url');
@@ -294,7 +376,7 @@
 			                	    			item += data.designation;
 			                	    			item += "</p>";
 			                	    			item += "</div>";
-			                	    			item += "<button class=\"btn btn-primary add-btn\">Add</button>";
+			                	    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
 			                	    			item += "</li>";
 			                	    			
 			                	    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
@@ -309,59 +391,188 @@
 			
 			$(document).on("click","#qp-add-btn",function() {
 				var id = $(this).parents('li').data('id');
-				
-				var leftLiLayout = $('.qp-body.left-body').find('li[data-id="'+id+'"]');
+			        	
+				if("@project" !== ""){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.addTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@project.id",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var leftLiLayout = $('.qp-body.left-body').find('li[data-id="'+id+'"]');
+		            					leftLiLayout.remove();
+		            					
+		            					var name = leftLiLayout.find('p.name').text();
+		            	    				var peNo = leftLiLayout.find('p.name').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += "PE No.:" + peNo;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"qp-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+		            			    			item += "</li>";
+		            			    			
+		            			    			$('.qp-body > .right-detail').find('ul.eng-list').append(item);
+		            			    			$('.qp-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+		            });
+				}else{
+					var leftLiLayout = $('.qp-body.left-body').find('li[data-id="'+id+'"]');
 					leftLiLayout.remove();
 					
-				var name = leftLiLayout.find('p.name').text();
-    				var peNo = leftLiLayout.find('p.name').next().text();
-				var item = "<li data-id='" +id + "'>";
-		    			item += "<div class=\"eng-info\">";
-		    			item += "<p class=\"name bold\">" + name + "</p>";
-		    			item += "<p>";
-		    			item += "PE No.:" + peNo;
-		    			item += "</p>";
-		    			item += "</div>";
-		    			item += "<button class=\"btn btn-primary remove-btn\">Remove</button>";
-		    			item += "</li>";
-		    			
-		    			$('.qp-body > .right-detail').find('ul.eng-list').append(item);
-		    			$('.qp-body > .right-detail').find('ul.eng-list').removeClass('hidden');
-		        	
+					var name = leftLiLayout.find('p.name').text();
+	    				var peNo = leftLiLayout.find('p.name').next().text();
+					var item = "<li data-id='" +id + "'>";
+			    			item += "<div class=\"eng-info\">";
+			    			item += "<p class=\"name bold\">" + name + "</p>";
+			    			item += "<p>";
+			    			item += "PE No.:" + peNo;
+			    			item += "</p>";
+			    			item += "</div>";
+			    			item += "<button id=\"qp-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+			    			item += "</li>";
+			    			
+			    			$('.qp-body > .right-detail').find('ul.eng-list').append(item);
+			    			$('.qp-body > .right-detail').find('ul.eng-list').removeClass('hidden');					
+				}
+	        	
 		    });
 			
 			$(document).on("click","#inspector-add-btn",function() {
 				var id = $(this).parents('li').data('id');
 				
-				var leftLiLayout = $('.inspector-body.left-body').find('li[data-id="'+id+'"]');
+				if("@project" !== ""){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.addTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@project.id",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var leftLiLayout = $('.inspector-body.left-body').find('li[data-id="'+id+'"]');
+		            					leftLiLayout.remove();
+		            					
+		            					var name = leftLiLayout.find('p.name').text();
+		            	    				var peNo = leftLiLayout.find('p.name').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += "PE No.:" + peNo;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"inspector-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+		            			    			item += "</li>";
+		            			    			
+		            			    			$('.inspector-body > .right-detail').find('ul.eng-list').append(item);
+		            			    			$('.inspector-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+		            });
+				}else{
+					var leftLiLayout = $('.inspector-body.left-body').find('li[data-id="'+id+'"]');
 					leftLiLayout.remove();
 					
-				var name = leftLiLayout.find('p.name').text();
-    				var peNo = leftLiLayout.find('p.name').next().text();
-				var item = "<li data-id='" +id + "'>";
-		    			item += "<div class=\"eng-info\">";
-		    			item += "<p class=\"name bold\">" + name + "</p>";
-		    			item += "<p>";
-		    			item += peNo;
-		    			item += "</p>";
-		    			item += "</div>";
-		    			item += "<button class=\"btn btn-primary remove-btn\">Remove</button>";
-		    			item += "</li>";
+					var name = leftLiLayout.find('p.name').text();
+	    				var peNo = leftLiLayout.find('p.name').next().text();
+					var item = "<li data-id='" +id + "'>";
+			    			item += "<div class=\"eng-info\">";
+			    			item += "<p class=\"name bold\">" + name + "</p>";
+			    			item += "<p>";
+			    			item += peNo;
+			    			item += "</p>";
+			    			item += "</div>";
+			    			item += "<button id=\"inspector-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+			    			item += "</li>";
 		    			
 		    			$('.inspector-body > .right-detail').find('ul.eng-list').append(item);
-		    			$('.inspector-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+		    			$('.inspector-body > .right-detail').find('ul.eng-list').removeClass('hidden');	
+				}
 		    });
 			
 			$(document).on("click",".qp-body .remove-btn",function() {
 				var id = $(this).parents('li').data('id');
 				
-				var rightLiLayout = $('.qp-body.right-body').find('li[data-id="'+id+'"]');
+				if("@project" !== ""){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.removeTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@project.id",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var rightLiLayout = $('.qp-body.right-body').find('li[data-id="'+id+'"]');
+		            	    				rightLiLayout.remove();
+		            					
+		            					var name = rightLiLayout.find('p.name').text();
+		            	    				var peNo = rightLiLayout.find('p.name').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += "PE No.:" + peNo;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"qp-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		            			    			item += "</li>";
+		            			    			$('.qp-body.left-body').find('ul.eng-list').append(item);
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+			        	});
+				}else{
+					var rightLiLayout = $('.qp-body.right-body').find('li[data-id="'+id+'"]');
 					rightLiLayout.remove();
 				
-				var name = rightLiLayout.find('p.name').text();
-    				var peNo = rightLiLayout.find('p.name').next().text();
-    				
-				var item = "<li data-id='" + id + "'>";
+					var name = rightLiLayout.find('p.name').text();
+	    				var peNo = rightLiLayout.find('p.name').next().text();
+	    				
+					var item = "<li data-id='" + id + "'>";
 		    			item += "<div class=\"eng-info\">";
 		    			item += "<p class=\"name bold\">" + name + "</p>";
 		    			item += "<p>";
@@ -375,32 +586,75 @@
 		    			if($('.qp-body.right-body').find('ul.eng-list').children().length == 0){
 		    				$('.qp-body.right-body').find('ul.eng-list').addClass('hidden');
 		    			}
+				}
 		    });
 			
 			$(document).on("click",".inspector-body .remove-btn",function() {
 				var id = $(this).parents('li').data('id');
 				
-				var rightLiLayout = $('.inspector-body.right-body').find('li[data-id="'+id+'"]');
+				if("@project" !== ""){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.removeTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@project.id",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var rightLiLayout = $('.inspector-body.right-body').find('li[data-id="'+id+'"]');
+		            	    				rightLiLayout.remove();
+		            					
+		            					var name = rightLiLayout.find('p.name').text();
+		            	    				var designation = rightLiLayout.find('p.designation').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += designation;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		            			    			item += "</li>";
+		            			    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+			        	});
+				}else{
+					var rightLiLayout = $('.inspector-body.right-body').find('li[data-id="'+id+'"]');
 					rightLiLayout.remove();
 				
-				var name = rightLiLayout.find('p.name').text();
-    				var peNo = rightLiLayout.find('p.name').next().text();
-    				
-				var item = "<li data-id='" + id + "'>";
-		    			item += "<div class=\"eng-info\">";
-		    			item += "<p class=\"name bold\">" + name + "</p>";
-		    			item += "<p>";
-		    			item += peNo;
-		    			item += "</p>";
-		    			item += "</div>";
-		    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
-		    			item += "</li>";
-		    			
-		    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
-		    			
-		    			if($('.inspector-body.right-body').find('ul.eng-list').children().length == 0){
-		    				$('.inspector-body.right-body').find('ul.eng-list').addClass('hidden');
-		    			}
+					var name = rightLiLayout.find('p.name').text();
+	    				var peNo = rightLiLayout.find('p.name').next().text();
+	    				
+					var item = "<li data-id='" + id + "'>";
+			    			item += "<div class=\"eng-info\">";
+			    			item += "<p class=\"name bold\">" + name + "</p>";
+			    			item += "<p>";
+			    			item += peNo;
+			    			item += "</p>";
+			    			item += "</div>";
+			    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+			    			item += "</li>";
+			    			
+			    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+			    			
+			    			if($('.inspector-body.right-body').find('ul.eng-list').children().length == 0){
+			    				$('.inspector-body.right-body').find('ul.eng-list').addClass('hidden');
+			    			}
+				}
 		    });
 			
 			$("#project-form").validate({
@@ -462,11 +716,112 @@
 		        		return false;
 		        }
 		    });
+			
+			$(document).on("click","#client .minus-btn",function() {
+				var btn = $(this);
+				var parentElement = $(this).parents('.acc-group');
+				if(parentElement.find('.client-id').length == 1){
+					if(!btn.hasClass('disabled')){
+						btn.addClass('disabled');
+						var clientId = parentElement.find('.client-id').val();
+						
+						var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						parentElement.append(spinner);
+						parentElement.find('.acc-info > p').css('color', 'white');
+						parentElement.find('.acc-info  span').css('color', 'white');
+						$.ajax({
+		            			url: "@routes.ProjectController.removeClient()",
+			                type: "POST",
+			                data: {
+				                	clientId: clientId
+			                },
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		parentElement.remove();
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+					}
+				}else{
+					parentElement.remove();
+				}
+			});
+			
+			$(document).on("click","#builder .minus-btn",function() {
+				var btn = $(this);
+				var parentElement = $(this).parents('.acc-group');
+				if(parentElement.find('.builder-id').length == 1){
+					if(!btn.hasClass('disabled')){
+						btn.addClass('disabled');
+						var builderId = parentElement.find('.builder-id').val();
+						
+						var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						parentElement.append(spinner);
+						parentElement.find('.acc-info > p').css('color', 'white');
+						parentElement.find('.acc-info  span').css('color', 'white');
+						$.ajax({
+		            			url: "@routes.ProjectController.removeBuilder()",
+			                type: "POST",
+			                data: {
+			                		builderId: builderId
+			                },
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		parentElement.remove();
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+					}
+				}else{
+					parentElement.remove();
+				}
+			});
+			
+			var qpListElement = $('.qp-body.right-body').find('ul.eng-list');
+			if(qpListElement.children().length == 0){
+				qpListElement.addClass('hidden');
+			}else{
+				qpListElement.removeClass('hidden');
+			}
+			
+			var inspectorListElement = $('.inspector-body.right-body').find('ul.eng-list');
+			if(inspectorListElement.children().length == 0){
+				inspectorListElement.addClass('hidden');
+			}else{
+				inspectorListElement.removeClass('hidden');
+			}
+			
+			$('.qp-body.left-body').find('ul.eng-list').children().remove();
+		    	allQPItemlayout.each(function() {
+		    		var id = $(this).data('id');
+		    		var ele = $('.qp-body.right-body').find("li[data-id='" + id + "']");
+		    		if (ele.length == 0) {
+		    			$('.qp-body.left-body').find('ul.eng-list').append($(this));
+		    		}
+		    	});
+		    	
+		    	$('.inspector-body.left-body').find('ul.eng-list').children().remove();
+		    	allInspectorItemlayout.each(function() {
+		    		var id = $(this).data('id');
+		    		var ele = $('.inspector-body.right-body').find("li[data-id='" + id + "']");
+		    		if (ele.length == 0) {
+		    			$('.inspector-body.left-body').find('ul.eng-list').append($(this));
+		    		}
+		    	});
 	   	});
 	</script>
 	<p class="center">Add MOM Project</p>
 	
 	<form id="project-form" action="@routes.ProjectController.saveProject()" method="POST">
+		@if(project != null){
+			<input type="hidden" name="projectId" value="@project.id"/>
+		}
 		<section id="pro-detail" class="pro-sec">
 			<p class="tb-header center">@messages.at("project_detail")</p>
 			<div class="sec-body">
@@ -481,12 +836,12 @@
 		      	
 		      	<div class="form-group date-group">
 					<label>Starting Date</label>
-					<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD">
+					<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.startDate}">
 				</div>
 				
 				<div class="form-group date-group right-align">
 					<label>Ending Date</label>
-					<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD">
+					<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.endDate}">
 				</div>
 				
 				<div class="form-group">
@@ -495,26 +850,26 @@
 					</div>
 							
 					<div class="form-input">
-						<label class="subject-lbl selected">
-						   	<input type="radio" name="gondola" class="form-control" value="1" checked>
+						<label class="subject-lbl @if(project != null){@if(project.isGondola){selected}}else{selected}">
+						   	<input type="radio" name="gondola" class="form-control" value="@if(project != null){@if(project.isGondola){1}else{0}}else{1}" @if(project != null){@if(project.isGondola){checked}}else{checked}>
 							<a class="radio-box">Gondola
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="mcwp" class="form-control" value="0">
+						<label class="subject-lbl @if(project != null){@if(project.isMCWP){selected}}">
+						   	<input type="radio" name="mcwp" class="form-control" value="@if(project != null){@if(project.isMCWP){1}else{0}}else{0}" @if(project != null){@if(project.isMCWP){checked}}>
 							<a class="radio-box">MCWP
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="scaffold" class="form-control" value="0">
+						<label class="subject-lbl @if(project != null){@if(project.isScaffold){selected}}">
+						   	<input type="radio" name="scaffold" class="form-control" value="@if(project != null){@if(project.isScaffold){1}else{0}}else{0}" @if(project != null){@if(project.isScaffold){checked}}>
 							<a class="radio-box">Scaffold
 								<i class="icon-check"></i>
 							</a>
 						</label>
-						<label class="subject-lbl">
-						   	<input type="radio" name="formwork" class="form-control" value="0">
+						<label class="subject-lbl @if(project != null){@if(project.isFormwork){selected}}">
+						   	<input type="radio" name="formwork" class="form-control" value="@if(project != null){@if(project.isFormwork){1}else{0}}else{0}" @if(project != null){@if(project.isFormwork){checked}}>
 							<a class="radio-box">Formwork
 								<i class="icon-check"></i>
 							</a>
@@ -525,7 +880,7 @@
 				<div class="form-group">
 					<div class="form-label">
 						<label class="chx-container">Use Company Letterhead
-						  <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="0">
+						  <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}">
 						  <span class="checkmark"></span>
 						</label>
 					</div>
@@ -542,7 +897,7 @@
 			            <label for="pro-title">@messages.at("company_name")</label>
 			         </div>
 			         <div class="form-input full-width">
-			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")">
+			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")" value="@if(project.clients != null){@if(project.clients != null){@if(project.clients.size > 0){@project.clients(0).companyName}}}">
 			         </div>
 		      	</div>
 		      	
@@ -551,10 +906,37 @@
 			            <label for="pro-title">@messages.at("person_in_charge")</label>
 			         </div>
 			         <div class="form-input full-width row">
+			         
+			         	@if(project != null){
+			         		@if(project.clients != null){
+			         			@for(index <- 0 until project.clients.size){
+					         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+					         			<input class="client-id" type="hidden" name="clientId" value="@project.clients(index).accountId">
+							         	<div class="acc-info">
+							         		<p class="acc-name bold">@project.clients(index).name</p>
+							         		<p class="acc-designation">@project.clients(index).designation</p>
+							         		<p class="acc-email">@project.clients(index).account.email</p>
+							         		<p class="acc-hp">@project.clients(index).hpNo</p>
+							         		<p class="acc-notify">Notify? <span class="green">@if(project.clients(index).isNotify){Yes}else{No}</span></p>
+							         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+							         	</div>
+							         	<div class="client-inputs">
+							         		<input type="hidden" name="clientEmail[]" value="@project.clients(index).account.email">
+							         		<input type="hidden" name="clientPassword[]" value="@project.clients(index).account.password">
+							         		<input type="hidden" name="clientName[]" value="@project.clients(index).name">
+							         		<input type="hidden" name="clientHpNo[]" value="@project.clients(index).hpNo">
+							         		<input type="hidden" name="clientDesignation[]" value="@project.clients(index).designation">
+							         		<input type="hidden" name="clientNotify[]" value="@if(project.clients(index).isNotify){1}else{0}">
+							         	</div>
+							        </div>
+					         	}
+			         		}
+			         	}
+			         
 			            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
-			            	<div class="acc-info">
-			            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
-			            	</div>
+				            	<div class="acc-info">
+				            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+				            	</div>
 			            </div>
 			         </div>
 		      	</div>
@@ -578,6 +960,33 @@
 			            <label for="pro-title">@messages.at("person_in_charge")</label>
 			         </div>
 			         <div class="form-input full-width row">
+			         
+			         	@if(project != null){
+			         		@if(project.clients != null){
+			         			@for(index <- 0 until project.builders.size){
+					         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+					         			<input class="builder-id" type="hidden" name="builderId" value="@project.builders(index).accountId">
+							         	<div class="acc-info">
+							         		<p class="acc-name bold">@project.builders(index).name</p>
+							         		<p class="acc-designation">@project.builders(index).designation</p>
+							         		<p class="acc-email">@project.builders(index).account.email</p>
+							         		<p class="acc-hp">@project.builders(index).hpNo</p>
+							         		<p class="acc-notify">Notify? <span class="green">@if(project.builders(index).isNotify){Yes}else{No}</span></p>
+							         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+							         	</div>
+							         	<div class="builder-inputs">
+							         		<input type="hidden" name="builderEmail[]" value="@project.builders(index).account.email">
+							         		<input type="hidden" name="builderPassword[]" value="@project.builders(index).account.password">
+							         		<input type="hidden" name="builderName[]" value="@project.builders(index).name">
+							         		<input type="hidden" name="builderHpNo[]" value="@project.builders(index).hpNo">
+							         		<input type="hidden" name="builderDesignation[]" value="@project.builders(index).designation">
+							         		<input type="hidden" name="builderNotify[]" value="@if(project.builders(index).isNotify){1}else{0}">
+							         	</div>
+							        </div>
+					         	}
+			         		}
+			         	}
+			         
 			            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
 			            	<div class="acc-info">
 			            		<a class="add-btn" data-toggle="modal" data-target="#builder-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
@@ -624,8 +1033,30 @@
 					
 					<div class="qp-body right-body">
 						<div class="right-detail">
-							<ul class="eng-list hidden">
-								
+							<ul class="eng-list">
+								@if(project != null){
+									@if(project.teamAccounts != null){
+										@for(index <- 0 until project.teamAccounts.size){
+											@if(project.teamAccounts(index).accType == AccountType.QP){
+												<li data-id="@project.teamAccounts(index).id" 
+													data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
+													data-pe="">
+													<div class="eng-info">
+														<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
+														<p>
+															@if(project.teamAccounts(index).user != null){
+																PE No.: @project.teamAccounts(index).user.peNo
+															}else{
+																Not Set
+															}
+														</p>
+													</div>
+													<button id="qp-remove-btn" class="btn btn-primary remove-btn">Remove</button>
+												</li>
+											}
+										}
+									}
+								}
 							</ul>
 						</div>
 					</div>
@@ -646,16 +1077,12 @@
 								<li data-id="@inspectors(index).id">
 									<div class="eng-info">
 										<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
-										<p>
+										<p class="designation">
 											@if(inspectors(index).user != null){
-												@if(inspectors(index).accType == 3){
-													PE No.: @inspectors(index).user.peNo
+												@if(inspectors(index).user.designation != null){
+													@inspectors(index).user.designation
 												}else{
-													@if(inspectors(index).user.designation != null){
-														@inspectors(index).user.designation
-													}else{
-														Not Set
-													}
+													Not Set
 												}
 											}
 										</p>
@@ -668,8 +1095,26 @@
 					
 					<div class="inspector-body right-body">
 						<div class="right-detail">
-							<ul class="eng-list hidden">
-								
+							<ul class="eng-list">
+								@if(project != null){
+									@if(project.teamAccounts != null){
+										@for(index <- 0 until project.teamAccounts.size){
+											@if(project.teamAccounts(index).accType == AccountType.INSPECTOR){
+												<li data-id="@project.teamAccounts(index).id" 
+													data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
+													data-pe="">
+													<div class="eng-info">
+														<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
+														<p class="designation">
+															@project.teamAccounts(index).user.designation
+														</p>
+													</div>
+													<button id="inspector-remove-btn" class="btn btn-primary remove-btn">Remove</button>
+												</li>
+											}
+										}
+									}
+								}
 							</ul>
 						</div>
 					</div>
@@ -692,6 +1137,9 @@
 		        	<h4 class="modal-title">@messages.at("add_client_developer")</h4>
 		      	</div>
 		      	<form id="client-form">
+		      		@if(project != null){
+		      			<input type="hidden" name="projectId" value="@project.id"/>
+		      		}
 			      	<div class="modal-body">
 				    	<div class="form-group">
 			    			<label>@messages.at("email")</label>
@@ -716,7 +1164,7 @@
 				      	<div class="form-group">
 							<div class="form-label">
 								<label class="chx-container">@messages.at("notify")
-								  <input id="client-notify-chx" type="checkbox" value="0">
+								  <input id="client-notify-chx" name="clientNotify" type="checkbox" value="0">
 								  <span class="checkmark"></span>
 								</label>
 							</div>
@@ -740,6 +1188,9 @@
 		        	<h4 class="modal-title">@messages.at("add_builder_contractor")</h4>
 		      	</div>
 		      	<form id="builder-form">
+		      		@if(project != null){
+		      			<input type="hidden" name="projectId" value="@project.id"/>
+		      		}
 			      	<div class="modal-body">
 				    	<div class="form-group">
 			    			<label>@messages.at("email")</label>
@@ -764,7 +1215,7 @@
 				      	<div class="form-group">
 							<div class="form-label">
 								<label class="chx-container">@messages.at("notify")
-								  <input id="builder-notify-chx" type="checkbox" value="0">
+								  <input id="builder-notify-chx" name="builderNotify" type="checkbox" value="0">
 								  <span class="checkmark"></span>
 								</label>
 							</div>
