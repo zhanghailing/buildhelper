@@ -58,7 +58,7 @@ POST 	/add/builder						controllers.ProjectController.addBuilder()
 POST 	/add/team						controllers.ProjectController.addTeam()
 POST 	/remove/team						controllers.ProjectController.removeTeam()
 GET 		/project/execution				controllers.ProjectController.projectExecution(offset: Integer ?= 0)
-GET 		/project/drawing/file			controllers.ProjectController.drawingFile()
+GET 		/project/drawing/file			controllers.ProjectController.drawingFile(projectId: Long ?= 0)
 
 
 GET 		/mom/checklist/formwork			controllers.DocFormatController.momChecklistFormWork()

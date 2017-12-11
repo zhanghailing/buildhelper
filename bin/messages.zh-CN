@@ -74,6 +74,10 @@ notify=通知
 builder_contractor=构建者／协调者
 add_builder_contractor=增添构建者／协调者
 qp_team=QP 小组
+placeholder_filename=请填写文件名称
+location=地点
+placeholder_location=请填写工作地点
+save_add_other=保存并上传新的文件
 
 error.file_size=上传的文件不可以超过2MB!
 

@@ -782,7 +782,6 @@ input.file-input{
 	top: 40px;
 }
 
-
 /** Company End **/
 
 /** Add Engineer Start **/
@@ -963,6 +962,66 @@ p.doc-title{
 }
 
 /** Document Format End **/
+
+/** Upload Drawing File Start **/
+
+.drawing-title{
+	height: 40px;
+    line-height: 40px;
+    background-color: #777;
+    color: white !important;
+    font-weight: 600;
+    margin:-15px 0 0 0 !important;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.drawing-body{
+	margin: 60px;
+}
+
+#upload-draw-form{
+	margin-top: 30px;
+}
+
+#draw-uploader-wrapper{
+	vertical-align: top;
+}
+
+.draw-right{
+	display: inline-block;
+	vertical-align: top;
+    padding-left: 25px;
+}
+
+.draw-right .form-group{
+	width: 632px;
+}
+
+.draw-right .form-input{
+	width: 100%;
+}
+
+.draw-right .input-wrapper{
+	padding: 0 5px;
+	margin-bottom: 10px;
+}
+
+.loc-input{
+	display: inline-block;
+	text-align: center;
+	border: 1px solid #ccc;
+	padding: 5px 8px;
+	border-radius: 10px;
+	width: 100%;
+}
+
+#upload-draw-form .btn-wrapper > button{
+	margin: 0 5px;
+	float: right;
+}
+
+/** Upload Drawing File End **/
 
 /** Dash Tab Bar Start **/
 

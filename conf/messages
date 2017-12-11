@@ -73,6 +73,10 @@ notify=Notify
 builder_contractor=Builder/Contractor
 add_builder_contractor=Add Builder/Contractor
 qp_team=QP Team
+placeholder_filename=Fill in file name
+location=Location
+placeholder_location=Fill in locations
+save_add_other=Save & add another file
 
 
 error.file_size=File size cannot be more than 2MB!

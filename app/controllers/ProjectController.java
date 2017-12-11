@@ -602,10 +602,25 @@ public class ProjectController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result drawingFile(){
+	public Result drawingFile(long projectId){
 		ResponseData responseData = new ResponseData();
 		
-		return ok(uploaddrawfile.render());
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount.engineer == null) {
+			responseData.code = 4000;
+			responseData.message = "You don't have permission.";
+		}else{
+			Project project = jpaApi.em().find(Project.class, projectId);
+			if(project != null) {
+				return ok(uploaddrawfile.render(project));
+			}else {
+				responseData.code = 4000;
+				responseData.message = "Project doesn't exist.";
+			}
+		}
+		
+		return notFound(errorpage.render(responseData));
 	}
 	 
 	
