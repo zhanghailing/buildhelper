@@ -657,7 +657,7 @@ public class ProjectController extends Controller{
 						drawFile.setLocation(requestData.data());
 						jpaApi.em().persist(drawFile);
 						
-						if(isAdd == "true"){
+						if(!Utils.isBlank(isAdd) && isAdd.equals("true")){
 							return redirect(routes.ProjectController.drawingFile(project.id));
 						}else{
 							return redirect(routes.ProjectController.projectExecution(0));

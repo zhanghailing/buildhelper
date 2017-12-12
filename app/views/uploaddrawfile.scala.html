@@ -65,12 +65,6 @@
 		    });
 	   	});
 		
-		$('#save-add').on('click', function(e){
-			var addInput = '<input type="hidden" name="isAdd" value="true"/>';
-			$('input[name="projectId"]').before(addInput);
-			$("#upload-draw-form").submit();
-		});
-		
 		function GetFileSize(fileid) {
 			 try {
 				 var fileSize = 0;
@@ -101,6 +95,12 @@
 		    } else{
 		 		return false;
 		    }	
+		}
+		
+		function saveAndCreateMore(){
+			var addInput = '<input type="hidden" name="isAdd" value="true"/>';
+			$('input[name="projectId"]').before(addInput);
+			$("#upload-draw-form").submit();
 		}
 	</script>
 	
@@ -154,7 +154,7 @@
 					</div>
 						      
 				    <div class="btn-wrapper form-group">
-				    	<button id="save-add" type="button" class="btn btn-success">@messages.at("save_add_other")</button>
+				    		<button id="save-add" type="button" class="btn btn-success" onclick="saveAndCreateMore();">@messages.at("save_add_other")</button>
 				        <input id="save" type="submit" class="btn btn-success" value='@messages.at("save")'/>
 				    </div>
 			    </div>

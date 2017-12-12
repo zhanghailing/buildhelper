@@ -107,11 +107,11 @@ public class DrawingFile{
 	    }
 	    
 	    for(int i = 0; i < locationMap.size(); i++){
-	    	this.location += locationMap.get(i) + "|";
+	    		this.location += locationMap.get(i) + "|";
 	    }
 	    
-	    if(Utils.isBlank(this.location) && this.location.length() > 0){
-	    	this.location = this.location.substring(0, this.location.length() - 1).replace("null", "");
+	    if(!Utils.isBlank(this.location) && this.location.length() > 0){
+	    		this.location = this.location.substring(0, this.location.length() - 1).replace("null", "");
 	    }
 	}
 	

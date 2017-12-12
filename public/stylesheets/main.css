@@ -1025,6 +1025,10 @@ p.doc-title{
 	height: 125px;
 }
 
+#draw-uploader-wrapper .browse-btn{
+	font-size: 0.8em;
+}
+
 /** Upload Drawing File End **/
 
 /** Dash Tab Bar Start **/
