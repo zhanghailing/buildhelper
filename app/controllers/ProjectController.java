@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import models.AccountType;
 import models.Builder;
 import models.Client;
 import models.Company;
+import models.DrawingFile;
 import models.Engineer;
 import models.Project;
 import models.ProjectStatus;
@@ -27,6 +30,8 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 import tools.Constants;
 import tools.Utils;
 import views.html.*;
@@ -623,6 +628,56 @@ public class ProjectController extends Controller{
 		return notFound(errorpage.render(responseData));
 	}
 	 
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result uploadDrawingFile(){
+		ResponseData responseData = new ResponseData();
+		
+		Account account = (Account) ctx().args.get("account");
+		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
+		if(engineerAccount.engineer == null) {
+			responseData.code = 4000;
+			responseData.message = "You don't have permission.";
+		}else{
+			try {
+				DynamicForm requestData = formFactory.form().bindFromRequest();
+				String projectId = requestData.get("projectId");
+				String fileName = requestData.get("fileName") + "";
+				String isAdd = requestData.get("isAdd");
+				
+				Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+				if(project != null) {
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					FilePart<File> pdfPart = body.getFile("pdfFile");
+					
+					if(pdfPart != null){
+						DrawingFile drawFile = new DrawingFile(project, pdfPart.getFile());
+						drawFile.fileName = fileName;
+						drawFile.setLocation(requestData.data());
+						jpaApi.em().persist(drawFile);
+						
+						if(isAdd == "true"){
+							return redirect(routes.ProjectController.drawingFile(project.id));
+						}else{
+							return redirect(routes.ProjectController.projectExecution(0));
+						}
+					}else{
+						responseData.code = 4001;
+						responseData.message = "PDF file cannot be empty";
+					}
+				}else {
+					responseData.code = 4001;
+					responseData.message = "Project doesn't exist.";
+				}
+			} catch (Exception e) {
+				responseData.code = 4000;
+				responseData.message = e.getLocalizedMessage();
+			} 
+		}
+		
+		return notFound(errorpage.render(responseData));
+	}
 	
 }
 

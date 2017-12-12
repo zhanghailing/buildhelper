@@ -636,7 +636,6 @@ ul.sidebar-menu li a.active > span{
     font-weight: 200;
     font-size: 1.0em;
     background-color: transparent;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, .05);
     -webkit-transition: all .2s;
     -moz-transition: all .2s;
     transition: all .2s;
@@ -1019,6 +1018,11 @@ p.doc-title{
 #upload-draw-form .btn-wrapper > button{
 	margin: 0 5px;
 	float: right;
+}
+
+#draw-uploader-wrapper{
+	width: 125px;
+	height: 125px;
 }
 
 /** Upload Drawing File End **/

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +26,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.AuthController;
+import play.db.jpa.JPA;
 import services.S3Plugin;
 import tools.Utils;
 
@@ -84,6 +89,30 @@ public class DrawingFile{
 
 	public void delete(){
 		S3Plugin.amazonS3.deleteObject(S3Plugin.s3Bucket, this.uuid);
+	}
+	
+	public void setLocation(Map<String, String> data) throws Exception{
+		Iterator<String> iterator = data.keySet().iterator();
+		Map<Integer, String> locationMap = new HashMap<>();
+	    
+	    String key;
+	    while(iterator.hasNext()){
+		    	key = iterator.next();
+		    	if(key.contains("location")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		locationMap.put(pos, data.get(key));
+		    	}
+	    }
+	    
+	    for(int i = 0; i < locationMap.size(); i++){
+	    	this.location += locationMap.get(i) + "|";
+	    }
+	    
+	    if(Utils.isBlank(this.location) && this.location.length() > 0){
+	    	this.location = this.location.substring(0, this.location.length() - 1).replace("null", "");
+	    }
 	}
 	
 }
