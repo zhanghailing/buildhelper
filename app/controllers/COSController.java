@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -35,6 +38,12 @@ public class COSController extends Controller{
 		}else{
 			Project project = jpaApi.em().find(Project.class, projectId);
 			if(project != null) {
+				List<String> locations = jpaApi.em().createNativeQuery("SELECT df.location FROM drawingfile df WHERE df.project_id = :projectId")
+						.setParameter("projectId", project.id)
+						.getResultList();
+				
+				System.out.println("---------> " + locations);
+				
 				return ok(requestcos.render(project));
 			}else {
 				responseData.code = 4000;

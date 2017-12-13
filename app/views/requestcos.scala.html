@@ -1,3 +1,30 @@
 @import tags._
 
 @(project: Project)
+
+@scripts = {
+	<script>
+		$(function(){
+			
+		});
+	</script>
+}
+
+@main(scripts, "COS Request"){
+	<div class="cos-bg">
+		<div class="a4">		
+			<p class="cos-header center">Request for COS</p>
+			
+			<section id="cos-basic">
+				<p class="cos-subheader">Project Title</p>
+				<p class="cos-content">@project.title</p>
+				
+				<p class="cos-subheader">Location</p>
+				<div class="row">
+					<div class="col col-md-1 col-sm-1 loc-blk">
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+}

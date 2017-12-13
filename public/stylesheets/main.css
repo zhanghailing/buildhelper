@@ -1128,7 +1128,45 @@ a.tab-link:hover{
 
 /** Dash Tab Bar End **/
 
+/** Create COS Start  **/
 
+.cos-bg{
+	background-color: #F1F1F1;	
+}
+
+.a4{
+	width: 50%;
+	height: 100%;
+	max-height: 900px;
+	background-color: white;
+	display: block;
+	margin: auto;
+	padding: 0 30px;
+}
+
+p.cos-header{
+	color: #777;
+	padding: 30px 0;
+	font-weight: 600;
+	font-size: 1.2em;	
+}
+
+p.cos-subheader{
+	color: #777;
+	font-weight: 400;
+	font-size: 1.2em;
+	
+}
+
+p.cos-content{
+	margin-bottom: 20px;
+}
+
+.loc-blk{
+	
+}
+	
+/** Create COS End  **/
 
 /** Footer start **/
 
@@ -1146,3 +1184,36 @@ footer{
 }
 
 /** Footer end **/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
