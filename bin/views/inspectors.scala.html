@@ -87,7 +87,7 @@
 						<td>@inspectors(index).email</td>
 						<td>@inspectors(index).password</td>
 						<td>
-							<a href="" class="action-btn">Edit</a>
+							<a href="@routes.CompanyController.createInspectorAccount(inspectors(index).id)" class="action-btn">Edit</a>
 							<a class="action-btn block-action" data-id="@inspectors(index).id" data-url="@if(inspectors(index).blocked){@routes.AuthController.unBlockAccount()}else{@routes.AuthController.blockAccount()}">@if(inspectors(index).blocked){Unblock}else{Block}</a>
 							<a class="action-btn delete-action" data-id="@inspectors(index).id" data-toggle="modal" data-target="#del-model">Delete</a>
 						</td>
@@ -95,7 +95,7 @@
 				}
 		    </tbody>
 		</table>
-		<div class="pagination-wrap">
+		<div class="pagination-wrap">	
 			<div id="page-nav"></div>
 			<form id="page-form" class="hidden" action="@routes.CompanyController.inspectors()" method="get">
 				<input id="page-offset" type="hidden" name="offset" value="0"/>

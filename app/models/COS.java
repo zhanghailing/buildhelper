@@ -31,7 +31,7 @@ public class COS {
 
 	@Column(name="grid_line")
 	public String gridLine;
-	
+
 	@Column(name="serial_no")
 	public String serialNo;
 	
@@ -50,12 +50,56 @@ public class COS {
 	@Column(name="gondola_max_swl")
 	public String gondolaMaxSWL;
 	
-	@Column(name="max_height")
-	public String workingMaxHeight;
+	@Column(name="mcwp_max_height")
+	public String mcwpMaxHeight;
 	
-	@Column(name="working_serial_no")
-	public String workginMaxLength;
+	@Column(name="mcwp_serial_no")
+	public String mcwpMaxLength;
+	
+	@Column(name="erected_status")
+	public int erectedStatus;
+	
+	@Column(name="endorsed_status")
+	public int endorsedStatus;
+	
+	@Column(name="inspected_status")
+	public int inspectedStatus;
+	
+	@Column(name="adequate_status")
+	public int adequateStatus;
+	
+	
+	@Column(name="constructed_status")
+	public int constructedStatus;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

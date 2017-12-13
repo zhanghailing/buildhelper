@@ -84,7 +84,7 @@
 		@helper.form(action = routes.AuthController.saveInspectorAccount(), 'id-> "inspector-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
 			<div class="mod-form__block">
 			   <div class="mod-form__block-content">
-				  <input type="hidden" name="qpAccountId" value="@if(inspectorAccount != null){@inspectorAccount.id}"/>
+				  <input type="hidden" name="inpectorAccountId" value="@if(inspectorAccount != null){@inspectorAccount.id}"/>
 			      
 			      <p class="tb-header">@messages.at("account_info")</p>
 			      <table class="tb-form">
