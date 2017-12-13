@@ -26,7 +26,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.db.jpa.JPA;
-import tools.Utils;
 
 @Entity
 @Table(name="project")

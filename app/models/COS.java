@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,7 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -56,21 +62,13 @@ public class COS {
 	@Column(name="mcwp_serial_no")
 	public String mcwpMaxLength;
 	
-	@Column(name="erected_status")
-	public int erectedStatus;
+	@OneToMany(mappedBy = "cos")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<Term> terms;
 	
-	@Column(name="endorsed_status")
-	public int endorsedStatus;
-	
-	@Column(name="inspected_status")
-	public int inspectedStatus;
-	
-	@Column(name="adequate_status")
-	public int adequateStatus;
-	
-	
-	@Column(name="constructed_status")
-	public int constructedStatus;
+	@OneToMany(mappedBy = "cos")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<Account> routeAccounts;
 }
 
 

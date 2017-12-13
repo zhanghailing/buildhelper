@@ -92,6 +92,11 @@ public class Account{
 	@JsonIgnore
     public List<Project> projectsJoined;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cos_id")
+	@JsonIgnore
+    public COS cos;
+	
 	@Column(columnDefinition = "boolean default false")
 	public boolean blocked;
 	

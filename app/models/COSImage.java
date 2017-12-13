@@ -7,8 +7,9 @@ import java.io.InputStream;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -22,25 +23,24 @@ import services.S3Plugin;
 import tools.Utils;
 
 @Entity
-@DiscriminatorValue("letter_head")
-public class LetterHead extends Image{
+@DiscriminatorValue("cos")
+public class COSImage extends Image{
 	@Transient
 	@JsonIgnore
-	public static final String PLACEHOLDER = "public/images/image_placeholder.png";
+	public static final String DEFAULT_AVATAR = "public/images/image_placeholder.png";
 	
-	@OneToOne
-	@JoinColumn(name = "company_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "term_id")
 	@JsonIgnore
-	public Company company;
+    public Term term;
 	
 	@Column(name="thumbnail_uuid")
 	public String thumbnailUUID;
 	
-	public LetterHead(){}
-	public LetterHead(Company company, File file) throws IOException{
+	public COSImage(){}
+	public COSImage(Term term, File file) throws IOException{
 		super(file);
 		this.thumbnailUUID = Utils.uuid();
-		this.company = company;
 		uploadThumbnail(file);
 	}
 	
@@ -73,11 +73,10 @@ public class LetterHead extends Image{
 		}
 		
 		Thumbnails.of(file)
-	    .size(400, 50)
+	    .size(300, 300)
 	    .outputFormat("jpg")
 	    .toFile(thumbnailFile);
 		
 		return thumbnailFile;
 	}
-	
 }

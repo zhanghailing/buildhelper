@@ -26,8 +26,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import controllers.AuthController;
-import play.db.jpa.JPA;
 import services.S3Plugin;
 import tools.Utils;
 
