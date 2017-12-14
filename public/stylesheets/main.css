@@ -268,6 +268,67 @@ input[type="submit"]{
 /** Spinner End **/
 
 
+/** Checkbox Start **/
+.chx-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.chx-container input {
+    position: absolute;
+    opacity: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+.chx-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.chx-container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.chx-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.chx-container .checkmark:after {
+    left: 9px;
+    top: 4px;
+    width: 8px;
+    height: 14px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/** Checkbox End **/
+
+
 /** Create Lesson Dashboard Start **/
 
 #dash-content{
@@ -288,6 +349,20 @@ input[type="submit"]{
 }
 
 .dash-block > a{
+	width: 150px;
+	height: 80px; 	
+	vertical-align: middle;
+}
+
+.dash-sidebar{
+	border-radius: 4px;
+	background-color: #2f4050;
+	margin: 0 10px;
+	position: relative;
+	padding: 15px 0;
+}
+
+.dash-sidebar > a{
 	width: 150px;
 	height: 80px; 	
 	vertical-align: middle;
@@ -346,7 +421,8 @@ ul.sidebar-menu li a {
     text-decoration: none;
     display: block;
     padding: 15px 0 15px 10px;
-    font-size: 15px;
+    font-size: 13px;
+    color: #a7b1c2 !important;
     outline: none;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -355,18 +431,24 @@ ul.sidebar-menu li a {
     transition: all 0.3s ease;
 }
 
+ul.sidebar-menu li a:hover {
+	color: #ffffff !important;
+	background-color: #293846;
+}
+
 ul.sidebar-menu li a span {
     display: inline-block;
 }
 
 ul.sidebar-menu li a.active {
-    color:#76abbf !important;
+    color:#ffffff !important;
+    background-color: #293846;
 }
 
 ul.sidebar-menu li a.active > i{
 	top: 0;
     left: 0;
-    background-color: red;
+    background-color: #19aa8d;
     height: 100%;
     position: absolute;
     width: 5px;
@@ -1025,6 +1107,10 @@ p.doc-title{
 	height: 125px;
 }
 
+#draw-uploader-wrapper .browse-btn{
+	font-size: 0.8em;
+}
+
 /** Upload Drawing File End **/
 
 /** Dash Tab Bar Start **/
@@ -1063,65 +1149,45 @@ a.tab-link:hover{
 
 /** Dash Tab Bar End **/
 
-/** Checkbox Start **/
-.chx-container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+/** Create COS Start  **/
+
+.cos-bg{
+	background-color: #F1F1F1;	
 }
 
-.chx-container input {
-    position: absolute;
-    opacity: 0;
+.a4{
+	width: 50%;
+	height: 100%;
+	max-height: 900px;
+	background-color: white;
+	display: block;
+	margin: auto;
+	padding: 0 30px;
 }
 
-.checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
+p.cos-header{
+	color: #777;
+	padding: 30px 0;
+	font-weight: 600;
+	font-size: 1.2em;	
 }
 
-.chx-container:hover input ~ .checkmark {
-    background-color: #ccc;
+p.cos-subheader{
+	color: #777;
+	font-weight: 400;
+	font-size: 1.2em;
+	
 }
 
-.chx-container input:checked ~ .checkmark {
-    background-color: #2196F3;
+p.cos-content{
+	margin-bottom: 20px;
 }
 
-.checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
+.loc-blk{
+	
 }
-
-.chx-container input:checked ~ .checkmark:after {
-    display: block;
-}
-
-.chx-container .checkmark:after {
-    left: 9px;
-    top: 4px;
-    width: 8px;
-    height: 14px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
-/** Checkbox End **/
+	
+/** Create COS End  **/
 
 /** Footer start **/
 
@@ -1139,3 +1205,36 @@ footer{
 }
 
 /** Footer end **/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
