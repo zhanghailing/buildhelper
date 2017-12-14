@@ -1,6 +1,6 @@
 @import tags._
 
-@(project: Project)
+@(project: Project, locations: List[String])
 
 @scripts = {
 	<script>
@@ -20,8 +20,16 @@
 				<p class="cos-content">@project.title</p>
 				
 				<p class="cos-subheader">Location</p>
-				<div class="row">
-					<div class="col col-md-1 col-sm-1 loc-blk">
+				<div class="form-group">
+					<div class="form-input">
+				 		@for(index <- 0 until locations.size){
+				 			<label class="subject-lbl selected">
+							   	<input type="radio" name="isCivil" class="form-control" value="@if(locations(index) != null){@locations(index)}" checked>
+								<a class="radio-box">@locations(index)
+									<i class="icon-check"></i>
+								</a>
+							</label>
+					 	}
 					</div>
 				</div>
 			</section>

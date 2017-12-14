@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import views.html.*;
 
+@SuppressWarnings("unchecked")
 public class COSController extends Controller{
 	@Inject private FormFactory formFactory;
 	@Inject private JPAApi jpaApi;
@@ -38,13 +40,19 @@ public class COSController extends Controller{
 		}else{
 			Project project = jpaApi.em().find(Project.class, projectId);
 			if(project != null) {
-				List<String> locations = jpaApi.em().createNativeQuery("SELECT df.location FROM drawingfile df WHERE df.project_id = :projectId")
+				List<String> locationLineArray = jpaApi.em().createNativeQuery("SELECT df.location FROM drawingfile df WHERE df.project_id = :projectId")
 						.setParameter("projectId", project.id)
 						.getResultList();
 				
-				System.out.println("---------> " + locations);
+				List<String> locations = new ArrayList<String>();
+				if(locationLineArray != null && locationLineArray.size() > 0) {
+					for(String locationLine : locationLineArray) {
+						String[] loc = locationLine.split("\\|");
+						locations.addAll(Arrays.asList(loc));
+					}
+				}
 				
-				return ok(requestcos.render(project));
+				return ok(requestcos.render(project, locations));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";
