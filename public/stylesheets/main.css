@@ -58,10 +58,11 @@ a:focus, ul:focus, button:focus{
 }
 
 a.action-btn{
-	color: black;
-	padding: 4px 8px;
+	color: #676a6c;
+	padding: 2px 8px;
 	display: inline-block;
-	border: 1px solid black;
+	border: 1px solid #676a6c;
+	margin: -3px 0;
 }
 
 a.disabled{
@@ -332,12 +333,11 @@ input[type="submit"]{
 /** Create Lesson Dashboard Start **/
 
 #dash-content{
-	padding: 10px 0;
 	min-height: 100%;	
 }
 
 .dash-bg{
-	background-color: #F1F1F1;
+	background-color: #f3f3f4;
 }
 
 .dash-block{
@@ -345,10 +345,25 @@ input[type="submit"]{
 	background-color: white;
 	margin: 0 10px;
 	position: relative;
-	padding: 15px 0;
+	padding: 15px;
+	border-color: #e7eaec;
+	border-style: solid solid none;
+	border-width: 1px 0;
 }
 
 .dash-block > a{
+	width: 150px;
+	height: 80px; 	
+	vertical-align: middle;
+}
+
+.dash-sidebar{
+	background-color: #2f4050;
+	position: relative;
+	padding-bottom: 15px;
+}
+
+.dash-sidebar > a{
 	width: 150px;
 	height: 80px; 	
 	vertical-align: middle;
@@ -381,9 +396,8 @@ input[type="submit"]{
 
 #sidebar {
 	position: absolute;
-    width: 240px;
+    width: 220px;
     min-height: 638px;
-    margin: 10px;
     overflow: hidden;
     outline: none; 
     z-index: 100;
@@ -407,7 +421,8 @@ ul.sidebar-menu li a {
     text-decoration: none;
     display: block;
     padding: 15px 0 15px 10px;
-    font-size: 15px;
+    font-size: 13px;
+    color: #a7b1c2 !important;
     outline: none;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -416,18 +431,47 @@ ul.sidebar-menu li a {
     transition: all 0.3s ease;
 }
 
+ul.sidebar-menu li a:hover {
+	color: #ffffff !important;
+	background-color: #293846;
+}
+
 ul.sidebar-menu li a span {
     display: inline-block;
 }
 
 ul.sidebar-menu li a.active {
-    color:#76abbf !important;
+    color:#ffffff !important;
+    background-color: #293846;
+}
+
+ul.sidebar-menu li a.sidebar-header {
+	background-image: url("/assets/images/header-profile.png");
+	height: 156px;
+	padding: 33px 10px;
+}
+ul.sidebar-menu li a.sidebar-header .sidebar-name {
+	color: white !important;
+	display: block;
+	margin-bottom: 4px;
+}
+
+ul.sidebar-menu li a.sidebar-header .sidebar-role {
+	color: #8095a8 !important;
+	display: block;
+}
+
+ul.sidebar-menu li a img {
+	height: 48px;
+	width: 48px;
+	border-radius: 50%;
+	margin-bottom: 5px;
 }
 
 ul.sidebar-menu li a.active > i{
 	top: 0;
     left: 0;
-    background-color: red;
+    background-color: #19aa8d;
     height: 100%;
     position: absolute;
     width: 5px;
@@ -442,13 +486,19 @@ ul.sidebar-menu li a.active > span{
 	font-weight: 600;
 }
 
+.topbar {
+	margin-left: 220px;
+	height: 60px;
+	display: flex;
+	border-bottom: 1px solid #e7eaec;
+}
+
 #dash-detail-wrap{
     width: 100%;
-    margin-top: 10px;
 }
 
 #dash-detail{
-	margin-left: 260px;
+	margin-left: 220px;
 	min-height: 638px;
 }
 
@@ -458,13 +508,20 @@ ul.sidebar-menu li a.active > span{
 
 .dash-detail-header{
 	position: relative;
+	width: 100%;
+	background-color: white;
+	padding: 10px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #e7eaec;
 }
 
 .dash-detail-header > p{
-	margin: 0 0 30px 0 !important;
 	padding: 10px 0;
-	border-bottom: 1px solid #eee;
-	color: #777;
+	color: #676a6c;
+	font-size: 24px;
+	font-weight: 120;
+	margin-bottom: 0 !important;
+	vertical-align: middle;
 }
 
 .dash-detail-header  > p.title{
@@ -472,17 +529,14 @@ ul.sidebar-menu li a.active > span{
 }
 
 .dash-detail-header > a{
-	position: absolute;
-    top: 0;
-    right: 0;
     color: white !important;
-    display: inline-block;
+    position: absolute;
+    top: 20px;
 }
 
 .dash-detail-header > a > i{
 	margin-left: 5px;
 	font-size: 120%;
-	vertical-align: middle;
 }
 
 .dash-detail-header > a.edit-btn{
