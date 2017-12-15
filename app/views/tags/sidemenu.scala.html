@@ -12,6 +12,13 @@
 	<div id="dash-content" class="dash-bg">		
 		<div id="sidebar" class="dash-sidebar">
 		    <ul class="sidebar-menu" id="nav-accordion">
+		    	<li class="sub-menu dcjq-parent-li">
+		            <a class="sidebar-header">
+		                <img src="/assets/images/default_avatar.png">
+		                <span class="sidebar-name">G Top International Pte Ltd</span>
+		                <span class="sidebar-role">Master Admin</span>
+		            </a>
+		        </li>
 		    	@if(portal == "admin"){
 		    		   	<li class="sub-menu dcjq-parent-li">
 				            <a @if(section == 0){class="active"} href="@routes.CompanyController.companys(0)">
@@ -85,9 +92,12 @@
 		        </li>
 		    </ul>
 		</div>
-	
+		
+		<div class="topbar">
+			
+		</div>
 		<div id="dash-detail-wrap" class="lesson-dash">
-			<div id="dash-detail" class="dash-block">
+			<div id="dash-detail">
 				@content
 			</div>
 		</div>
