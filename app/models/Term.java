@@ -26,10 +26,6 @@ public class Term {
 	
 	public String subject;
 	
-	public int value;
-	
-	public String remark;
-	
 	@OneToMany(mappedBy = "term")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<COSImage> cosImages;
@@ -38,6 +34,18 @@ public class Term {
     @JoinColumn(name = "cos_id")
 	@JsonIgnore
     public COS cos;
+	
+	public TermType Type;
+	
+	@OneToMany(mappedBy = "term")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<COSTerm> cosTerms;
+	
+	public Term() {}
+	public Term(String subject, TermType type) {
+		this.subject = subject;
+		this.Type = type;
+	}
 }
 
 

@@ -1132,12 +1132,13 @@ a.tab-link:hover{
 
 .cos-bg{
 	background-color: #F1F1F1;	
+	padding-bottom: 30px;
 }
 
 .a4{
 	width: 50%;
-	height: 100%;
-	max-height: 900px;
+	height: auto;
+	min-height: 900px;
 	background-color: white;
 	display: block;
 	margin: auto;
@@ -1160,6 +1161,10 @@ p.cos-subheader{
 
 p.cos-content{
 	margin-bottom: 20px;
+}
+
+.opt-wrapper > p.ques{
+	margin:0;
 }
 
 @media only screen and (max-width: 980px) {

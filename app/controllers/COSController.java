@@ -12,6 +12,7 @@ import models.Account;
 import models.Engineer;
 import models.Project;
 import models.ResponseData;
+import models.Term;
 import play.Application;
 import play.data.FormFactory;
 import play.db.jpa.JPAApi;
@@ -52,7 +53,8 @@ public class COSController extends Controller{
 					}
 				}
 				
-				return ok(requestcos.render(project, locations));
+				List<Term> terms = jpaApi.em().createQuery("FROM Term", Term.class).getResultList();
+				return ok(requestcos.render(project, locations, terms));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";
