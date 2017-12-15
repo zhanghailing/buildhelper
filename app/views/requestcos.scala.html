@@ -5,8 +5,30 @@
 @scripts = {
 	<script>
 		$(function(){
+			$('.subject-lbl:first-child').addClass('selected');
+			$('.subject-lbl.selected').find('input[type="radio"]').attr('checked', true);
 			
-		});
+			$('input[type="radio"]').on('click', function(){
+				$('.subject-lbl').removeClass('selected');
+				$('input[type="radio"]').attr('checked', false);
+       			
+       			$(this).attr('checked', true);
+       			$(this).parent().addClass('selected');
+	       	});
+			
+			var serialNo = uuid();
+			$('input[name="serialNo"]').val(serialNo);
+			$('.serial-no').html(serialNo);
+		});	
+		
+		function uuid() {
+			  var u='',i=0;
+			  while(i++<18) {
+			    var c='xxxxxxxx-4xxx-yxxx'[i-1],r=Math.random()*16|0,v=c=='x'?r:(r&0x3|0x8);
+			    u+=(c=='-'||c=='4')?c:v.toString(16)
+			  }
+			  return u;
+		}
 	</script>
 }
 
@@ -19,20 +41,155 @@
 				<p class="cos-subheader">Project Title</p>
 				<p class="cos-content">@project.title</p>
 				
-				<p class="cos-subheader">Location</p>
 				<div class="form-group">
+					<p class="cos-subheader">Location</p>
 					<div class="form-input">
 				 		@for(index <- 0 until locations.size){
-				 			<label class="subject-lbl selected">
-							   	<input type="radio" name="isCivil" class="form-control" value="@if(locations(index) != null){@locations(index)}" checked>
+				 			<label class="subject-lbl">
+							   	<input type="radio" name="location" class="form-control" value="@if(locations(index) != null){@locations(index)}">
 								<a class="radio-box">@locations(index)
 									<i class="icon-check"></i>
 								</a>
 							</label>
 					 	}
 					</div>
+					<div class="line-form form-group">
+		      			<input type="text" name="extraLocation" placeholder="None of the above, enter here..." />
+					</div>
+				</div>
+				
+				
+				@if(project.isScaffold || project.isFormwork){
+					<div class="form-group">
+			           <div class="form-label">	
+			              <label for="locgrid">Location/Grid Line</label>
+			           </div>
+			           <div class="form-input">
+			           	  <textarea id="locgrid" class="form-control" name="locgrid" rows="5" placeholder="Shifting of Gondola System from Blk79 to Blk81"></textarea>
+			         	</div>
+			        </div>
+				}
+				
+				<div class="serial-wrapper">
+					<p class="cos-subheader">Serial No.</p>
+					<p class="serial-no"></p>
+					<input type="hidden" name="serialNo" />
+				</div>
+			</section>
+			
+			@if(project.isGondola){
+				<section id="cos-gondola">
+					<p class="tb-header center">Gondola Particulars</p>
+					<div class="form-group">
+			           <div class="form-label">	
+			              <label for="gondola-no">Location/Grid Line</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="gondola-no" class="form-control" name="gondolaNo" placeholder="Fill in Gondola No." />
+			         	</div>
+			        </div>
+			        
+			        <div class="form-group">
+			           <div class="form-label">	
+			              <label for="le-reg-no">L E Registration No.</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="le-reg-no" class="form-control" name="leRegisterNo" placeholder="Fill in L E Registration No." />
+			         	</div>
+			        </div>
+			        
+			        <div class="form-group">
+			           <div class="form-label">	
+			              <label for="distinctive-no">Distinctive No.</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="distinctive-no" class="form-control" name="distinctiveNo" placeholder="Fill in Distinctive No." />
+			         	</div>
+			        </div>
+			        
+			        <div class="form-group">
+			           <div class="form-label">	
+			              <label for="gondola-max-length">Max. Length</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="gondola-max-length" class="form-control" name="gondolaMaxLength" placeholder="Fill in Max. Length" />
+			         	</div>
+			        </div>
+			        
+			        <div class="form-group">
+			           <div class="form-label">	
+			              <label for="gondola-max-swl">Max. S.W.L</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="gondola-max-swl" class="form-control" name="gondolaMaxSWL" placeholder="Fill in Max. S.W.L" />
+			         	</div>
+			        </div>
+				</section>
+			}
+			
+			@if(project.isMCWP){
+				<section id="cos-mcwp">
+					<p class="tb-header center">Working Platform Particulars</p>
+					<div class="form-group">
+			           <div class="form-label">	
+			              <label for="mcwp-serial-no">Serial N.</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="mcwp-serial-no" class="form-control" name="cmwpSerialNo" placeholder="Fill in Serial No." />
+			         	</div>
+			        </div>
+			        
+			        <div class="form-group">
+			           <div class="form-label">	
+			              <label for="mcwp-max-height">Max. Height</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="mcwp-max-height" class="form-control" name="mcwpMaxHeight" placeholder="Fill in Max. Height" />
+			         	</div>
+			        </div>
+			        
+			        <div class="form-group">
+			           <div class="form-label">	
+			              <label for="mcwp-max-length">Max. Length</label>
+			           </div>
+			           <div class="form-input">
+			           	  <input id="mcwp-max-length" class="form-control" name="mcwpMaxLength" placeholder="Fill in Max. Length" />
+			         	</div>
+			        </div>
+				</section>
+			}
+			
+			<section id="cos-compliance">
+				<p class="tb-header center">Compliance Criteria</p>
+				
+				<div class="general">
+					<p class="cos-subheader">General</p>
+					<div class="opt-wrapper">
+						<p class="ques"><span class="num">1. </span></p>
+					</div>
 				</div>
 			</section>
 		</div>
 	</div>
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
