@@ -2,6 +2,7 @@ package models;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,16 +27,13 @@ public class Term {
 	
 	public String subject;
 	
-	@OneToMany(mappedBy = "term")
-	@LazyCollection(LazyCollectionOption.EXTRA)
-	public List<COSImage> cosImages;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cos_id")
 	@JsonIgnore
     public COS cos;
 	
-	public TermType Type;
+	@Column(name="type")
+	public TermType termType;
 	
 	@OneToMany(mappedBy = "term")
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -44,7 +42,7 @@ public class Term {
 	public Term() {}
 	public Term(String subject, TermType type) {
 		this.subject = subject;
-		this.Type = type;
+		this.termType = type;
 	}
 }
 

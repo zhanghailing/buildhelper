@@ -72,6 +72,7 @@ GET 		/mom/cos/mcwp					controllers.DocFormatController.momCOSMCWP()
 GET 		/mom/cos/formwork				controllers.DocFormatController.momCOSFormwork()
 
 GET		/create/cos						controllers.COSController.createCOS(projectId: Long ?= 0)
+POST		/save/cos						controllers.COSController.saveCOS()
 
 
 

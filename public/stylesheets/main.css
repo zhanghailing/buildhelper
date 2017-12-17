@@ -795,7 +795,7 @@ input.file-input{
 	margin: 0 5px;
 }
 
-#logo-link, #lh-link{
+#logo-link, #lh-link, .cos-link{
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -814,6 +814,10 @@ input.file-input{
 .upload-wrap > label.error{
 	font-size: 14px;
     margin-top: 15px;
+}
+
+#signature{
+	opacity: 0;
 }
 
 /** Create Company End ---- Form **/
@@ -1217,9 +1221,57 @@ p.cos-content{
 	margin-bottom: 20px;
 }
 
+.value-box{
+	display: inline-block;
+}
+
 .opt-wrapper > p.ques{
 	margin:0;
 }
+
+.opt-list{
+	display:inline-block;
+}
+
+.opt-list > li{
+	display: inline-block;
+	margin: 10px 2px;
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+}
+
+.opt-list > li.selected, .opt-list > li.selected:hover{
+	background-color: #98FB98;
+}
+
+.opt-list > li:hover, .remark-block button:hover{
+	background-color: #eee;
+}
+
+.remark-block{
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.remark-btn{
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	display: inline;
+}
+
+.remark-btn.selected{
+	background-color: #eee;
+}
+
+.cos-uploader-wrapper{
+	width: 100%;	
+	height:90px;
+}
+
+#canvas{
+	border:1px solid #ccc;	
+}
+
 
 @media only screen and (max-width: 980px) {
     .a4 {
