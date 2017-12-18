@@ -89,7 +89,7 @@ p.bold{
 @-webkit-keyframes autofill {
     to {
         color: #999;
-        background: transparent;
+        background: #ffffff;
     }
 }
 
@@ -129,7 +129,7 @@ input[type="submit"]{
 }
 
 .radial-bg {
-  background-color: #2F2727;
+  background-color: #f3f3f4;
   background-position: center center;
   background-repeat: no-repeat;
 
@@ -333,7 +333,7 @@ input[type="submit"]{
 /** Create Lesson Dashboard Start **/
 
 #dash-content{
-	min-height: 100%;	
+	min-height: calc(100% - 30px);	
 }
 
 .dash-bg{
@@ -505,7 +505,7 @@ ul.sidebar-menu li a.active > span{
 
 #dash-detail{
 	margin-left: 220px;
-	min-height: 638px;
+	min-height: calc(100% - 85px);
 }
 
 #dash-detail .form-label, #dash-detail .form-input{
@@ -575,6 +575,7 @@ ul.sidebar-menu li a.active > span{
     height: 100%;
     display: table;
     table-layout: fixed;
+    background-color: #f3f3f4;
 }
 
 .login-form-wrapper{
@@ -589,17 +590,28 @@ ul.sidebar-menu li a.active > span{
 	margin: auto;
 }
 
+#login-icon {
+	font-size: 170px;
+	color: #e6e6e6;
+	margin-bottom: 20px;
+}
+
+.login-form-wrapper p {
+	font-size: 16px;
+	margin-bottom: 25px;
+}
+
 .line-form{
-	margin-top: 20px;
-  	border-bottom: 1px solid #999;
+	margin-top: 15px;
 }
 
 .line-form input{
 	color:#999;
-	border: 0;
-  	outline: 0;
   	width: 100%;
-  	background: transparent;
+  	background:-color: #ffffff;
+  	border: 1px solid #e5e6e7;
+  	padding: 6px 12px;
+  	font-size: 14px;
 }
 
 #login-btn{
@@ -609,12 +621,12 @@ ul.sidebar-menu li a.active > span{
 	color: white;
 	font-size: 1.2em;
 	font-weight: 200;
-	padding: 10px;
+	padding: 6px 12px;
 	border-radius: 5px;
 }
 
 .login-spinner{
-	top: 14px;
+	top: 10px;
 	right: 20px;
 }
 
@@ -737,8 +749,8 @@ ul.sidebar-menu li a.active > span{
 }
 
 #lh-uploader-wrapper{
-	width: 800px;
-	height: 80px;
+	width: 100%;
+	padding-top: 10%;
 }
 
 .uploader i{
