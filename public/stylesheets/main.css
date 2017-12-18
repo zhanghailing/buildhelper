@@ -1272,6 +1272,9 @@ p.cos-content{
 	border:1px solid #ccc;	
 }
 
+#cos-form #submit{
+	float: right;
+}
 
 @media only screen and (max-width: 980px) {
     .a4 {

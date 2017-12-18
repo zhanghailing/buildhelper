@@ -2,3 +2,8 @@
 /models/
 /controllers/
 /actions/
+/META-INF/
+/ModelVOs/
+/filters/
+/services/
+/tools/

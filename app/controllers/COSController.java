@@ -175,8 +175,10 @@ public class COSController extends Controller{
 					List<COSTerm> cosTerms = new ArrayList<>();
 					for(Term term : terms) {
 						String remark = requestData.get(term.id + "-remark");
+						String optVal = requestData.get(term.id + "-value");
 						
 						COSTerm generalcosTerm = new COSTerm(cos, term);
+						generalcosTerm.value = Integer.parseInt(optVal);
 						if(!Utils.isBlank(remark)) {
 							generalcosTerm.remark = remark;
 						}
