@@ -395,10 +395,12 @@ input[type="submit"]{
 }
 
 #sidebar {
-	position: absolute;
+	position: fixed;
     width: 220px;
-    min-height: 638px;
-    overflow: hidden;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    overflow-y: auto;
     outline: none; 
     z-index: 100;
 }
@@ -1260,11 +1262,16 @@ footer{
   	right: 0;
   	bottom: 0;
   	left: 0;
+  	padding-left: 220px;
   	text-align: center;
-  	color: #999;
+  	color: #676a6c;
   	font-weight: 200;
   	font-size: 0.8em;
-  	background-color: #F1F1F1;
+  	background-color: #f3f3f4;
+}
+
+footer p.copy-right {
+	margin-bottom: 0;
 }
 
 /** Footer end **/
