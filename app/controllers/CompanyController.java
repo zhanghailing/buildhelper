@@ -402,12 +402,6 @@ public class CompanyController extends Controller {
 						sql,
 						Account.class)
 				.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-		
-		
-		for(Account acc : qpAccounts) {
-			System.out.println("Account-------> " + acc.user + ", ID: " + acc.id);
-		}
-		
 
 		return ok(qplist.render(qpAccounts, pageIndex, totalAmount));
 	}
