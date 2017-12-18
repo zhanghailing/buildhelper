@@ -420,7 +420,7 @@ ul.sidebar-menu li a {
 	position: relative;
     text-decoration: none;
     display: block;
-    padding: 15px 0 15px 10px;
+    padding: 14px 20px; 14px 25px;
     font-size: 13px;
     color: #a7b1c2 !important;
     outline: none;
@@ -440,6 +440,10 @@ ul.sidebar-menu li a span {
     display: inline-block;
 }
 
+ul.sidebar-menu li a i {
+    margin-right: 6px;
+}
+
 ul.sidebar-menu li a.active {
     color:#ffffff !important;
     background-color: #293846;
@@ -448,7 +452,7 @@ ul.sidebar-menu li a.active {
 ul.sidebar-menu li a.sidebar-header {
 	background-image: url("/assets/images/header-profile.png");
 	height: 156px;
-	padding: 33px 10px;
+	padding: 33px 10px 33px 20px;
 }
 ul.sidebar-menu li a.sidebar-header .sidebar-name {
 	color: white !important;
@@ -471,10 +475,10 @@ ul.sidebar-menu li a img {
 ul.sidebar-menu li a.active > i{
 	top: 0;
     left: 0;
-    background-color: #19aa8d;
-    height: 100%;
+    border-left: 4px solid #19aa8d;
+    padding: 14px 20px;
     position: absolute;
-    width: 5px;
+    width: 20px;
 }
 
 ul.sidebar-menu li a > span, i{
@@ -482,13 +486,13 @@ ul.sidebar-menu li a > span, i{
 }
 
 ul.sidebar-menu li a.active > span{
-	margin-left: 5px;
+	margin-left: 25px;
 	font-weight: 600;
 }
 
 .topbar {
 	margin-left: 220px;
-	height: 60px;
+	height: 55px;
 	display: flex;
 	border-bottom: 1px solid #e7eaec;
 }
@@ -545,6 +549,18 @@ ul.sidebar-menu li a.active > span{
 
 .dash-detail-header > a.create-btn{
 	right: 10px;
+}
+
+.navbar {
+	color: #888888 !important;
+}
+
+.topbar .label {
+	line-height: 12px;
+	padding: 2px 5px;
+	position: relative;
+	right: 9px;
+	top: -10px;
 }
 
 /** Create Lesson Dashboard End **/
@@ -865,7 +881,14 @@ input.file-input{
 }
 
 .company-content{
-	padding: 0 30px;
+	border-radius: 4px;
+	background-color: white;
+	margin: 0 10px;
+	position: relative;
+	padding: 15px 30px;
+	border-color: #e7eaec;
+	border-style: solid solid none;
+	border-width: 1px 0;
 }
 
 .company-content #logo-uploader-wrapper{
