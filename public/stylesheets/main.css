@@ -1241,13 +1241,13 @@ a.tab-link:hover{
 }
 
 .a4{
-	width: 50%;
+	width: 60%;
 	height: auto;
 	min-height: 900px;
 	background-color: white;
 	display: block;
 	margin: auto;
-	padding: 0 30px;
+	padding: 10px 40px;
 }
 
 p.cos-header{
