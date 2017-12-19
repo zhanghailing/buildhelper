@@ -38,7 +38,7 @@
 				<div class="row">
 					@for(index <- 0 until docFormats.size){
 						@if(docFormats(index).docType == "checklist"){
-							<div class="col col-xs-4 col-md-2 col-sm-2">
+							<div class="col col-xs-6 col-md-3 col-sm-3">
 			            	<a target="_blank" class="doc-preview link-img" href="@docFormats(index).partialUrl" style="background-image:url(@routes.CompanyController.downloadDocThumbnail(docFormats(index).uuid))">
 			            		<span class="caption"><span>@docFormats(index).workType.capitalize</span><span> </span><span>@docFormats(index).docType.capitalize</span></span>
 		            		</a>
@@ -53,7 +53,7 @@
 				<div class="row">
 					@for(index <- 0 until docFormats.size){
 						@if(docFormats(index).docType == "cos"){
-							<div class="col col-xs-4 col-md-2 col-sm-2">
+							<div class="col col-xs-6 col-md-3 col-sm-3">
 			            	<a target="_blank" class="doc-preview link-img" href="@docFormats(index).partialUrl" style="background-image:url(@routes.CompanyController.downloadDocThumbnail(docFormats(index).uuid))">
 			            		<span class="caption"><span>@docFormats(index).workType.capitalize</span><span> </span><span>@docFormats(index).docType.capitalize</span></span>
 		            		</a>

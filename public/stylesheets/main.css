@@ -89,7 +89,7 @@ p.bold{
 @-webkit-keyframes autofill {
     to {
         color: #999;
-        background: transparent;
+        background: #ffffff;
     }
 }
 
@@ -129,7 +129,7 @@ input[type="submit"]{
 }
 
 .radial-bg {
-  background-color: #2F2727;
+  background-color: #f3f3f4;
   background-position: center center;
   background-repeat: no-repeat;
 
@@ -333,7 +333,7 @@ input[type="submit"]{
 /** Create Lesson Dashboard Start **/
 
 #dash-content{
-	min-height: 100%;	
+	min-height: calc(100% - 30px);	
 }
 
 .dash-bg{
@@ -349,6 +349,13 @@ input[type="submit"]{
 	border-color: #e7eaec;
 	border-style: solid solid none;
 	border-width: 1px 0;
+}
+
+.dash-block-title {
+	margin: -15px -15px 0 -15px;
+	padding: 15px;
+	border-bottom: 1px solid #e7eaec;
+	font-size: 14px;
 }
 
 .dash-block > a{
@@ -395,10 +402,12 @@ input[type="submit"]{
 }
 
 #sidebar {
-	position: absolute;
+	position: fixed;
     width: 220px;
-    min-height: 638px;
-    overflow: hidden;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    overflow-y: auto;
     outline: none; 
     z-index: 100;
 }
@@ -503,7 +512,7 @@ ul.sidebar-menu li a.active > span{
 
 #dash-detail{
 	margin-left: 220px;
-	min-height: 638px;
+	min-height: calc(100% - 85px);
 }
 
 #dash-detail .form-label, #dash-detail .form-input{
@@ -573,6 +582,7 @@ ul.sidebar-menu li a.active > span{
     height: 100%;
     display: table;
     table-layout: fixed;
+    background-color: #f3f3f4;
 }
 
 .login-form-wrapper{
@@ -587,17 +597,28 @@ ul.sidebar-menu li a.active > span{
 	margin: auto;
 }
 
+#login-icon {
+	font-size: 170px;
+	color: #e6e6e6;
+	margin-bottom: 20px;
+}
+
+.login-form-wrapper p {
+	font-size: 16px;
+	margin-bottom: 25px;
+}
+
 .line-form{
-	margin-top: 20px;
-  	border-bottom: 1px solid #999;
+	margin-top: 15px;
 }
 
 .line-form input{
 	color:#999;
-	border: 0;
-  	outline: 0;
   	width: 100%;
-  	background: transparent;
+  	background:-color: #ffffff;
+  	border: 1px solid #e5e6e7;
+  	padding: 6px 12px;
+  	font-size: 14px;
 }
 
 #login-btn{
@@ -607,12 +628,12 @@ ul.sidebar-menu li a.active > span{
 	color: white;
 	font-size: 1.2em;
 	font-weight: 200;
-	padding: 10px;
+	padding: 6px 12px;
 	border-radius: 5px;
 }
 
 .login-spinner{
-	top: 14px;
+	top: 10px;
 	right: 20px;
 }
 
@@ -736,8 +757,8 @@ ul.sidebar-menu li a.active > span{
 }
 
 #lh-uploader-wrapper{
-	width: 800px;
-	height: 80px;
+	width: 100%;
+	padding-top: 10%;
 }
 
 .uploader i{
@@ -843,7 +864,6 @@ input.file-input{
 
 .tb-form{
 	width: 100%;
- 	margin-bottom: 30px;
 }
 
 .tb-form .form-input{
@@ -852,14 +872,11 @@ input.file-input{
 }
 
 .tb-header{
-	height: 40px;
-	line-height: 40px;
-	background-color: #777;
-	color: white;
+	line-height: 30px;
+	border-bottom: 1px solid #e7eaec;
 	font-weight: 600;
-	font-size: 1.2em;
-	text-align: center;
-	
+	font-size: 14px;
+	margin: 0 -30px 15px -30px;
 }
 
 .branch-lbl{
@@ -935,7 +952,7 @@ input.file-input{
 
 .left-body{
 	position: absolute;
-    width: 40%;
+    width: 50%;
     padding: 0 30px;
     min-height: 400px;
     overflow: hidden;
@@ -949,7 +966,7 @@ input.file-input{
 }
 
 .right-detail{
-	margin-left: 45%;
+	margin-left: 55%;
     min-height: 100%;
     padding-top: 93px;
 }
@@ -966,14 +983,14 @@ input.file-input{
 .search-btn{
     position: absolute;
     right: 0;
-    top: 25px;
+    top: 0;
 }
 
 .eng-list{
 	padding:10px;
    	border: 1px solid #ccc;
    	max-height: 400px;
-   	overflow-y: scroll;
+   	overflow-y: auto;
 }
 
 .eng-list > li{
@@ -992,6 +1009,10 @@ input.file-input{
 .eng-info .spinner{
 	right: 18px;
     top: 30px;
+}
+
+.eng-search {
+	width: calc(100% - 80px) !important;
 }
 
 /** Add Engineer End **/
@@ -1021,7 +1042,7 @@ input.file-input{
 }
 
 .acc-info{
-	background-color: white;
+	background-color: #f3f3f4;
 	padding: 10px;
 	min-height: 130px;
 	position: relative;
@@ -1057,6 +1078,10 @@ input.file-input{
 	margin-right: 30px;
 }
 
+#project-form .tb-header {
+	margin: 0 0 5px 0;
+}
+
 p.work-type{
 	margin:0;
 	padding:0;
@@ -1066,6 +1091,11 @@ p.work-type{
 	color: black;
 	top: 45%;
     left: 45%;
+}
+
+#qp-search, #inspector-search {
+	position: absolute;
+	top: 33px;
 }
 
 /** Create Project End **/
@@ -1078,7 +1108,7 @@ p.work-type{
 
 .doc-preview{
 	width: 100%;
-	height: 120px;
+	padding-top: 100%;
 	margin: 15px;
     display: inline-block;
     position:relative;
@@ -1107,17 +1137,6 @@ p.doc-title{
 
 /** Upload Drawing File Start **/
 
-.drawing-title{
-	height: 40px;
-    line-height: 40px;
-    background-color: #777;
-    color: white !important;
-    font-weight: 600;
-    margin:-15px 0 0 0 !important;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
 .drawing-body{
 	margin: 60px;
 }
@@ -1134,10 +1153,11 @@ p.doc-title{
 	display: inline-block;
 	vertical-align: top;
     padding-left: 25px;
+    width: calc(100% - 150px);
 }
 
 .draw-right .form-group{
-	width: 632px;
+	width: 100%;
 }
 
 .draw-right .form-input{
@@ -1147,6 +1167,10 @@ p.doc-title{
 .draw-right .input-wrapper{
 	padding: 0 5px;
 	margin-bottom: 10px;
+}
+.draw-right .form-group .row{
+	margin-left: -5px;
+	margin-right: -5px;
 }
 
 .loc-input{
@@ -1177,7 +1201,7 @@ p.doc-title{
 /** Dash Tab Bar Start **/
 
 .dash-tab-header{
-	margin-top: -15px;
+	margin: -15px -15px 0 -15px;
 	background-color: #fafafa;
 }
 
@@ -1186,12 +1210,12 @@ p.doc-title{
 }
 
 .tab-bar > li:hover{
-	background-color: #707070;
+	background-color: #18a689;
 }
 
 a.tab-link{
 	display: block;
-	padding: 15px 20px;
+	padding: 15px 40px;
 	color: #777 !important;
 	text-decoration: none;
 }
@@ -1201,7 +1225,7 @@ a.tab-link:hover{
 }
 
 .tab-bar > li.active{
-	background-color: #707070;
+	background-color: #1ab394;
 }
 
 .tab-bar > li.active a{
@@ -1218,13 +1242,13 @@ a.tab-link:hover{
 }
 
 .a4{
-	width: 50%;
+	width: 60%;
 	height: auto;
 	min-height: 900px;
 	background-color: white;
 	display: block;
 	margin: auto;
-	padding: 0 30px;
+	padding: 10px 40px;
 }
 
 p.cos-header{
@@ -1339,11 +1363,16 @@ footer{
   	right: 0;
   	bottom: 0;
   	left: 0;
+  	padding-left: 220px;
   	text-align: center;
-  	color: #999;
+  	color: #676a6c;
   	font-weight: 200;
   	font-size: 0.8em;
-  	background-color: #F1F1F1;
+  	background-color: #f3f3f4;
+}
+
+footer p.copy-right {
+	margin-bottom: 0;
 }
 
 /** Footer end **/

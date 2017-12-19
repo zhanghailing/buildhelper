@@ -3,7 +3,8 @@
 
 @(project: Project, locations: List[String], terms: List[Term], qpList: List[Account], inspectors: List[Account])
 
-@scripts = {
+
+@sidemenu("engineer", 8) {
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<script src="@routes.Assets.versioned("javascripts/fabric/fabric.min.js")" type="text/javascript"></script>
 	<script>
@@ -257,13 +258,11 @@
 			uploader.append(uploaderItem);
 		}
 	</script>
-}
-
-@main(scripts, "COS Request"){
-	<div class="cos-bg">
-		<div class="a4">		
-			<p class="cos-header center">Request for COS</p>
-			
+	<div class="dash-detail-header">
+		<p class="title">Request for COS</p>
+	</div>
+	<div class="cos-bg"> 
+		<div class="a4">
 			<form id="cos-form" method="POST" enctype="multipart/form-data">
 				<input type="hidden" name="projectId" value="@project.id"/>
 				<section id="cos-basic">
@@ -317,7 +316,7 @@
 				
 				@if(project.isGondola){
 					<section id="cos-gondola">
-						<p class="tb-header center">Gondola Particulars</p>
+						<p class="tb-header">Gondola Particulars</p>
 						<div class="form-group">
 				           <div class="form-label">	
 				              <label for="gondola-no">Location/Grid Line</label>
@@ -398,7 +397,7 @@
 				}
 				
 				<section id="cos-compliance">
-					<p class="tb-header center">Compliance Criteria</p>
+					<p class="tb-header">Compliance Criteria</p>
 					
 						<div class="compliance-sec">
 							<p class="cos-subheader">General</p>
@@ -430,7 +429,7 @@
 									         	</div>
 									        </div>
 									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+										         <div class="uploader-wrapper col col-xs-6 col-md-4 col-sm-6">
 										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
@@ -480,7 +479,7 @@
 									         	</div>
 									        </div>
 									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+										         <div class="uploader-wrapper col col-xs-6 col-md-4 col-sm-6">
 										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
@@ -501,7 +500,7 @@
 				</section>
 				
 				<section id="cos-route">
-					<p class="tb-header center">Route To</p>
+					<p class="tb-header">Route To</p>
 					<div class="qp-group form-group">
 						<p class="cos-subheader">QP:</p>
 						<div class="form-input">
@@ -563,7 +562,6 @@
 		</div>
 	</div>
 }
-
 
 
 
