@@ -1037,7 +1037,7 @@ input.file-input{
 }
 
 .acc-info{
-	background-color: white;
+	background-color: #f3f3f4;
 	padding: 10px;
 	min-height: 130px;
 	position: relative;
@@ -1073,6 +1073,10 @@ input.file-input{
 	margin-right: 30px;
 }
 
+#project-form .tb-header {
+	margin: 0 0 5px 0;
+}
+
 p.work-type{
 	margin:0;
 	padding:0;
@@ -1082,6 +1086,11 @@ p.work-type{
 	color: black;
 	top: 45%;
     left: 45%;
+}
+
+#qp-search, #inspector-search {
+	position: absolute;
+	top: 33px;
 }
 
 /** Create Project End **/
