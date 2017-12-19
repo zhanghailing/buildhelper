@@ -84,6 +84,15 @@
 				}
 			});
 			
+			$(document).on("click",".draw-btn",function(e) {
+				$('#draw-model').modal('show');
+			});
+			
+			$('#draw-model').on('shown.bs.modal', function (e) {
+				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
+				console.log('-------> ' +srcTarget);
+			});
+			
 			$(document).on("change",".uploader",function(e) {
 				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
 				var inputId = $(srcTarget).attr('id');
@@ -102,6 +111,9 @@
 			                	linkEle.removeClass('hidden');
 			                	browserEle.hide();
 			                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+			                	
+			                	var drawIconBtn = '<i class="draw-btn glyphicon glyphicon-pencil"></i>';
+			                	$(uploaderEle).append(drawIconBtn);
 				        }
 				        reader.readAsDataURL(file);
 				        createUploder($(srcTarget), inputId);
@@ -135,8 +147,8 @@
 				var btn = $('#submit');
 				var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
 				btn.after(spinner);
-	        	btn.css('color', '#1ab394');
-	        	btn.attr("disabled", true);
+		        	btn.css('color', '#1ab394');
+		        	btn.attr("disabled", true);
 				
 				$.ajax({
 	                url: "@routes.COSController.saveCOS()",
@@ -146,15 +158,15 @@
 	                processData: false,
 	                success: function(response, status) {
 		                var data = $.parseJSON(JSON.stringify(response));
-		            	if(data.code == 0){
-	           	    		showAlertToast(data.message, "alert-success");
+		            		if(data.code == 0){
+	           	    			showAlertToast(data.message, "alert-success");
 		                }else{
-                			showAlertToast(data.message, "alert-warning");
+                				showAlertToast(data.message, "alert-warning");
 		                }
 		            	
-		            	spinner.remove();
-		            	btn.css('color', 'white');
-            	    	btn.attr("disabled", false);
+			            	spinner.remove();
+			            	btn.css('color', 'white');
+	            	    		btn.attr("disabled", false);
 		            }
 	            });
 				
@@ -529,6 +541,25 @@
 					<div style="clear: both; margin-bottom: 30px"></div>
 				</section>
 			</form>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="draw-model" role="dialog">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">Image Drawing</h4>
+		      	</div>
+	      		<div class="modal-body">
+			    		<a class="drawing-content link-img"></a>
+		      	</div>
+		      	<div class="modal-footer">
+			      	<div class="form-group">
+			        		<a id="draw-sure-btn" class="btn btn-success">确定</a>
+		        		</div>
+	    			</div>
+			</div>
 		</div>
 	</div>
 }

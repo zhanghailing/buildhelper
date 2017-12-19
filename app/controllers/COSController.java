@@ -18,6 +18,7 @@ import models.AccountType;
 import models.COS;
 import models.COSImage;
 import models.COSTerm;
+import models.Client;
 import models.Engineer;
 import models.LetterHead;
 import models.Project;
@@ -28,6 +29,7 @@ import models.TermType;
 import play.Application;
 import play.data.DynamicForm;
 import play.data.FormFactory;
+import play.db.jpa.JPA;
 import play.db.jpa.JPAApi;
 import play.db.jpa.Transactional;
 import play.libs.Json;
@@ -205,6 +207,42 @@ public class COSController extends Controller{
 								}
 							}
 						}
+					}
+					
+					//Start add route member
+					Iterator<String> iterator = requestData.data().keySet().iterator();
+					List<String> routeAccounts = new ArrayList<>();
+				    
+				    String key;
+				    while(iterator.hasNext()){
+					    	key = iterator.next();
+					    	if(key.contains("qp")){
+					    		String qpAcc = requestData.data().get(key);
+					    		if(!Utils.isBlank(qpAcc)) {
+					    			routeAccounts.add(qpAcc);
+					    		}
+					    	}
+					    	
+					    	if(key.contains("inspector")){
+					    		String inspectorAcc = requestData.data().get(key);
+					    		if(!Utils.isBlank(inspectorAcc)) {
+					    			routeAccounts.add(inspectorAcc);
+					    		}
+					    	}
+				    }
+				    
+				    String routeWhereCause = "";
+				    for(String qpAcc : routeAccounts){
+				    		routeWhereCause	 += "ac.id=" + qpAcc + " or ";
+				    }
+					if(routeWhereCause.length() > 4) {
+						routeWhereCause = routeWhereCause.substring(0, routeWhereCause.length() - 4);
+					}
+					
+					List<Account> accountList = jpaApi.em().createNativeQuery("SELECT * FROM account ac " + routeWhereCause, Account.class).getResultList();
+					for(Account a : accountList) {
+						a.cos = cos;
+						jpaApi.em().persist(a);
 					}
 				}catch (IOException e) {
 					responseData.code = 4001;
