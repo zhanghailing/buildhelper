@@ -239,7 +239,7 @@ public class COSController extends Controller{
 						routeWhereCause = routeWhereCause.substring(0, routeWhereCause.length() - 4);
 					}
 					
-					List<Account> accountList = jpaApi.em().createNativeQuery("SELECT * FROM account ac " + routeWhereCause, Account.class).getResultList();
+					List<Account> accountList = jpaApi.em().createNativeQuery("SELECT * FROM account ac WHERE " + routeWhereCause, Account.class).getResultList();
 					for(Account a : accountList) {
 						a.cos = cos;
 						jpaApi.em().persist(a);
