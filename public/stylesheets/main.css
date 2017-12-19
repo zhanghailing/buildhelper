@@ -351,6 +351,13 @@ input[type="submit"]{
 	border-width: 1px 0;
 }
 
+.dash-block-title {
+	margin: -15px -15px 0 -15px;
+	padding: 15px;
+	border-bottom: 1px solid #e7eaec;
+	font-size: 14px;
+}
+
 .dash-block > a{
 	width: 150px;
 	height: 80px; 	
@@ -852,7 +859,6 @@ input.file-input{
 
 .tb-form{
 	width: 100%;
- 	margin-bottom: 30px;
 }
 
 .tb-form .form-input{
@@ -861,14 +867,11 @@ input.file-input{
 }
 
 .tb-header{
-	height: 40px;
-	line-height: 40px;
-	background-color: #777;
-	color: white;
+	line-height: 30px;
+	border-bottom: 1px solid #e7eaec;
 	font-weight: 600;
-	font-size: 1.2em;
-	text-align: center;
-	
+	font-size: 14px;
+	margin: 0 -30px 15px -30px;
 }
 
 .branch-lbl{
@@ -944,7 +947,7 @@ input.file-input{
 
 .left-body{
 	position: absolute;
-    width: 40%;
+    width: 50%;
     padding: 0 30px;
     min-height: 400px;
     overflow: hidden;
@@ -958,7 +961,7 @@ input.file-input{
 }
 
 .right-detail{
-	margin-left: 45%;
+	margin-left: 55%;
     min-height: 100%;
     padding-top: 93px;
 }
@@ -975,14 +978,14 @@ input.file-input{
 .search-btn{
     position: absolute;
     right: 0;
-    top: 25px;
+    top: 0;
 }
 
 .eng-list{
 	padding:10px;
    	border: 1px solid #ccc;
    	max-height: 400px;
-   	overflow-y: scroll;
+   	overflow-y: auto;
 }
 
 .eng-list > li{
@@ -1001,6 +1004,10 @@ input.file-input{
 .eng-info .spinner{
 	right: 18px;
     top: 30px;
+}
+
+.eng-search {
+	width: calc(100% - 80px) !important;
 }
 
 /** Add Engineer End **/
