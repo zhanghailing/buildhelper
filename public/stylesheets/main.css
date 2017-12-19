@@ -1299,6 +1299,15 @@ p.cos-content{
 	float: right;
 }
 
+.submit-wrapper{
+	position: relative;
+}
+
+.submit-wrapper > i.spinner{
+	right: 28px;
+    top: 10px;
+}
+
 @media only screen and (max-width: 980px) {
     .a4 {
         width: 100%;

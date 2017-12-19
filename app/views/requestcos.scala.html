@@ -13,11 +13,11 @@
 		    });
 			
 			$('.location-group .subject-lbl:first-child').addClass('selected');
-			$('.location-group  .subject-lbl.selected').find('input[type="radio"]').attr('checked', true);
+			$('.location-group .subject-lbl.selected').find('input[type="radio"]').attr('checked', true);
 			
 			$('.location-group input[type="radio"]').on('click', function(){
-				$('.subject-lbl').removeClass('selected');
-				$('input[type="radio"]').attr('checked', false);
+				$('.location-group .subject-lbl').removeClass('selected');
+				$('.location-group input[type="radio"]').attr('checked', false);
        			
        			$(this).attr('checked', true);
        			$(this).parent().addClass('selected');
@@ -132,6 +132,12 @@
 				var formDataToUpload = new FormData(document.getElementById('cos-form'));
 				formDataToUpload.append("signature", blob, 'signature.png');
 				
+				var btn = $('#submit');
+				var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+				btn.after(spinner);
+	        	btn.css('color', '#1ab394');
+	        	btn.attr("disabled", true);
+				
 				$.ajax({
 	                url: "@routes.COSController.saveCOS()",
 	                type: "POST",
@@ -140,11 +146,15 @@
 	                processData: false,
 	                success: function(response, status) {
 		                var data = $.parseJSON(JSON.stringify(response));
-		            	    	if(data.code == 0){
-		            	    		showAlertToast(data.message, "alert-success");
-		                	}else{
-		                		showAlertToast(data.message, "alert-warning");
-		                	}
+		            	if(data.code == 0){
+	           	    		showAlertToast(data.message, "alert-success");
+		                }else{
+                			showAlertToast(data.message, "alert-warning");
+		                }
+		            	
+		            	spinner.remove();
+		            	btn.css('color', 'white');
+            	    	btn.attr("disabled", false);
 		            }
 	            });
 				
@@ -267,7 +277,7 @@
 					
 					<div class="form-group">
 			           <div class="form-label">	
-			              <label for="subject">Location/Grid Line</label>
+			              <label for="subject">Subject</label>
 			           </div>
 			           <div class="form-input">
 			           	  <input id="subject" class="form-control" name="subject" placeholder="Fill in Subject" />
@@ -278,7 +288,7 @@
 					@if(project.isScaffold || project.isFormwork){
 						<div class="form-group">
 				           <div class="form-label">	
-				              <label for="locgrid">Location/Grid Line</label>
+				              <label for="locgrid">Gondola No.</label>
 				           </div>
 				           <div class="form-input">
 				           	  <textarea id="locgrid" class="form-control" name="locgrid" rows="5" placeholder="Shifting of Gondola System from Blk79 to Blk81"></textarea>
@@ -513,7 +523,9 @@
 					</div>
 					<canvas id="canvas" width="" height="400"></canvas>
 					<input id="signature" type="file" value="signature"/>
-					<input id="submit" class="btn btn-success" type="submit" value="Submit"/>
+					<div class="submit-wrapper">
+						<input id="submit" class="btn btn-success" type="submit" value="Submit"/>
+					</div>
 					<div style="clear: both; margin-bottom: 30px"></div>
 				</section>
 			</form>
