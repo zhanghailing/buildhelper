@@ -880,7 +880,6 @@
 							</label>
 						</div>
 					</div>
-					
 					<div class="form-group">
 						<div class="form-label">
 							<label class="chx-container">Use Company Letterhead
@@ -890,139 +889,138 @@
 						</div>
 					</div>
 				</div>
-				
 			</section>
-			
-			<section id="client">
-				<p class="tb-header">@messages.at("developer_client")</p>
-				<div class="sec-body">
-					<div class="form-group">
-						<div class="form-label">
-				            <label for="pro-title">@messages.at("company_name")</label>
-				         </div>
-				         <div class="form-input full-width">
-				            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")" 
-				            	value="
-				            		@if(project != null){
-					            		@if(project.clients != null){
-					            			@if(project.clients != null){
-					            				@if(project.clients.size > 0){
-					            					@project.clients(0).companyName
-					            				}
-					            			}
-					            		}
-				            		}">
-				         </div>
-			      	</div>
-			      	
-			      	<div class="form-group">
-						<div class="form-label">
-				            <label for="pro-title">@messages.at("person_in_charge")</label>
-				         </div>
-				         <div class="form-input full-width row">
-				         
-				         	@if(project != null){
-				         		@if(project.clients != null){
-				         			@for(index <- 0 until project.clients.size){
-						         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
-						         			<input class="client-id" type="hidden" name="clientId" value="@project.clients(index).accountId">
-								         	<div class="acc-info">
-								         		<p class="acc-name bold">@project.clients(index).name</p>
-								         		<p class="acc-designation">@project.clients(index).designation</p>
-								         		<p class="acc-email">@project.clients(index).account.email</p>
-								         		<p class="acc-hp">@project.clients(index).hpNo</p>
-								         		<p class="acc-notify">Notify? <span class="green">@if(project.clients(index).isNotify){Yes}else{No}</span></p>
-								         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
-								         	</div>
-								         	<div class="client-inputs">
-								         		<input type="hidden" name="clientEmail[]" value="@project.clients(index).account.email">
-								         		<input type="hidden" name="clientPassword[]" value="@project.clients(index).account.password">
-								         		<input type="hidden" name="clientName[]" value="@project.clients(index).name">
-								         		<input type="hidden" name="clientHpNo[]" value="@project.clients(index).hpNo">
-								         		<input type="hidden" name="clientDesignation[]" value="@project.clients(index).designation">
-								         		<input type="hidden" name="clientNotify[]" value="@if(project.clients(index).isNotify){1}else{0}">
-								         	</div>
-								        </div>
-						         	}
-				         		}
-				         	}
-				         
-				            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
-					            	<div class="acc-info">
-					            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
-					            	</div>
-				            </div>
-				         </div>
-			      	</div>
-				</div>
-			</section>
-			
-			<section id="builder">
-				<p class="tb-header">@messages.at("builder_contractor")</p>
-				<div class="sec-body">
-					<div class="form-group">
-						<div class="form-label">
-				            <label for="pro-title">@messages.at("company_name")</label>
-				         </div>
-				         <div class="form-input full-width">
-				            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")">
-				         </div>
-			      	</div>
-			      	
-			      	<div class="form-group">
-						<div class="form-label">
-				            <label for="pro-title">@messages.at("person_in_charge")</label>
-				         </div>
-				         <div class="form-input full-width row">
-				         
-				         	@if(project != null){
-				         		@if(project.clients != null){
-				         			@for(index <- 0 until project.builders.size){
-						         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
-						         			<input class="builder-id" type="hidden" name="builderId" value="@project.builders(index).accountId">
-								         	<div class="acc-info">
-								         		<p class="acc-name bold">@project.builders(index).name</p>
-								         		<p class="acc-designation">@project.builders(index).designation</p>
-								         		<p class="acc-email">@project.builders(index).account.email</p>
-								         		<p class="acc-hp">@project.builders(index).hpNo</p>
-								         		<p class="acc-notify">Notify? <span class="green">@if(project.builders(index).isNotify){Yes}else{No}</span></p>
-								         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
-								         	</div>
-								         	<div class="builder-inputs">
-								         		<input type="hidden" name="builderEmail[]" value="@project.builders(index).account.email">
-								         		<input type="hidden" name="builderPassword[]" value="@project.builders(index).account.password">
-								         		<input type="hidden" name="builderName[]" value="@project.builders(index).name">
-								         		<input type="hidden" name="builderHpNo[]" value="@project.builders(index).hpNo">
-								         		<input type="hidden" name="builderDesignation[]" value="@project.builders(index).designation">
-								         		<input type="hidden" name="builderNotify[]" value="@if(project.builders(index).isNotify){1}else{0}">
-								         	</div>
-								        </div>
-						         	}
-				         		}
-				         	}
-				         
-				            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+		
+		<section id="client">
+			<p class="tb-header">@messages.at("developer_client")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input full-width">
+			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")" 
+			            	value="
+			            		@if(project != null){
+				            		@if(project.clients != null){
+				            			@if(project.clients != null){
+				            				@if(project.clients.size > 0){
+				            					@project.clients(0).companyName
+				            				}
+				            			}
+				            		}
+			            		}">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("person_in_charge")</label>
+			         </div>
+			         <div class="form-input full-width row">
+			         
+			         	@if(project != null){
+			         		@if(project.clients != null){
+			         			@for(index <- 0 until project.clients.size){
+					         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+					         			<input class="client-id" type="hidden" name="clientId" value="@project.clients(index).accountId">
+							         	<div class="acc-info">
+							         		<p class="acc-name bold">@project.clients(index).name</p>
+							         		<p class="acc-designation">@project.clients(index).designation</p>
+							         		<p class="acc-email">@project.clients(index).account.email</p>
+							         		<p class="acc-hp">@project.clients(index).hpNo</p>
+							         		<p class="acc-notify">Notify? <span class="green">@if(project.clients(index).isNotify){Yes}else{No}</span></p>
+							         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+							         	</div>
+							         	<div class="client-inputs">
+							         		<input type="hidden" name="clientEmail[]" value="@project.clients(index).account.email">
+							         		<input type="hidden" name="clientPassword[]" value="@project.clients(index).account.password">
+							         		<input type="hidden" name="clientName[]" value="@project.clients(index).name">
+							         		<input type="hidden" name="clientHpNo[]" value="@project.clients(index).hpNo">
+							         		<input type="hidden" name="clientDesignation[]" value="@project.clients(index).designation">
+							         		<input type="hidden" name="clientNotify[]" value="@if(project.clients(index).isNotify){1}else{0}">
+							         	</div>
+							        </div>
+					         	}
+			         		}
+			         	}
+			         
+			            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+				            	<div class="acc-info">
+				            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+				            	</div>
+			            </div>
+			         </div>
+		      	</div>
+			</div>
+		</section>
+		
+		<section id="builder">
+			<p class="tb-header">@messages.at("builder_contractor")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input full-width">
+			            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("person_in_charge")</label>
+			         </div>
+			         <div class="form-input full-width row">
+			         
+			         	@if(project != null){
+			         		@if(project.clients != null){
+			         			@for(index <- 0 until project.builders.size){
+					         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+					         			<input class="builder-id" type="hidden" name="builderId" value="@project.builders(index).accountId">
+							         	<div class="acc-info">
+							         		<p class="acc-name bold">@project.builders(index).name</p>
+							         		<p class="acc-designation">@project.builders(index).designation</p>
+							         		<p class="acc-email">@project.builders(index).account.email</p>
+							         		<p class="acc-hp">@project.builders(index).hpNo</p>
+							         		<p class="acc-notify">Notify? <span class="green">@if(project.builders(index).isNotify){Yes}else{No}</span></p>
+							         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+							         	</div>
+							         	<div class="builder-inputs">
+							         		<input type="hidden" name="builderEmail[]" value="@project.builders(index).account.email">
+							         		<input type="hidden" name="builderPassword[]" value="@project.builders(index).account.password">
+							         		<input type="hidden" name="builderName[]" value="@project.builders(index).name">
+							         		<input type="hidden" name="builderHpNo[]" value="@project.builders(index).hpNo">
+							         		<input type="hidden" name="builderDesignation[]" value="@project.builders(index).designation">
+							         		<input type="hidden" name="builderNotify[]" value="@if(project.builders(index).isNotify){1}else{0}">
+							         	</div>
+							        </div>
+					         	}
+			         		}
+			         	}
+			         
+			            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
 				            	<div class="acc-info">
 				            		<a class="add-btn" data-toggle="modal" data-target="#builder-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
 				            	</div>
-				            </div>
-				         </div>
-			      	</div>
-				</div>
-			</section>
-			
-			
-			<section id="team-detail">
-				<p class="tb-header">@messages.at("qp_team")</p>
-				<div class="sec-body">
-					<div class="eng-content">
-						<div class="qp-body left-body">
-							<div class="search-wrapper">
-								<p class="search-bar-title">Select QP</p>
-								<div class="line-form">
-						      		<input class="eng-search" type="text" name="name" placeholder="Enter QP's name">
-								</div>
-								<button id="qp-search" class="btn btn-success search-btn">Search</button>
+			            </div>
+			         </div>
+		      	</div>
+			</div>
+		</section>
+		
+		
+		<section id="team-detail">
+			<p class="tb-header">@messages.at("qp_team")</p>
+			<div class="sec-body">
+				<div class="eng-content">
+					<div class="qp-body left-body">
+						<div class="search-wrapper">
+							<p class="search-bar-title">Select QP</p>
+							<div class="line-form">
+					      		<input class="eng-search" type="text" name="name" placeholder="Enter QP's name">
+							</div>
+							<button id="qp-search" class="btn btn-success search-btn">Search</button>
 							</div>
 							<ul class="qp-list eng-list">
 							@if(qpList != null){

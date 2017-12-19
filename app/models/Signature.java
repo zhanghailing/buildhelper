@@ -7,9 +7,8 @@ import java.io.InputStream;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -23,25 +22,25 @@ import services.S3Plugin;
 import tools.Utils;
 
 @Entity
-@DiscriminatorValue("cos")
-public class COSImage extends Image{
+@DiscriminatorValue("signature")
+public class Signature extends Image{
 	@Transient
 	@JsonIgnore
-	public static final String DEFAULT_AVATAR = "public/images/image_placeholder.png";
+	public static final String PLACEHOLDER = "public/images/image_placeholder.png";
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "costerm_id")
+	@OneToOne
+	@JoinColumn(name = "cos_id")
 	@JsonIgnore
-    public COSTerm cosTerm;
+	public COS cos;
 	
 	@Column(name="thumbnail_uuid")
 	public String thumbnailUUID;
 	
-	public COSImage(){}
-	public COSImage(COSTerm cosTerm, File file) throws IOException{
+	public Signature(){}
+	public Signature(COS cos, File file) throws IOException{
 		super(file);
-		this.cosTerm = cosTerm;
 		this.thumbnailUUID = Utils.uuid();
+		this.cos = cos;
 		uploadThumbnail(file);
 	}
 	
@@ -74,7 +73,7 @@ public class COSImage extends Image{
 		}
 		
 		Thumbnails.of(file)
-	    .size(300, 300)
+	    .size(200, 200)
 	    .outputFormat("jpg")
 	    .toFile(thumbnailFile);
 		
