@@ -1,6 +1,6 @@
 name := """BuildHelper"""
 
-version := "1.15"
+version := "1.14"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
@@ -30,3 +30,6 @@ PlayKeys.externalizeResources := false
 EclipseKeys.preTasks := Seq(compile in Compile)
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
 EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)
+
+
+fork in run := true
