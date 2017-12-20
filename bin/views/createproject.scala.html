@@ -817,81 +817,82 @@
 		    	});
 	   	});
 	</script>
-	<p class="center">Add MOM Project</p>
+	<div class="dash-detail-header">
+		<p class="title">Add MOM Project </p>
+	</div>	
 	
-	<form id="project-form" action="@routes.ProjectController.saveProject()" method="POST">
-		@if(project != null){
-			<input type="hidden" name="projectId" value="@project.id"/>
-		}
-		<section id="pro-detail" class="pro-sec">
-			<p class="tb-header center">@messages.at("project_detail")</p>
-			<div class="sec-body">
-				<div class="form-group">
-					<div class="form-label">
-			            <label for="pro-title">@messages.at("project_title")</label>
-			         </div>
-			         <div class="form-input full-width">
-			            <input id="pro-title" type="text" class="form-control" name="title" placeholder="@messages.at("placeholder_project_title")" value="@if(project != null){@project.title}">
-			         </div>
-		      	</div>
-		      	
-		      	<div class="form-group date-group">
-					<label>Starting Date</label>
-					<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.startDate}">
-				</div>
-				
-				<div class="form-group date-group right-align">
-					<label>Ending Date</label>
-					<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.endDate}">
-				</div>
-				
-				<div class="form-group">
-					<div class="form-label branch-lbl">
-						<label>@messages.at("select_type_of_work")</label>
+	<div class="dash-block">
+		<form id="project-form" action="@routes.ProjectController.saveProject()" method="POST">
+			@if(project != null){
+				<input type="hidden" name="projectId" value="@project.id"/>
+			}
+			<section id="pro-detail">
+				<p class="tb-header">@messages.at("project_detail")</p>
+				<div class="sec-body">
+					<div class="form-group">
+						<div class="form-label">
+				            <label for="pro-title">@messages.at("project_title")</label>
+				         </div>
+				         <div class="form-input full-width">
+				            <input id="pro-title" type="text" class="form-control" name="title" placeholder="@messages.at("placeholder_project_title")" value="@if(project != null){@project.title}">
+				         </div>
+			      	</div>
+			      	
+			      	<div class="form-group date-group">
+						<label>Starting Date</label>
+						<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.startDate}">
 					</div>
-							
-					<div class="form-input">
-						<label class="subject-lbl @if(project != null){@if(project.isGondola){selected}}else{selected}">
-						   	<input type="radio" name="gondola" class="form-control" value="@if(project != null){@if(project.isGondola){1}else{0}}else{1}" @if(project != null){@if(project.isGondola){checked}}else{checked}>
-							<a class="radio-box">Gondola
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(project != null){@if(project.isMCWP){selected}}">
-						   	<input type="radio" name="mcwp" class="form-control" value="@if(project != null){@if(project.isMCWP){1}else{0}}else{0}" @if(project != null){@if(project.isMCWP){checked}}>
-							<a class="radio-box">MCWP
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(project != null){@if(project.isScaffold){selected}}">
-						   	<input type="radio" name="scaffold" class="form-control" value="@if(project != null){@if(project.isScaffold){1}else{0}}else{0}" @if(project != null){@if(project.isScaffold){checked}}>
-							<a class="radio-box">Scaffold
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(project != null){@if(project.isFormwork){selected}}">
-						   	<input type="radio" name="formwork" class="form-control" value="@if(project != null){@if(project.isFormwork){1}else{0}}else{0}" @if(project != null){@if(project.isFormwork){checked}}>
-							<a class="radio-box">Formwork
-								<i class="icon-check"></i>
-							</a>
-						</label>
+					
+					<div class="form-group date-group right-align">
+						<label>Ending Date</label>
+						<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.endDate}">
+					</div>
+					
+					<div class="form-group">
+						<div class="form-label branch-lbl">
+							<label>@messages.at("select_type_of_work")</label>
+						</div>
+								
+						<div class="form-input">
+							<label class="subject-lbl @if(project != null){@if(project.isGondola){selected}}else{selected}">
+							   	<input type="radio" name="gondola" class="form-control" value="@if(project != null){@if(project.isGondola){1}else{0}}else{1}" @if(project != null){@if(project.isGondola){checked}}else{checked}>
+								<a class="radio-box">Gondola
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isMCWP){selected}}">
+							   	<input type="radio" name="mcwp" class="form-control" value="@if(project != null){@if(project.isMCWP){1}else{0}}else{0}" @if(project != null){@if(project.isMCWP){checked}}>
+								<a class="radio-box">MCWP
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isScaffold){selected}}">
+							   	<input type="radio" name="scaffold" class="form-control" value="@if(project != null){@if(project.isScaffold){1}else{0}}else{0}" @if(project != null){@if(project.isScaffold){checked}}>
+								<a class="radio-box">Scaffold
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isFormwork){selected}}">
+							   	<input type="radio" name="formwork" class="form-control" value="@if(project != null){@if(project.isFormwork){1}else{0}}else{0}" @if(project != null){@if(project.isFormwork){checked}}>
+								<a class="radio-box">Formwork
+									<i class="icon-check"></i>
+								</a>
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-label">
+							<label class="chx-container">Use Company Letterhead
+							  <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}">
+							  <span class="checkmark"></span>
+							</label>
+						</div>
 					</div>
 				</div>
-				
-				<div class="form-group">
-					<div class="form-label">
-						<label class="chx-container">Use Company Letterhead
-						  <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}">
-						  <span class="checkmark"></span>
-						</label>
-					</div>
-				</div>
-			</div>
-			
-		</section>
+			</section>
 		
-		<section id="client" class="pro-sec">
-			<p class="tb-header center">@messages.at("developer_client")</p>
+		<section id="client">
+			<p class="tb-header">@messages.at("developer_client")</p>
 			<div class="sec-body">
 				<div class="form-group">
 					<div class="form-label">
@@ -954,8 +955,8 @@
 			</div>
 		</section>
 		
-		<section id="builder" class="pro-sec">
-			<p class="tb-header center">@messages.at("builder_contractor")</p>
+		<section id="builder">
+			<p class="tb-header">@messages.at("builder_contractor")</p>
 			<div class="sec-body">
 				<div class="form-group">
 					<div class="form-label">
@@ -1009,242 +1010,243 @@
 		</section>
 		
 		
-		<section id="team-detail" class="pro-sec">
-			<p class="tb-header center">@messages.at("qp_team")</p>
+		<section id="team-detail">
+			<p class="tb-header">@messages.at("qp_team")</p>
 			<div class="sec-body">
 				<div class="eng-content">
 					<div class="qp-body left-body">
 						<div class="search-wrapper">
 							<p class="search-bar-title">Select QP</p>
 							<div class="line-form">
-					      		<input type="text" name="name" placeholder="Enter QP's name">
+					      		<input class="eng-search" type="text" name="name" placeholder="Enter QP's name">
 							</div>
 							<button id="qp-search" class="btn btn-success search-btn">Search</button>
-						</div>
-						<ul class="qp-list eng-list">
-						@if(qpList != null){
-							@for(index <- 0 until qpList.size){
-								<li data-id="@qpList(index).id" 
-									data-name="@if(qpList(index).user != null){@qpList(index).user.name}"
-									data-pe="">
-									<div class="eng-info">
-										<p class="name bold">@if(qpList(index).user != null){@qpList(index).user.name}</p>
-										<p>
-											@if(qpList(index).user != null){
-												PE No.: @qpList(index).user.peNo
-											}else{
-												Not Set
-											}
-										</p>
-									</div>
-									<button id="qp-add-btn" class="btn btn-primary add-btn">Add</button>
-								</li>
-							}						
-						}
-						</ul>
-					</div>
-					
-					<div class="qp-body right-body">
-						<div class="right-detail">
-							<ul class="eng-list">
-								@if(project != null){
-									@if(project.teamAccounts != null){
-										@for(index <- 0 until project.teamAccounts.size){
-											@if(project.teamAccounts(index).accType == AccountType.QP){
-												<li data-id="@project.teamAccounts(index).id" 
-													data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
-													data-pe="">
-													<div class="eng-info">
-														<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
-														<p>
-															@if(project.teamAccounts(index).user != null){
-																PE No.: @project.teamAccounts(index).user.peNo
-															}else{
-																Not Set
-															}
-														</p>
-													</div>
-													<button id="qp-remove-btn" class="btn btn-primary remove-btn">Remove</button>
-												</li>
-											}
-										}
-									}
-								}
-							</ul>
-						</div>
-					</div>
-				</div>
-				
-				
-				<div class="eng-content">
-					<div class="inspector-body left-body">
-						<div class="search-wrapper">
-							<p class="search-bar-title">Select Inspector</p>
-							<div class="line-form">
-					      		<input type="text" name="name" placeholder="Enter Inspector's name">
 							</div>
-							<button id="inspector-search" class="btn btn-success search-btn">Search</button>
-						</div>
-						<ul class="inspector-list eng-list">
-							@if(inspectors != null){
-								@for(index <- 0 until inspectors.size){
-									<li data-id="@inspectors(index).id">
+							<ul class="qp-list eng-list">
+							@if(qpList != null){
+								@for(index <- 0 until qpList.size){
+									<li data-id="@qpList(index).id" 
+										data-name="@if(qpList(index).user != null){@qpList(index).user.name}"
+										data-pe="">
 										<div class="eng-info">
-											<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
-											<p class="designation">
-												@if(inspectors(index).user != null){
-													@if(inspectors(index).user.designation != null){
-														@inspectors(index).user.designation
-													}else{
-														Not Set
-													}
+											<p class="name bold">@if(qpList(index).user != null){@qpList(index).user.name}</p>
+											<p>
+												@if(qpList(index).user != null){
+													PE No.: @qpList(index).user.peNo
+												}else{
+													Not Set
 												}
 											</p>
 										</div>
-										<button id="inspector-add-btn" class="btn btn-primary add-btn">Add</button>
+										<button id="qp-add-btn" class="btn btn-primary add-btn">Add</button>
 									</li>
-								}
+								}						
 							}
-						</ul>
-					</div>
-					
-					<div class="inspector-body right-body">
-						<div class="right-detail">
-							<ul class="eng-list">
-								@if(project != null){
-									@if(project.teamAccounts != null){
-										@for(index <- 0 until project.teamAccounts.size){
-											@if(project.teamAccounts(index).accType == AccountType.INSPECTOR){
-												<li data-id="@project.teamAccounts(index).id" 
-													data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
-													data-pe="">
-													<div class="eng-info">
-														<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
-														<p class="designation">
-															@project.teamAccounts(index).user.designation
-														</p>
-													</div>
-													<button id="inspector-remove-btn" class="btn btn-primary remove-btn">Remove</button>
-												</li>
+							</ul>
+						</div>
+						
+						<div class="qp-body right-body">
+							<div class="right-detail">
+								<ul class="eng-list">
+									@if(project != null){
+										@if(project.teamAccounts != null){
+											@for(index <- 0 until project.teamAccounts.size){
+												@if(project.teamAccounts(index).accType == AccountType.QP){
+													<li data-id="@project.teamAccounts(index).id" 
+														data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
+														data-pe="">
+														<div class="eng-info">
+															<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
+															<p>
+																@if(project.teamAccounts(index).user != null){
+																	PE No.: @project.teamAccounts(index).user.peNo
+																}else{
+																	Not Set
+																}
+															</p>
+														</div>
+														<button id="qp-remove-btn" class="btn btn-primary remove-btn">Remove</button>
+													</li>
+												}
 											}
 										}
+									}
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="eng-content">
+						<div class="inspector-body left-body">
+							<div class="search-wrapper">
+								<p class="search-bar-title">Select Inspector</p>
+								<div class="line-form">
+						      		<input class="eng-search" type="text" name="name" placeholder="Enter Inspector's name">
+								</div>
+								<button id="inspector-search" class="btn btn-success search-btn">Search</button>
+							</div>
+							<ul class="inspector-list eng-list">
+								@if(inspectors != null){
+									@for(index <- 0 until inspectors.size){
+										<li data-id="@inspectors(index).id">
+											<div class="eng-info">
+												<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
+												<p class="designation">
+													@if(inspectors(index).user != null){
+														@if(inspectors(index).user.designation != null){
+															@inspectors(index).user.designation
+														}else{
+															Not Set
+														}
+													}
+												</p>
+											</div>
+											<button id="inspector-add-btn" class="btn btn-primary add-btn">Add</button>
+										</li>
 									}
 								}
 							</ul>
 						</div>
+						
+						<div class="inspector-body right-body">
+							<div class="right-detail">
+								<ul class="eng-list">
+									@if(project != null){
+										@if(project.teamAccounts != null){
+											@for(index <- 0 until project.teamAccounts.size){
+												@if(project.teamAccounts(index).accType == AccountType.INSPECTOR){
+													<li data-id="@project.teamAccounts(index).id" 
+														data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
+														data-pe="">
+														<div class="eng-info">
+															<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
+															<p class="designation">
+																@project.teamAccounts(index).user.designation
+															</p>
+														</div>
+														<button id="inspector-remove-btn" class="btn btn-primary remove-btn">Remove</button>
+													</li>
+												}
+											}
+										}
+									}
+								</ul>
+							</div>
+						</div>
 					</div>
 				</div>
+			</section>
+			
+			<div class="form-group form-submit">
+			   <input class="btn btn-success" type="submit" value="Submit"/>
+			   <div style="clear: both;"></div>
 			</div>
-		</section>
+		</form>
 		
-		<div class="form-group form-submit">
-		   <input class="btn btn-success" type="submit" value="Submit"/>
-		   <div style="clear: both;"></div>
-		</div>
-	</form>
-	
-	
-	<div class="modal fade" id="client-model" role="dialog">
-		<div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      	<div class="modal-header">
-		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        	<h4 class="modal-title">@messages.at("add_client_developer")</h4>
-		      	</div>
-		      	<form id="client-form">
-		      		@if(project != null){
-		      			<input type="hidden" name="projectId" value="@project.id"/>
-		      		}
-			      	<div class="modal-body">
-				    	<div class="form-group">
-			    			<label>@messages.at("email")</label>
-			      			<input class="form-control" type="text" name="clientEmail" placeholder="@messages.at("placeholder_email")"/>
-			      		</div>
-				      	<div class="form-group">
-				      		<label>Password</label>	
-				      		<input class="form-control" type="password" name="clientPassword" placeholder="@messages.at("placeholder_password")"/>
-				      	</div>
-				      	<div class="form-group">
-				      		<label>Name</label>	
-				      		<input class="form-control" type="text" name="clientName" placeholder="@messages.at("placeholder_name")"/>
-				      	</div>
-				      	<div class="form-group">
-				      		<label>HP NO.</label>	
-				      		<input class="form-control" type="text" name="clientHpNo" placeholder="@messages.at("placeholder_hp")"/>
-				      	</div>
-				      	<div class="form-group">
-				      		<label>@messages.at("designation")</label>	
-				      		<input class="form-control" type="text" name="clientDesignation" placeholder="@messages.at("placeholder_designation")"/>
-				      	</div>
-				      	<div class="form-group">
-							<div class="form-label">
-								<label class="chx-container">@messages.at("notify")
-								  <input id="client-notify-chx" name="clientNotify" type="checkbox" value="0">
-								  <span class="checkmark"></span>
-								</label>
+		
+		<div class="modal fade" id="client-model" role="dialog">
+			<div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">@messages.at("add_client_developer")</h4>
+			      	</div>
+			      	<form id="client-form">
+			      		@if(project != null){
+			      			<input type="hidden" name="projectId" value="@project.id"/>
+			      		}
+				      	<div class="modal-body">
+					    	<div class="form-group">
+				    			<label>@messages.at("email")</label>
+				      			<input class="form-control" type="text" name="clientEmail" placeholder="@messages.at("placeholder_email")"/>
+				      		</div>
+					      	<div class="form-group">
+					      		<label>Password</label>	
+					      		<input class="form-control" type="password" name="clientPassword" placeholder="@messages.at("placeholder_password")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>Name</label>	
+					      		<input class="form-control" type="text" name="clientName" placeholder="@messages.at("placeholder_name")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>HP NO.</label>	
+					      		<input class="form-control" type="text" name="clientHpNo" placeholder="@messages.at("placeholder_hp")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>@messages.at("designation")</label>	
+					      		<input class="form-control" type="text" name="clientDesignation" placeholder="@messages.at("placeholder_designation")"/>
+					      	</div>
+					      	<div class="form-group">
+								<div class="form-label">
+									<label class="chx-container">@messages.at("notify")
+									  <input id="client-notify-chx" name="clientNotify" type="checkbox" value="0">
+									  <span class="checkmark"></span>
+									</label>
+								</div>
 							</div>
-						</div>
-			      	</div>
-			      	<div class="modal-footer">
-				      	<div class="form-group">
-				        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
-				        </div>
-			      	</div>
-		      	</form>
-	    	</div>
+				      	</div>
+				      	<div class="modal-footer">
+					      	<div class="form-group">
+					        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+					        </div>
+				      	</div>
+			      	</form>
+		    	</div>
+			</div>
 		</div>
-	</div>
-	
-	<div class="modal fade" id="builder-model" role="dialog">
-		<div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      	<div class="modal-header">
-		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        	<h4 class="modal-title">@messages.at("add_builder_contractor")</h4>
-		      	</div>
-		      	<form id="builder-form">
-		      		@if(project != null){
-		      			<input type="hidden" name="projectId" value="@project.id"/>
-		      		}
-			      	<div class="modal-body">
-				    	<div class="form-group">
-			    			<label>@messages.at("email")</label>
-			      			<input class="form-control" type="text" name="builderEmail" placeholder="@messages.at("placeholder_email")"/>
-			      		</div>
-				      	<div class="form-group">
-				      		<label>Password</label>	
-				      		<input class="form-control" type="password" name="builderPassword" placeholder="@messages.at("placeholder_password")"/>
-				      	</div>
-				      	<div class="form-group">
-				      		<label>Name</label>	
-				      		<input class="form-control" type="text" name="builderName" placeholder="@messages.at("placeholder_name")"/>
-				      	</div>
-				      	<div class="form-group">
-				      		<label>HP NO.</label>	
-				      		<input class="form-control" type="text" name="builderHpNo" placeholder="@messages.at("placeholder_hp")"/>
-				      	</div>
-				      	<div class="form-group">
-				      		<label>@messages.at("designation")</label>	
-				      		<input class="form-control" type="text" name="builderDesignation" placeholder="@messages.at("placeholder_designation")"/>
-				      	</div>
-				      	<div class="form-group">
-							<div class="form-label">
-								<label class="chx-container">@messages.at("notify")
-								  <input id="builder-notify-chx" name="builderNotify" type="checkbox" value="0">
-								  <span class="checkmark"></span>
-								</label>
+		
+		<div class="modal fade" id="builder-model" role="dialog">
+			<div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">@messages.at("add_builder_contractor")</h4>
+			      	</div>
+			      	<form id="builder-form">
+			      		@if(project != null){
+			      			<input type="hidden" name="projectId" value="@project.id"/>
+			      		}
+				      	<div class="modal-body">
+					    	<div class="form-group">
+				    			<label>@messages.at("email")</label>
+				      			<input class="form-control" type="text" name="builderEmail" placeholder="@messages.at("placeholder_email")"/>
+				      		</div>
+					      	<div class="form-group">
+					      		<label>Password</label>	
+					      		<input class="form-control" type="password" name="builderPassword" placeholder="@messages.at("placeholder_password")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>Name</label>	
+					      		<input class="form-control" type="text" name="builderName" placeholder="@messages.at("placeholder_name")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>HP NO.</label>	
+					      		<input class="form-control" type="text" name="builderHpNo" placeholder="@messages.at("placeholder_hp")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>@messages.at("designation")</label>	
+					      		<input class="form-control" type="text" name="builderDesignation" placeholder="@messages.at("placeholder_designation")"/>
+					      	</div>
+					      	<div class="form-group">
+								<div class="form-label">
+									<label class="chx-container">@messages.at("notify")
+									  <input id="builder-notify-chx" name="builderNotify" type="checkbox" value="0">
+									  <span class="checkmark"></span>
+									</label>
+								</div>
 							</div>
-						</div>
-			      	</div>
-			      	<div class="modal-footer">
-				      	<div class="form-group">
-				        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
-				        </div>
-			      	</div>
-		      	</form>
-	    		</div>
+				      	</div>
+				      	<div class="modal-footer">
+					      	<div class="form-group">
+					        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+					        </div>
+				      	</div>
+			      	</form>
+		    		</div>
+			</div>
 		</div>
-	</div>
+	</div>	
 }
 
 

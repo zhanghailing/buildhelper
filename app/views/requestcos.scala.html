@@ -86,12 +86,20 @@
 			});
 			
 			$(document).on("click",".draw-btn",function(e) {
-				$('#draw-model').modal('show');
+				$('#draw-model').modal('show', $(this));
 			});
 			
 			$('#draw-model').on('shown.bs.modal', function (e) {
-				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
-				console.log('-------> ' +srcTarget);
+				var drawBtn = $(e.relatedTarget);
+				var fileInput = drawBtn.siblings('.upload-wrap').find('input[type="file"]');
+				var file = fileInput[0].files[0];
+				
+				
+				var reader = new FileReader();
+				reader.onloadend = function() {
+					
+	        	}
+				reader.readAsDataURL(file);
 			});
 			
 			$(document).on("change",".uploader",function(e) {
@@ -147,7 +155,7 @@
 				
 				var btn = $('#submit');
 				var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
-				btn.after(spinner);
+					btn.after(spinner);
 		        	btn.css('color', '#1ab394');
 		        	btn.attr("disabled", true);
 				

@@ -3,6 +3,7 @@
 @(accounts: List[Account], engineers: List[Engineer])
 
 @sidemenu("admin", 4){
+	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<script type="text/javascript">
 		$(function(){
 			var allItemlayout = $('ul.eng-list').children();
@@ -160,70 +161,74 @@
 	   	});
 	</script>
 	
-	<p class="center">@messages.at("manage_project_engineer")</p>
+	<div class="dash-detail-header">
+		<p class="title">@messages.at("manage_project_engineer")</p>
+	</div>
 	
-	<div class="eng-content">
-		<div class="left-body">
-			<div class="search-wrapper">
-				<p class="search-bar-title">Select Project Engineer</p>
-				<div class="line-form">
-		      		<input type="text" name="name" placeholder="@messages.at("enter_qp_inspector_name")">
+	<div class="dash-block">
+		<div class="dash-block-title">Select Project Engineer</div>
+		<div class="eng-content">
+			<div class="left-body">
+				<div class="search-wrapper">
+					<div class="line-form">
+			      		<input class="eng-search" type="text" name="name" placeholder="@messages.at("enter_qp_inspector_name")">
+					</div>
+					<button class="btn btn-success search-btn">Search</button>
 				</div>
-				<button class="btn btn-success search-btn">Search</button>
-			</div>
-			<ul class="eng-list">
-				@for(index <- 0 until accounts.size){
-					<li data-id="@accounts(index).id">
-						<div class="eng-info">
-							<p class="name bold">@if(accounts(index).user != null){@accounts(index).user.name}</p>
-							<p>
-								@if(accounts(index).user != null){
-									@if(accounts(index).accType == 3){
-										PE No.: @accounts(index).user.peNo
-									}else{
-										@if(accounts(index).user.designation != null){
-											@accounts(index).user.designation
+				<ul class="eng-list">
+					@for(index <- 0 until accounts.size){
+						<li data-id="@accounts(index).id">
+							<div class="eng-info">
+								<p class="name bold">@if(accounts(index).user != null){@accounts(index).user.name}</p>
+								<p>
+									@if(accounts(index).user != null){
+										@if(accounts(index).accType == 3){
+											PE No.: @accounts(index).user.peNo
 										}else{
-											Not Set
-										}
-									}
-								}
-							</p>
-						</div>
-						<button class="btn btn-primary add-btn">Add</button>
-					</li>
-				}
-			</ul>
-		</div>
-		
-		<div class="right-body">
-			<div class="right-detail">
-				<ul class="eng-list @if(engineers != null){@if(engineers.size == 0){hidden}}">
-					@if(engineers != null){
-						@for(index <- 0 until engineers.size){
-							<li data-id="@engineers(index).accountId">
-								<div class="eng-info">
-									<p class="name bold">@if(engineers(index).account.user != null){@engineers(index).account.user.name}</p>
-									<p>
-										@if(engineers(index).account.user != null){
-											@if(engineers(index).account.accType == 3){
-												PE No.: @engineers(index).account.user.peNo
+											@if(accounts(index).user.designation != null){
+												@accounts(index).user.designation
 											}else{
-												@if(engineers(index).account.user.designation != null){
-													@engineers(index).account.user.designation
-												}else{
-													Not Set
-												}
+												Not Set
 											}
 										}
-									</p>
-								</div>
-								<button class="btn btn-primary remove-btn">Remove</button>
-							</li>
-						}
+									}
+								</p>
+							</div>
+							<button class="btn btn-primary add-btn">Add</button>
+						</li>
 					}
 				</ul>
 			</div>
+			
+			<div class="right-body">
+				<div class="right-detail">
+					<ul class="eng-list @if(engineers != null){@if(engineers.size == 0){hidden}}">
+						@if(engineers != null){
+							@for(index <- 0 until engineers.size){
+								<li data-id="@engineers(index).accountId">
+									<div class="eng-info">
+										<p class="name bold">@if(engineers(index).account.user != null){@engineers(index).account.user.name}</p>
+										<p>
+											@if(engineers(index).account.user != null){
+												@if(engineers(index).account.accType == 3){
+													PE No.: @engineers(index).account.user.peNo
+												}else{
+													@if(engineers(index).account.user.designation != null){
+														@engineers(index).account.user.designation
+													}else{
+														Not Set
+													}
+												}
+											}
+										</p>
+									</div>
+									<button class="btn btn-primary remove-btn">Remove</button>
+								</li>
+							}
+						}
+					</ul>
+				</div>
+			</div>
 		</div>
-	</div>
+	</div>	
 }
