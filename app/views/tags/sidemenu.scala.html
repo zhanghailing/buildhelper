@@ -19,13 +19,15 @@
 		                <span class="sidebar-role">Master Admin</span>
 		            </a>
 		        </li>
+		        @if(portal == "superadmin"){
+		        	<li class="sub-menu dcjq-parent-li">
+			        	<a @if(section == 0){class="active"} href="@routes.CompanyController.companys(0)">
+			                <i class="fa fa-tachometer"></i>
+			                <span>Company Management</span>
+			            </a>
+			        </li>
+		        }
 		    	@if(portal == "admin"){
-		    		   	<li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 0){class="active"} href="@routes.CompanyController.companys(0)">
-				                <i class="fa fa-tachometer"></i>
-				                <span>Company Management</span>
-				            </a>
-				        </li>
 				        <li class="sub-menu dcjq-parent-li">
 				            <a @if(section == 1){class="active"} href="@routes.CompanyController.company()">
 				                <i class="fa fa-bank"></i>

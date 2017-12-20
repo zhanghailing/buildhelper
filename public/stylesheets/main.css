@@ -731,6 +731,7 @@ ul.sidebar-menu li a.active > span{
 
 .uploader-wrapper{
 	display:inline-block;
+	position: relative;
 }
 
 .uploader{
@@ -1330,6 +1331,20 @@ p.cos-content{
 .submit-wrapper > i.spinner{
 	right: 28px;
     top: 10px;
+}
+
+.draw-btn{
+	color: white;
+	position: absolute;
+	font-size: 20px;
+	right: 8px;
+	top: 8px;
+	z-index:100000;
+}
+
+.drawing-content{
+	width: 100%;
+	height: auto;
 }
 
 @media only screen and (max-width: 980px) {
