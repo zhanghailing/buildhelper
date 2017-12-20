@@ -1347,6 +1347,12 @@ p.cos-content{
 	height: auto;
 }
 
+#draw-model .canvas-container{
+	position: absolute !important;
+    top: 15px;
+	z-index: 100;
+}
+
 @media only screen and (max-width: 980px) {
     .a4 {
         width: 100%;
