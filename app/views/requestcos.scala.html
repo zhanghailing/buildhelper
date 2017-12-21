@@ -90,8 +90,10 @@
 				$('#draw-model').modal('show', $(this));
 			});
 			
+			var currentDrawBtn;
 			$('#draw-model').on('shown.bs.modal', function (e) {
 				var drawBtn = $(e.relatedTarget);
+				currentDrawBtn = drawBtn;
 				var fileInput = drawBtn.siblings('.upload-wrap').find('input[type="file"]');
 				var file = fileInput[0].files[0];
 				
@@ -110,6 +112,9 @@
 						});
 			    		imgCanvas.setWidth(aLinkWidth);
 			    		imgCanvas.setHeight(aLinkHeight);
+			    		
+			    		$('.drawing-layer').width(aLinkWidth);
+			    		$('.drawing-layer').height(aLinkHeight);
 				    		
 			    		linkEle.height(aLinkHeight);
 						linkEle.css('background-image', 'url(\'' + reader.result + '\')');
@@ -154,6 +159,41 @@
 			});
 			canvas.setWidth($('#cos-basic').width());
 			
+			$('#draw-sure-btn').on('click', function(){
+				var canvas =document.getElementById("draw-canvas");
+				var data = canvas.toDataURL("image/png");
+				var block = data.split(";");
+				var realData = block[1].split(",")[1];
+				var contentType = block[0].split(":")[1];
+				var blob = b64toBlob(realData, contentType);
+				
+				var reader  = new FileReader();
+				reader.onloadend = function() {
+					$('.drawing-layer').css('background-image', 'url(\'' + reader.result + '\')');
+		        }
+				reader.readAsDataURL(blob);
+				
+				/* html2canvas(document.getElementById("draw-container")).then(function(canvas) {
+					var data = canvas.toDataURL("image/png");
+					
+					var block = data.split(";");
+					var realData = block[1].split(",")[1];
+					var contentType = block[0].split(":")[1];
+					var blob = b64toBlob(realData, contentType);
+					
+					
+					var reader  = new FileReader();
+					reader.onloadend = function() {
+						var uploaderEle = currentDrawBtn.parents('.uploader');
+		                	var linkEle = uploaderEle.find('.link-img');
+		               
+		                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+		                $('#draw-model').modal('hide');
+			        }
+					reader.readAsDataURL(blob);
+				}); */
+			});
+			
 			$("#cos-form").submit(function(e) {
 				e.preventDefault();
 				
@@ -164,7 +204,6 @@
 				var realData = block[1].split(",")[1];
 				var contentType = block[0].split(":")[1];
 				var blob = b64toBlob(realData, contentType);
-				
 				
 				var formDataToUpload = new FormData(document.getElementById('cos-form'));
 				formDataToUpload.append("signature", blob, 'signature.png');
@@ -575,8 +614,11 @@
 			        	<h4 class="modal-title">Image Drawing</h4>
 		      	</div>
 	      		<div class="modal-body">
-			    		<a class="drawing-content link-img"></a>
-			    		<canvas id="draw-canvas"></canvas>
+	      			<div id="draw-container">
+				    		<a class="drawing-content link-img"></a>
+				    		<a class="drawing-layer"></a>
+				    		<canvas id="draw-canvas"></canvas>
+			    		</div>
 		      	</div>
 		      	<div class="modal-footer">
 			      	<div class="form-group">
