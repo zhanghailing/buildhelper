@@ -84,7 +84,6 @@ public class COSController extends Controller{
 					}
 				}
 				
-				
 				return ok(requestcos.render(project, locations, terms, qpList, inspectors));
 			}else {
 				responseData.code = 4000;
