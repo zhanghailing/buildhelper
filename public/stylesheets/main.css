@@ -1382,6 +1382,10 @@ footer{
   	background-color: #f3f3f4;
 }
 
+.main-footer{
+	padding-left: 0 !important;
+}
+
 footer p.copy-right {
 	margin-bottom: 0;
 }
