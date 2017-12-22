@@ -1349,13 +1349,13 @@ i.draw-btn{
 #draw-model .canvas-container{
 	position: absolute !important;
     top: 15px;
-	z-index: 101;
+	z-index: 102;
 }
 #draw-model .drawing-layer{
 	position: absolute !important;
 	top: 15px;
 	display:inline-block;
-	z-index:102;
+	z-index:101;
 }
 
 #draw-model .modal-dialog{
