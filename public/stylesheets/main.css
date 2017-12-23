@@ -128,6 +128,14 @@ input[type="submit"]{
 	float: right;
 }
 
+.left-content{
+	align-text: left;
+}
+
+.right-content{
+	align-text: right;
+}
+
 .radial-bg {
   background-color: #f3f3f4;
   background-position: center center;
@@ -1361,8 +1369,17 @@ i.draw-btn{
 #draw-model .modal-dialog{
 	width: 900px !important;
 }
+	
+.note-title{
+	width: 60%;
+	padding: 10px;
+	color: #676a6c;
+    font-weight: 200;
+    margin-bottom: 0 !important;
+    vertical-align: middle;
+}
 
-@media only screen and (max-width: 980px) {
+@media only screen and (max-width: 980px) {	
     .a4 {
         width: 100%;
     }

@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
+import tools.Constants;
 import tools.Utils;
 import views.html.*;
 
@@ -106,7 +108,6 @@ public class COSController extends Controller{
 		String subject = requestData.get("subject");
 		String locgrid = requestData.get("locgrid");
 		String serialNo = requestData.get("serialNo");
-		
 		//Gondola
 		String gondolaNo = requestData.get("gondolaNo");
 		String leRegisterNo = requestData.get("leRegisterNo");
@@ -257,7 +258,7 @@ public class COSController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result viewCOS() {
+	public Result viewCOS(long projectId, int offset) {
 		ResponseData responseData = new ResponseData();
 		
 		Account account = (Account) ctx().args.get("account");
@@ -266,7 +267,21 @@ public class COSController extends Controller{
 			responseData.code = 4000;
 			responseData.message = "You do not have permission.";
 		}else{
-			
+			Project project = jpaApi.em().find(Project.class, projectId);
+			if(project != null) {
+				   String countSql = "SELECT COUNT(*) FROM cos cs WHERE cs.project_id = :projectId";
+
+					int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).setParameter("projectId", project.id).getSingleResult()).intValue();
+					int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+					List<COS> coses = jpaApi.em()
+							   .createNativeQuery("SELECT * FROM cos cs WHERE cs.project_id = :projectId", COS.class)
+							   .setParameter("projectId", project.id).getResultList();
+				   
+				return ok(viewcos.render(coses, pageIndex, totalAmount));
+			}else {
+				responseData.code = 4000;
+				responseData.message = "Project doesn't exist.";
+			}
 		}
 		
 		return notFound(errorpage.render(responseData));

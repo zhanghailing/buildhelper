@@ -59,7 +59,7 @@ POST 	/add/team						controllers.ProjectController.addTeam()
 POST 	/remove/team						controllers.ProjectController.removeTeam()
 GET 		/project/execution				controllers.ProjectController.projectExecution(offset: Integer ?= 0)
 GET 		/project/drawing/file			controllers.ProjectController.drawingFile(projectId: Long ?= 0)
-POST 		/project/upload/drawingfile		controllers.ProjectController.uploadDrawingFile()
+POST 	/project/upload/drawingfile		controllers.ProjectController.uploadDrawingFile()
 
 
 GET 		/mom/checklist/formwork			controllers.DocFormatController.momChecklistFormWork()
@@ -73,6 +73,7 @@ GET 		/mom/cos/formwork				controllers.DocFormatController.momCOSFormwork()
 
 GET		/create/cos						controllers.COSController.createCOS(projectId: Long ?= 0)
 POST		/save/cos						controllers.COSController.saveCOS()
+GET 		/view/cos						controllers.COSController.viewCOS(projectId: Long ?= 0, offset: Integer ?= 0)
 
 
 

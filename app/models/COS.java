@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -69,6 +72,14 @@ public class COS {
 	@Column(name="mcwp_serial_no")
 	public String mcwpMaxLength;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name="issue_date")
+	public Date issueDate;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="inspect_date")
+	public Date inspectDate;
+	
 	@OneToMany(mappedBy = "cos")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Account> routeAccounts;
@@ -84,6 +95,7 @@ public class COS {
 	public COS(Project project, String subject) {
 		this.project = project;
 		this.subject = subject;
+		this.issueDate = new Date();
 	}
 	
 }

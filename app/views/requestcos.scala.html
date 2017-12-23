@@ -17,11 +17,11 @@
 			$('.location-group .subject-lbl:first-child').addClass('selected');
 			$('.location-group .subject-lbl.selected').find('input[type="radio"]').attr('checked', true);
 			
-			$('.location-group input[type="radio"]').on('click', function(){
+			$('.location-group input[name="location"]').on('click', function(){
 				$('.location-group .subject-lbl').removeClass('selected');
-				$('.location-group input[type="radio"]').attr('checked', false);
+				$('.location-group input[name="location"]').prop('checked', false);
        			
-       			$(this).attr('checked', true);
+       			$(this).prop('checked', true);	
        			$(this).parent().addClass('selected');
 	       	});
 			
@@ -119,7 +119,7 @@
 			    		linkEle.height(aLinkHeight);
 						linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 				    };
-	        	}
+	        		}
 				reader.readAsDataURL(file);
 			});
 			
@@ -186,6 +186,8 @@
 					reader.onloadend = function() {
 						var uploaderEle = currentDrawBtn.parents('.uploader');
 		                var linkEle = uploaderEle.find('.link-img');
+		                var fileInput = uploaderEle.find('input[type="file"]');
+		                fileInput[0].setAttribute("value", blob);
 		               
 		                linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 		                $('#draw-model').modal('hide');
@@ -194,47 +196,61 @@
 				});
 			});
 			
-			$("#cos-form").submit(function(e) {
-				e.preventDefault();
-				
-				var c=document.getElementById("canvas");
-				var data=c.toDataURL("image/png");
-				
-				var block = data.split(";");
-				var realData = block[1].split(",")[1];
-				var contentType = block[0].split(":")[1];
-				var blob = b64toBlob(realData, contentType);
-				
-				var formDataToUpload = new FormData(document.getElementById('cos-form'));
-				formDataToUpload.append("signature", blob, 'signature.png');
-				
-				var btn = $('#submit');
-				var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
-					btn.after(spinner);
-		        	btn.css('color', '#1ab394');
-		        	btn.attr("disabled", true);
-				
-				$.ajax({
-	                url: "@routes.COSController.saveCOS()",
-	                type: "POST",
-	                data: formDataToUpload,
-	                contentType: false, 
-	                processData: false,
-	                success: function(response, status) {
-		                var data = $.parseJSON(JSON.stringify(response));
-		            		if(data.code == 0){
-	           	    			showAlertToast(data.message, "alert-success");
-		                }else{
-                				showAlertToast(data.message, "alert-warning");
-		                }
-		            	
-			            	spinner.remove();
-			            	btn.css('color', 'white');
-	            	    		btn.attr("disabled", false);
-		            }
-	            });
-				
-			});
+			
+			$("#cos-form").validate({
+				ignore: [],
+		        rules: {
+		        		subject:{
+			            	minlength: 2,
+		            		maxlength: 50,
+		            		required:true
+		        		}
+        			},
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        		var c=document.getElementById("canvas");
+					var data=c.toDataURL("image/png");
+					
+					var block = data.split(";");
+					var realData = block[1].split(",")[1];
+					var contentType = block[0].split(":")[1];
+					var blob = b64toBlob(realData, contentType);
+					
+					var formDataToUpload = new FormData(document.getElementById('cos-form'));
+					formDataToUpload.append("signature", blob, 'signature.png');
+					
+					var btn = $('#submit');
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+			        	btn.css('color', '#1ab394');
+			        	btn.attr("disabled", true);
+					
+					$.ajax({
+		                url: "@routes.COSController.saveCOS()",
+		                type: "POST",
+		                data: formDataToUpload,
+		                contentType: false, 
+		                processData: false,
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+			            		if(data.code == 0){
+		           	    			showAlertToast(data.message, "alert-success");
+			                }else{
+	                				showAlertToast(data.message, "alert-warning");
+			                }
+			            	
+				            	spinner.remove();
+				            	btn.css('color', 'white');
+		            	    		btn.attr("disabled", false);
+			            }
+		            });
+		        }
+		    });
 		});	
 		
 		function b64toBlob(b64Data, contentType, sliceSize) {
@@ -331,7 +347,7 @@
 						<div class="form-input">
 					 		@for(index <- 0 until locations.size){
 					 			<label class="subject-lbl">
-								   	<input type="radio" name="location" class="form-control" value="@if(locations(index) != null){@locations(index)}">
+								   	<input name="location" type="radio" class="form-control" value="@if(locations(index) != null){@locations(index)}">
 									<a class="radio-box">@locations(index)
 										<i class="icon-check"></i>
 									</a>
