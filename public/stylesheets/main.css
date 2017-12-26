@@ -1338,7 +1338,7 @@ i.draw-btn{
 	font-size: 20px;
 	right: 8px;
 	top: 8px;
-	z-index:101;
+	z-index:100;
 }
 
 .drawing-content{
@@ -1349,14 +1349,18 @@ i.draw-btn{
 #draw-model .canvas-container{
 	position: absolute !important;
     top: 15px;
-	z-index: 100;
+	z-index: 102;
+}
+#draw-model .drawing-layer{
+	position: absolute !important;
+	top: 15px;
+	display:inline-block;
+	z-index:101;
 }
 
 #draw-model .modal-dialog{
 	width: 900px !important;
 }
-
-
 
 @media only screen and (max-width: 980px) {
     .a4 {

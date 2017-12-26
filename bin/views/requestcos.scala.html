@@ -173,7 +173,7 @@
 		        }
 				reader.readAsDataURL(blob);
 				
-				html2canvas(document.getElementById("draw-container")).then(function(canvas) {
+				/* html2canvas(document.getElementById("draw-container")).then(function(canvas) {
 					var data = canvas.toDataURL("image/png");
 					
 					var block = data.split(";");
@@ -185,13 +185,13 @@
 					var reader  = new FileReader();
 					reader.onloadend = function() {
 						var uploaderEle = currentDrawBtn.parents('.uploader');
-		                var linkEle = uploaderEle.find('.link-img');
+		                	var linkEle = uploaderEle.find('.link-img');
 		               
-		                linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+		                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 		                $('#draw-model').modal('hide');
 			        }
 					reader.readAsDataURL(blob);
-				});
+				}); */
 			});
 			
 			$("#cos-form").submit(function(e) {
@@ -240,17 +240,23 @@
 		function b64toBlob(b64Data, contentType, sliceSize) {
 	        contentType = contentType || '';
 	        sliceSize = sliceSize || 512;
+
 	        var byteCharacters = atob(b64Data);
 	        var byteArrays = [];
+
 	        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
 	            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
 	            var byteNumbers = new Array(slice.length);
 	            for (var i = 0; i < slice.length; i++) {
 	                byteNumbers[i] = slice.charCodeAt(i);
 	            }
+
 	            var byteArray = new Uint8Array(byteNumbers);
+
 	            byteArrays.push(byteArray);
 	        }
+
 	      	var blob = new Blob(byteArrays, {type: contentType});
 	      	return blob;
 		}
@@ -610,7 +616,7 @@
 	      		<div class="modal-body">
 	      			<div id="draw-container">
 				    		<a class="drawing-content link-img"></a>
-				    		<a class="drawing-layer link-img"></a>
+				    		<a class="drawing-layer"></a>
 				    		<canvas id="draw-canvas"></canvas>
 			    		</div>
 		      	</div>
@@ -623,3 +629,23 @@
 		</div>
 	</div>
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -45,7 +45,6 @@ import views.html.*;
 public class COSController extends Controller{
 	@Inject private FormFactory formFactory;
 	@Inject private JPAApi jpaApi;
-	@Inject private Provider<Application> application;
 	
 	@With(AuthAction.class)
 	@Transactional
@@ -254,6 +253,23 @@ public class COSController extends Controller{
 		}
 		
 		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result viewCOS() {
+		ResponseData responseData = new ResponseData();
+		
+		Account account = (Account) ctx().args.get("account");
+		Engineer engineer = jpaApi.em().find(Engineer.class, account.id);
+		if (engineer == null) {
+			responseData.code = 4000;
+			responseData.message = "You do not have permission.";
+		}else{
+			
+		}
+		
+		return notFound(errorpage.render(responseData));
 	}
 }
 

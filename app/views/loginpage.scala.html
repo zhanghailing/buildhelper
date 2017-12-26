@@ -32,21 +32,20 @@
 		                data: $(form).serialize(),
 		                success: function(response, status) {
 		                	var data = $.parseJSON(JSON.stringify(response));
-		                	
 		                	if(data.code != 0){
 		                		showAlertToast(data.message, "alert-danger");
 		                	}else{
 		                		if(data.data.accType === "SADMIN"){
-		                			window.location.href = "@routes.CompanyController.companys()";
+		                			location.assign("@routes.CompanyController.companys()");
 		                		}else if(data.data.accType === "ADMIN"){
-		                			window.location.href = "@routes.CompanyController.company()";
+		                			location.assign("@routes.CompanyController.company()");
 		                		}else if(data.data.accType === "QP"){
 		                			if(data.data.isEngineer){
-		                				window.location.href = "@routes.ProjectController.projectOfEngineer()";
+		                				location.assign("@routes.ProjectController.projectOfEngineer()");
 		                			}
 		                		}else if(data.data.accType === "INSPECTOR"){
 									if(data.data.isEngineer){
-										window.location.href = "@routes.ProjectController.projectOfEngineer()";
+										location.assign("@routes.ProjectController.projectOfEngineer()");
 		                			}	
 		                		}
 		                	}
