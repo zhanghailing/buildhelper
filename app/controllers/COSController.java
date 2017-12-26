@@ -20,12 +20,17 @@ import javax.persistence.TypedQuery;
 import actions.AuthAction;
 import models.Account;
 import models.AccountType;
+import models.Approve;
+import models.ApproveSign;
+import models.Avatar;
 import models.COS;
 import models.COSImage;
 import models.COSTerm;
 import models.Engineer;
 import models.LetterHead;
 import models.Project;
+import models.Reject;
+import models.RejectSign;
 import models.ResponseData;
 import models.Signature;
 import models.Term;
@@ -366,6 +371,139 @@ public class COSController extends Controller{
 		return ok(Json.toJson(responseData));
 	}
 	
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result issueCOS() {
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String passType = requestData.get("passType");
+		String cosId = requestData.get("cosId");
+		String inspectDate = requestData.get("inspectDate");
+		
+		Account account = (Account) ctx().args.get("account");
+		if (account == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
+			if(cos != null) {
+				try {
+					cos.passType = passType;
+					cos.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
+					jpaApi.em().persist(cos);
+					
+					if(cos.passType.equals("approve")) {
+						return ok(approvecos.render(cos));
+					}else {
+						return ok(rejectcos.render(cos));
+					}
+					
+				} catch (ParseException e) {
+					responseData.code = 4001;
+					responseData.message = e.getMessage();
+				}
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		
+		return notFound(errorpage.render(responseData));
+	}
+	
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result rejectCOS() {
+		ResponseData responseData = new ResponseData();
+
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String cosId = requestData.get("cosId");
+		String reason = requestData.get("reason");
+		
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if (account == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
+			if(cos != null) {
+				//remove all rejects
+				if(cos.rejects != null && cos.rejects.size() > 0) {
+					for(Reject reject : cos.rejects) {
+						System.out.println("Size----> " + reject.rejectSign);
+						jpaApi.em().remove(reject);
+					}
+				}
+				
+				Reject reject = new Reject(cos, reason);
+				jpaApi.em().persist(reject);
+				
+				MultipartFormData<File> body = request().body().asMultipartFormData();
+				FilePart<File> rejectSignPart = body.getFile("rejectSign");
+				try {
+					RejectSign rejectSign = new RejectSign(reject, rejectSignPart.getFile());
+					jpaApi.em().persist(rejectSign);
+				} catch (IOException e) {
+					responseData.code = 4001;
+					responseData.message = e.getMessage();
+				}
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result approveCOS() {
+		ResponseData responseData = new ResponseData();
+
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String cosId = requestData.get("cosId");
+		String reason = requestData.get("reason");
+		
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if (account == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
+			if(cos != null) {
+				//remove all approves
+				if(cos.approves != null && cos.approves.size() > 0) {
+					for(Approve approve : cos.approves) {
+						jpaApi.em().remove(approve);
+					}
+				}
+				
+				Approve approve = new Approve(cos, reason);
+				jpaApi.em().persist(approve);
+				
+				MultipartFormData<File> body = request().body().asMultipartFormData();
+				FilePart<File> approveSignPart = body.getFile("approveSign");
+				try {
+					ApproveSign approveSign = new ApproveSign(approve, approveSignPart.getFile());
+					jpaApi.em().persist(approveSign);
+				} catch (IOException e) {
+					responseData.code = 4001;
+					responseData.message = e.getMessage();
+				}
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
 }
 
 

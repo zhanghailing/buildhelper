@@ -15,6 +15,7 @@
 			var width = $('.cos-sec').width();
 			var height = width * 3 / 4;
 			$('.draw-preview').width(width).height(height);
+			$('.cos-link').width(width).height(height);
 			
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
@@ -161,19 +162,8 @@
 		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		        },
 		        submitHandler: function(form) {
-					$.ajax({
-		                url: "@routes.COSController.verifyCOS()",
-		                type: "POST",
-		                data: $(form).serialize(),
-		                success: function(response, status) {
-			                var data = $.parseJSON(JSON.stringify(response));
-			            		if(data.code == 0){
-		           	    			showAlertToast(data.message, "alert-success");
-			                }else{
-	                				showAlertToast(data.message, "alert-warning");
-			                }
-			            }
-		            });
+			        	$('.submit-wrapper button').attr("disabled", true);
+		        		form.submit();
 		        }
 		    });
 			
@@ -378,49 +368,18 @@
 									<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
 									<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
 								</ul>
-								<input class="opt-value" type="hidden" name="@cos.cosTerms(index).term.id-value" value="@cos.cosTerms(index).value"/>
 								<button class="remark-btn">Remark</button>
 								<div class="remark-body">
 									<div class="form-group">
-						           		<div class="form-label">	
-						              		<label>Remark</label>
-						           		</div>
 							           	<div class="form-input">
-							           		<input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value="@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}"/>
+							           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
 						         		</div>
 							        </div>
 							        @if(cos.cosTerms(index).cosImages != null){
-							        		<div class="uploader-group form-group row">
-								        		@for(index <- 0 until cos.cosTerms(index).cosImages.size){
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-										         	 <div class="cos-uploader-wrapper uploader">
-											            <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid))"></a>
-											            <img class="hidden" src="@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid)" />
-											            <div class="upload-wrap">
-											               <i class="fa fa-picture-o" aria-hidden="true"></i>
-											               <div class="upload-text">
-											                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
-											               </div>
-											               <input class="file-input" type="file" name="@cos.cosTerms(index).term.id-generalImage[]" accept="image/*" capture="camera" multiple/>
-											            </div>
-											            <i class="draw-btn glyphicon glyphicon-pencil"></i>
-											         </div>
-										         </div>
-								        		}
-								        		<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-									         	 <div class="cos-uploader-wrapper uploader">
-										            <a class="link-img cos-link"></a>
-										            <div class="upload-wrap">
-										               <i class="fa fa-picture-o" aria-hidden="true"></i>
-										               <div class="upload-text">
-										                  <p>Drop image here or  <a class="browse-btn">Browse Files</a></p>
-										               </div>
-										               <input id="general-uploader-@cos.cosTerms(index).term.id" class="file-input" type="file" name="@cos.cosTerms(index).term.id-generalImage[]" accept="image/*" capture="camera" multiple="">
-										            </div>
-										         </div>
-									         </div>
-								         </div>
-							        }
+								        	@for(index <- 0 until cos.cosTerms(index).cosImages.size){
+									         <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid))"></a>
+								     	}
+							        	}
 								</div>
 							</div>
 						}
@@ -436,48 +395,17 @@
 									<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
 									<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
 								</ul>
-								<input class="opt-value" type="hidden" name="@cos.cosTerms(index).term.id-value" value="@cos.cosTerms(index).value"/>
 								<button class="remark-btn">Remark</button>
 								<div class="remark-body">
 									<div class="form-group">
-						           		<div class="form-label">	
-						              		<label>Remark</label>
-						           		</div>
 							           	<div class="form-input">
-							           		<input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value="@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}"/>
+							           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
 						         		</div>
 							        </div>
 							        @if(cos.cosTerms(index).cosImages != null){
-							        		<div class="uploader-group form-group row">
-								        		@for(index <- 0 until cos.cosTerms(index).cosImages.size){
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-										         	 <div class="cos-uploader-wrapper uploader">
-											            <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid))"></a>
-											            <img class="hidden" src="@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid)" />
-											            <div class="upload-wrap">
-											               <i class="fa fa-picture-o" aria-hidden="true"></i>
-											               <div class="upload-text">
-											                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
-											               </div>
-											               <input class="file-input" type="file" name="@cos.cosTerms(index).term.id-generalImage[]" accept="image/*" capture="camera" multiple/>
-											            </div>
-											            <i class="draw-btn glyphicon glyphicon-pencil"></i>
-											         </div>
-										         </div>
-								        		}
-								        		<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-									         	 <div class="cos-uploader-wrapper uploader">
-										            <a class="link-img cos-link"></a>
-										            <div class="upload-wrap">
-										               <i class="fa fa-picture-o" aria-hidden="true"></i>
-										               <div class="upload-text">
-										                  <p>Drop image here or  <a class="browse-btn">Browse Files</a></p>
-										               </div>
-										               <input id="general-uploader-@cos.cosTerms(index).term.id" class="file-input" type="file" name="@cos.cosTerms(index).term.id-generalImage[]" accept="image/*" capture="camera" multiple="">
-										            </div>
-										         </div>
-									         </div>
-								         </div>
+							        		@for(index <- 0 until cos.cosTerms(index).cosImages.size){
+								    		    <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid))"></a>
+								        	}
 							        }
 								</div>
 							</div>
@@ -486,7 +414,7 @@
 				}
 				</div>
 			</div>
-			<form id="inspect-form">
+			<form id="inspect-form" action="@routes.COSController.issueCOS()" method="POST">
 				<input type="hidden" name="cosId" value="@cos.id"/>
 				<div class="form-group date-group">
 					<label>Starting Date</label>
@@ -495,8 +423,9 @@
 				
 				<div class="submit-wrapper">
 					<input id="pass-input" type="hidden" name="passType" value="approve"/>
+					<button id="reject" class="btn btn-default">Reject</button>
 					<button id="approve" class="btn btn-success">Approve</button>
-				</div>
+				</div> 
 				<div style="clear: both; margin-bottom: 30px"></div>
 			</form>
 		</div>

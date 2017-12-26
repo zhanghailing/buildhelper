@@ -78,6 +78,9 @@ GET 		/view/cos						controllers.COSController.viewCOS(projectId: Long ?= 0, off
 GET 		/inspect/cos						controllers.COSController.inspectCOS(cosId: Long ?= 0)
 GET     /cos/show/image          		controllers.COSController.showCOSImage(uuid: String ?= "", isLarge: Boolean ?= false)
 POST		/verify/cos						controllers.COSController.verifyCOS()
+POST		/issue/cos						controllers.COSController.issueCOS()
+POST		/reject/cos						controllers.COSController.rejectCOS()
+POST		/approve/cos						controllers.COSController.approveCOS()
 
 
 

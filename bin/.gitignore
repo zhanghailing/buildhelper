@@ -1,9 +1,11 @@
+/ApplicationTest.class
+/IntegrationTest.class
 /controllers/
-/META-INF/
-/ModelVOs/
-/actions/
 /filters/
 /models/
 /services/
 /tools/
 /views/
+/META-INF/
+/ModelVOs/
+/actions/

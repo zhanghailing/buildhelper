@@ -94,6 +94,14 @@ public class COS {
 	@Column(name="pass_type")
 	public String passType;
 	
+	@OneToMany(mappedBy = "cos")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<Reject> rejects; //use onetomany to be alternative to onetoone
+	
+	@OneToMany(mappedBy = "cos")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<Approve> approves; //use onetomany to be alternative to onetoone
+	
 	public COS() {}
 	public COS(Project project, String subject) {
 		this.project = project;

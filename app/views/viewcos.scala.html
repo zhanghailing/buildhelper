@@ -75,7 +75,15 @@
 								<a href="" class="action-btn h-print-action center-align">Print<br>Hard Copy</a>
 								<a class="action-btn upload-action center-align">Upload <br> Hard Copy</a>
 								<a class="action-btn s-print-action center-align">Print<br>E-Copy</a>
-								<a class="upload-action action-btn" href="@routes.COSController.inspectCOS(coses(index).id)">Inspect<br>COS</a>
+								@if(coses(index).passType == "approve"){
+									<a class="approve-action action-btn center-align" >Approved</a>
+								}else{
+									@if(coses(index).passType == "reject"){
+										<a class="reject-action action-btn center-align" >Rejected</a>
+									}else{
+										<a class="upload-action action-btn center-align" href="@routes.COSController.inspectCOS(coses(index).id)">Inspect<br>COS</a>
+									}
+								}
 							</td>
 				        </tr>
 					}
