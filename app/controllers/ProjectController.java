@@ -1,12 +1,15 @@
 package controllers;
 
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 import ModelVOs.AccountVO;
 import actions.AuthAction;
@@ -17,9 +20,11 @@ import models.Client;
 import models.Company;
 import models.DrawingFile;
 import models.Engineer;
+import models.LetterHead;
 import models.Project;
 import models.ProjectStatus;
 import models.ResponseData;
+import play.Application;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.db.jpa.JPA;
@@ -39,27 +44,56 @@ import views.html.*;
 public class ProjectController extends Controller{
 	@Inject private FormFactory formFactory;
 	@Inject private JPAApi jpaApi;
+	@Inject private Provider<Application> application;
 	
 	@With(AuthAction.class)
 	@Transactional
 	public Result projectOfEngineer(int offset){
 		ResponseData responseData = new ResponseData();
 
-		Account account = (Account) ctx().args.get("account");
-		Engineer engineer = jpaApi.em().find(Engineer.class, account.id);
-		if (engineer == null) {
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if (account == null) {
 			responseData.code = 4000;
-			responseData.message = "You do not have permission.";
+			responseData.message = "Account doesn't exist.";
 		}else{
 			int totalAmount = ((BigInteger) jpaApi.em()
-					.createNativeQuery("SELECT COUNT(*) FROM project pro WHERE pro.engineer_id = :engineerId")
-					.setParameter("engineerId", engineer.account.id)
+					.createNativeQuery("SELECT COUNT(*) FROM (SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
+							" UNION " + 
+							"SELECT  pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
+							"ORDER BY id) as t")
+					.setParameter("engineerId", account.id)
+					.setParameter("accountId", account.id)
 					.getSingleResult()).intValue();
+			
 			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+			
+			List<String> results = jpaApi.em().createNativeQuery("SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
+					" UNION " + 
+					"SELECT pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
+					"ORDER BY id")
+					.setParameter("engineerId", account.id)
+					.setParameter("accountId", account.id)
+					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
+			
+			String projectIDCause = "";
+			for (int i = 0; i < results.size(); i++) {
+				if (i == results.size() - 1) {
+					projectIDCause += "pro.id='" + ((BigInteger) ((Object)results.get(i))).intValue() + "'";
+				} else {
+					projectIDCause += "pro.id='" + ((BigInteger) ((Object)results.get(i))).intValue() + "' OR ";
+				}
+			}
+			
+			String projectCause = "";
+			if(Utils.isBlank(projectIDCause)) {
+				projectCause = "pro.engineer_id=" + account.id; 
+			}else {
+				projectCause = projectIDCause;
+			}
 
 			List<Project> projects = jpaApi.em()
-					.createNativeQuery("SELECT * FROM project pro WHERE pro.engineer_id=:engineerId AND pro.is_archived = :isArchived", Project.class)
-					.setParameter("engineerId", engineer.account.id)
+					.createNativeQuery("SELECT * FROM project pro WHERE " + projectCause + " AND pro.is_archived = :isArchived", Project.class)
 					.setParameter("isArchived", false)
 					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 			return ok(projectofengineer.render(projects, pageIndex,totalAmount));
@@ -582,24 +616,52 @@ public class ProjectController extends Controller{
 	public Result projectExecution(int offset){
 		ResponseData responseData = new ResponseData();
 		
-		Account account = (Account) ctx().args.get("account");
-		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
-		if(engineerAccount.engineer == null) {
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if(account == null) {
 			responseData.code = 4000;
 			responseData.message = "You don't have permission.";
 		}else{
 			int totalAmount = ((BigInteger) jpaApi.em()
-					.createNativeQuery("SELECT COUNT(*) FROM project pro WHERE pro.engineer_id = :engineerId")
-					.setParameter("engineerId", engineerAccount.id)
+					.createNativeQuery("SELECT COUNT(*) FROM (SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
+							" UNION " + 
+							"SELECT  pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
+							"ORDER BY id) as t")
+					.setParameter("engineerId", account.id)
+					.setParameter("accountId", account.id)
 					.getSingleResult()).intValue();
+			
 			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+			
+			List<String> results = jpaApi.em().createNativeQuery("SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
+					" UNION " + 
+					"SELECT pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
+					"ORDER BY id")
+					.setParameter("engineerId", account.id)
+					.setParameter("accountId", account.id)
+					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
+			
+			String projectIDCause = "";
+			for (int i = 0; i < results.size(); i++) {
+				if (i == results.size() - 1) {
+					projectIDCause += "pro.id='" + ((BigInteger) ((Object)results.get(i))).intValue() + "'";
+				} else {
+					projectIDCause += "pro.id='" + ((BigInteger) ((Object)results.get(i))).intValue() + "' OR ";
+				}
+			}
+			
+			String projectCause = "";
+			if(Utils.isBlank(projectIDCause)) {
+				projectCause = "pro.engineer_id=" + account.id; 
+			}else {
+				projectCause = projectIDCause;
+			}
 
 			List<Project> projects = jpaApi.em()
-					.createNativeQuery("SELECT * FROM project pro WHERE pro.engineer_id=:engineerId AND pro.is_archived = :isArchived", Project.class)
-					.setParameter("engineerId", engineerAccount.id)
+					.createNativeQuery("SELECT * FROM project pro WHERE " + projectCause + " AND pro.is_archived = :isArchived", Project.class)
 					.setParameter("isArchived", false)
 					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-			return ok(projectexecution.render(projects, pageIndex,totalAmount));
+			return ok(projectexecution.render(account, projects, pageIndex,totalAmount));
 		}
 		return notFound(errorpage.render(responseData));
 	}
@@ -678,6 +740,20 @@ public class ProjectController extends Controller{
 		return notFound(errorpage.render(responseData));
 	}
 	
+	@Transactional
+	public Result showDrawing(String uuid) {
+		TypedQuery<DrawingFile> query = jpaApi.em()
+				.createQuery("from DrawingFile df where df.uuid = :uuid", DrawingFile.class).setParameter("uuid", uuid);
+
+		InputStream imageStream = null;
+		try {
+			DrawingFile drawingFile = query.getSingleResult();
+			imageStream = drawingFile.download();
+		} catch (NoResultException e) {
+			imageStream = application.get().classloader().getResourceAsStream(LetterHead.PLACEHOLDER);
+		}
+		return ok(imageStream);
+	}
 }
 
 

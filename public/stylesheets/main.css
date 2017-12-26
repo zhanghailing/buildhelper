@@ -9,6 +9,14 @@ html, body {
 	position: relative;
 }
 
+iframe { 
+	margin: none;
+    padding: none;
+    border: none;
+    line-height: 0;
+    float: left; 
+}
+
 ul, ol, li, dl, dd {
     margin: 0;
     padding: 0;
@@ -134,6 +142,10 @@ input[type="submit"]{
 
 .right-content{
 	align-text: right;
+}
+
+.center-align{
+	text-align: center;
 }
 
 .radial-bg {
@@ -1268,9 +1280,8 @@ p.cos-header{
 
 p.cos-subheader{
 	color: #777;
-	font-weight: 400;
+	font-weight: 600;
 	font-size: 1.2em;
-	
 }
 
 p.cos-content{
@@ -1279,6 +1290,7 @@ p.cos-content{
 
 .value-box{
 	display: inline-block;
+	width: 100%;
 }
 
 .opt-wrapper > p.ques{
@@ -1379,6 +1391,10 @@ i.draw-btn{
     vertical-align: middle;
 }
 
+#inspect-form .submit-wrapper{
+	text-align: right;
+}
+
 @media only screen and (max-width: 980px) {	
     .a4 {
         width: 100%;
@@ -1386,6 +1402,20 @@ i.draw-btn{
 }
 	
 /** Create COS End  **/
+
+/** Inspect COS Start **/
+
+.cos-sec{
+	margin: 10px 0;
+}
+	
+p.sec-header{
+	margin-top: 30px;
+	padding: 15px;
+	background-color: #eee;
+}
+
+/** Inspect COS End **/
 
 /** Footer start **/
 

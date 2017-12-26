@@ -86,7 +86,6 @@ public class Project {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<DrawingFile> drawings;
 	
-	
 	@OneToMany(mappedBy = "project")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<COS> coses;

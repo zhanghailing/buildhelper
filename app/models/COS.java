@@ -91,6 +91,9 @@ public class COS {
 	@OneToOne(mappedBy = "cos")
 	public Signature signature;
 	
+	@Column(name="pass_type")
+	public String passType;
+	
 	public COS() {}
 	public COS(Project project, String subject) {
 		this.project = project;

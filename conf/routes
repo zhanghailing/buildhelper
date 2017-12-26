@@ -60,6 +60,7 @@ POST 	/remove/team						controllers.ProjectController.removeTeam()
 GET 		/project/execution				controllers.ProjectController.projectExecution(offset: Integer ?= 0)
 GET 		/project/drawing/file			controllers.ProjectController.drawingFile(projectId: Long ?= 0)
 POST 	/project/upload/drawingfile		controllers.ProjectController.uploadDrawingFile()
+GET     /project/show/drawingfile    	controllers.ProjectController.showDrawing(uuid: String ?= "")
 
 
 GET 		/mom/checklist/formwork			controllers.DocFormatController.momChecklistFormWork()
@@ -74,6 +75,9 @@ GET 		/mom/cos/formwork				controllers.DocFormatController.momCOSFormwork()
 GET		/create/cos						controllers.COSController.createCOS(projectId: Long ?= 0)
 POST		/save/cos						controllers.COSController.saveCOS()
 GET 		/view/cos						controllers.COSController.viewCOS(projectId: Long ?= 0, offset: Integer ?= 0)
+GET 		/inspect/cos						controllers.COSController.inspectCOS(cosId: Long ?= 0)
+GET     /cos/show/image          		controllers.COSController.showCOSImage(uuid: String ?= "", isLarge: Boolean ?= false)
+POST		/verify/cos						controllers.COSController.verifyCOS()
 
 
 

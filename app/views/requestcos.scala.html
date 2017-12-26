@@ -77,7 +77,8 @@
 				}
 			});
 			
-			$('.remark-btn').on('click', function(){
+			$('.remark-btn').on('click', function(e){
+				e.preventDefault();
 				var remarkBlk = $(this).parents('.opt-wrapper').find('.remark-body');
 				if(remarkBlk.hasClass('hidden')){
 					remarkBlk.removeClass('hidden');
@@ -170,30 +171,30 @@
 				var reader  = new FileReader();
 				reader.onloadend = function() {
 					$('.drawing-layer').css('background-image', 'url(\'' + reader.result + '\')');
+					
+					html2canvas(document.getElementById("draw-container")).then(function(canvas) {
+						var data = canvas.toDataURL("image/png");
+						
+						var block = data.split(";");
+						var realData = block[1].split(",")[1];
+						var contentType = block[0].split(":")[1];
+						var blob = b64toBlob(realData, contentType);
+						
+						
+						var shReader  = new FileReader();
+						shReader.onloadend = function() {
+							var uploaderEle = currentDrawBtn.parents('.uploader');
+			                var linkEle = uploaderEle.find('.link-img');
+			                var fileInput = uploaderEle.find('input[type="file"]');
+			                fileInput[0].files[0] = blob;
+			               
+			                linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
+			                $('#draw-model').modal('hide');
+				        }
+						shReader.readAsDataURL(blob);
+					});
 		        }
 				reader.readAsDataURL(blob);
-				
-				html2canvas(document.getElementById("draw-container")).then(function(canvas) {
-					var data = canvas.toDataURL("image/png");
-					
-					var block = data.split(";");
-					var realData = block[1].split(",")[1];
-					var contentType = block[0].split(":")[1];
-					var blob = b64toBlob(realData, contentType);
-					
-					
-					var reader  = new FileReader();
-					reader.onloadend = function() {
-						var uploaderEle = currentDrawBtn.parents('.uploader');
-		                var linkEle = uploaderEle.find('.link-img');
-		                var fileInput = uploaderEle.find('input[type="file"]');
-		                fileInput[0].setAttribute("value", blob);
-		               
-		                linkEle.css('background-image', 'url(\'' + reader.result + '\')');
-		                $('#draw-model').modal('hide');
-			        }
-					reader.readAsDataURL(blob);
-				});
 			});
 			
 			
@@ -502,7 +503,7 @@
 									         	</div>
 									        </div>
 									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-6 col-md-4 col-sm-6">
+										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
 										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
@@ -552,7 +553,7 @@
 									         	</div>
 									        </div>
 									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-6 col-md-4 col-sm-6">
+										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
 										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">

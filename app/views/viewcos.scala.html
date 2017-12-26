@@ -1,7 +1,7 @@
 @import tags._
 @import tools.Constants
 
-@(coses: List[COS], pageIndex: Integer, totalAmount: Integer)
+@(account: Account, coses: List[COS], pageIndex: Integer, totalAmount: Integer)
 
 @sidemenu("engineer", 8) {
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -72,9 +72,10 @@
 							<td>@coses(index).inspectDate</td>
 							<td>@coses(index).issueDate</td>
 							<td>
-								<a href="" class="action-btn h-print-action">Print\nHard Copy</a>
-								<a class="action-btn upload-action">Upload\nHard Copy</a>
-								<a class="action-btn s-print-action">Print\nE-Copy</a>
+								<a href="" class="action-btn h-print-action center-align">Print<br>Hard Copy</a>
+								<a class="action-btn upload-action center-align">Upload <br> Hard Copy</a>
+								<a class="action-btn s-print-action center-align">Print<br>E-Copy</a>
+								<a class="upload-action action-btn" href="@routes.COSController.inspectCOS(coses(index).id)">Inspect<br>COS</a>
 							</td>
 				        </tr>
 					}
