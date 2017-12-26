@@ -112,181 +112,183 @@
 		<p class="title">@messages.at("create_qp")</p>
 	</div>
 	
-	<div class="wrap-step wrap-step-2" style="display: block;">
-		@helper.form(action = routes.AuthController.saveQPAccount(), 'id-> "qp-account-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
-			<div class="mod-form__block">
-			   <div class="mod-form__block-content">
-				  <input type="hidden" name="qpAccountId" value="@if(qpAccount != null){@qpAccount.id}"/>
-			      
-			      <p class="tb-header">@messages.at("account_info")</p>
-			      <table class="tb-form">
-			      	<tr>
-			      		<td>
-			      			<div class="form-group">
-						         <div class="form-label">
-						            <label for="qp-name">@messages.at("name")</label>
-						         </div>
-						         <div class="form-input">
-						            <input id="qp-name" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_name")" value="@if(qpAccount != null){@qpAccount.user.name}">
-						         </div>
-						    </div>
-			      		</td>
-			      		<td>
-			      			<div class="form-group">
-					           <div class="form-label">	
-					              <label for="primary-email">@messages.at("primary_email_address"):</label>
-					           </div>
-					           <div class="form-input">
-					           	  <input id="primary-email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")" value="@if(qpAccount != null){@qpAccount.email}">
-					         	</div>
-					        </div>
-			      		</td>
-			      	</tr>
-			      	<tr>
-			      		<td></td>
-			      		<td>
-			      			<div class="form-group">
-					           <div class="form-label">	
-					              <label for="password">@messages.at("password"):</label>
-					           </div>
-					           <div class="form-input">
-					           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(qpAccount != null){@qpAccount.password}" autocomplete="off">
-					         	</div>
-					        </div>
-			      		</td>
-			      	</tr>
-			      </table>
-			      
-			      <p class="tb-header">@messages.at("personal_info")</p>
-			      <table class="tb-form">
-			      	<tr>
-			      		<td>
-			      			<div class="form-group">
-						         <div class="form-label">
-						            <label for="aler-email-1">@messages.at("alter_emaill_1")</label>
-						         </div>
-						         <div class="form-input">
-						            <input id="aler-email-1" type="text" class="form-control" name="alerEmail1" placeholder="@messages.at("alter_emaill_1")" value="@if(qpAccount != null){@qpAccount.user.alterEmail1}">
-						         </div>
-						    </div>
-			      		</td>
-			      		<td>
-			      			<div class="form-group">
-					           <div class="form-label">	
-					              <label for="aler-email-2">@messages.at("alter_emaill_2"):</label>
-					           </div>
-					           <div class="form-input">
-					           	  <input id="aler-email-2" type="text" class="form-control" name="alerEmail2" placeholder="@messages.at("alter_emaill_2")" value="@if(qpAccount != null){@qpAccount.user.alterEmail2}">
-					         	</div>
-					        </div>
-			      		</td>
-			      	</tr>
-			      	<tr>
-			      		<td>
-			      			<div class="form-group">
-					           <div class="form-label">	
-					              <label for="office_phone">@messages.at("office_phone"):</label>
-					           </div>
-					           <div class="form-input">
-					           	  <input id="office_phone" type="text" class="form-control" name="officePhone" placeholder="@messages.at("placeholder_office_no")" value="@if(qpAccount != null){@qpAccount.user.officePhone}">
-					         	</div>
-					        </div>
-			      		</td>
-			      		<td>
-			      			<div class="form-group">
-					           <div class="form-label">	
-					              <label for="mobile">@messages.at("mobile_no"):</label>
-					           </div>
-					           <div class="form-input">
-					           	  <input id="mobile" type="text" class="form-control" name="mobile" placeholder="@messages.at("placeholder_mobile")" value="@if(qpAccount != null){@qpAccount.user.mobile}">
-					         	</div>
-					        </div>
-			      		</td>
-			      	</tr>
-			      </table>
-			      
-			      
-			      <p class="tb-header">@messages.at("qualified_person_particular")</p>
-			      <div class="form-group">
-					<div class="form-label branch-lbl">
-						<label>@messages.at("branch_engineering")</label>
+	<div class="dash-block">
+		<div class="wrap-step wrap-step-2" style="display: block;">
+			@helper.form(action = routes.AuthController.saveQPAccount(), 'id-> "qp-account-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
+				<div class="mod-form__block">
+				   <div class="mod-form__block-content">
+					  <input type="hidden" name="qpAccountId" value="@if(qpAccount != null){@qpAccount.id}"/>
+				      
+				      <p class="tb-header">@messages.at("account_info")</p>
+				      <table class="tb-form">
+				      	<tr>
+				      		<td>
+				      			<div class="form-group">
+							         <div class="form-label">
+							            <label for="qp-name">@messages.at("name")</label>
+							         </div>
+							         <div class="form-input">
+							            <input id="qp-name" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_name")" value="@if(qpAccount != null){@qpAccount.user.name}">
+							         </div>
+							    </div>
+				      		</td>
+				      		<td>
+				      			<div class="form-group">
+						           <div class="form-label">	
+						              <label for="primary-email">@messages.at("primary_email_address"):</label>
+						           </div>
+						           <div class="form-input">
+						           	  <input id="primary-email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")" value="@if(qpAccount != null){@qpAccount.email}">
+						         	</div>
+						        </div>
+				      		</td>
+				      	</tr>
+				      	<tr>
+				      		<td></td>
+				      		<td>
+				      			<div class="form-group">
+						           <div class="form-label">	
+						              <label for="password">@messages.at("password"):</label>
+						           </div>
+						           <div class="form-input">
+						           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(qpAccount != null){@qpAccount.password}" autocomplete="off">
+						         	</div>
+						        </div>
+				      		</td>
+				      	</tr>
+				      </table>
+				      
+				      <p class="tb-header">@messages.at("personal_info")</p>
+				      <table class="tb-form">
+				      	<tr>
+				      		<td>
+				      			<div class="form-group">
+							         <div class="form-label">
+							            <label for="aler-email-1">@messages.at("alter_emaill_1")</label>
+							         </div>
+							         <div class="form-input">
+							            <input id="aler-email-1" type="text" class="form-control" name="alerEmail1" placeholder="@messages.at("alter_emaill_1")" value="@if(qpAccount != null){@qpAccount.user.alterEmail1}">
+							         </div>
+							    </div>
+				      		</td>
+				      		<td>
+				      			<div class="form-group">
+						           <div class="form-label">	
+						              <label for="aler-email-2">@messages.at("alter_emaill_2"):</label>
+						           </div>
+						           <div class="form-input">
+						           	  <input id="aler-email-2" type="text" class="form-control" name="alerEmail2" placeholder="@messages.at("alter_emaill_2")" value="@if(qpAccount != null){@qpAccount.user.alterEmail2}">
+						         	</div>
+						        </div>
+				      		</td>
+				      	</tr>
+				      	<tr>
+				      		<td>
+				      			<div class="form-group">
+						           <div class="form-label">	
+						              <label for="office_phone">@messages.at("office_phone"):</label>
+						           </div>
+						           <div class="form-input">
+						           	  <input id="office_phone" type="text" class="form-control" name="officePhone" placeholder="@messages.at("placeholder_office_no")" value="@if(qpAccount != null){@qpAccount.user.officePhone}">
+						         	</div>
+						        </div>
+				      		</td>
+				      		<td>
+				      			<div class="form-group">
+						           <div class="form-label">	
+						              <label for="mobile">@messages.at("mobile_no"):</label>
+						           </div>
+						           <div class="form-input">
+						           	  <input id="mobile" type="text" class="form-control" name="mobile" placeholder="@messages.at("placeholder_mobile")" value="@if(qpAccount != null){@qpAccount.user.mobile}">
+						         	</div>
+						        </div>
+				      		</td>
+				      	</tr>
+				      </table>
+				      
+				      
+				      <p class="tb-header">@messages.at("qualified_person_particular")</p>
+				      <div class="form-group">
+						<div class="form-label branch-lbl">
+							<label>@messages.at("branch_engineering")</label>
+						</div>
+						
+						<div class="form-input">
+							<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isCivil){selected}}else{selected}">
+							   	<input type="radio" name="isCivil" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isCivil){1}else{0}}else{1}" @if(qpAccount != null){@if(qpAccount.user.isCivil){checked}}else{checked}>
+								<a class="radio-box">Civil
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isQECP){selected}}">
+							   	<input type="radio" name="isQECP" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isQECP){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isQECP){checked}}>
+								<a class="radio-box">QECP
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){selected}}">
+							   	<input type="radio" name="isGeo" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isGeotechnical){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){checked}}>
+								<a class="radio-box">Geotechnical
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isElectric){selected}}">
+							   	<input type="radio" name="isElectric" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isElectric){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isElectric){checked}}>
+								<a class="radio-box">Electrical
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isMechanical){selected}}">
+							   	<input type="radio" name="isMechnical" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isMechanical){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isMechanical){checked}}>
+								<a class="radio-box">Mechanical
+									<i class="icon-check"></i>
+								</a>
+							</label>
+						</div>
 					</div>
 					
-					<div class="form-input">
-						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isCivil){selected}}else{selected}">
-						   	<input type="radio" name="isCivil" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isCivil){1}else{0}}else{1}" @if(qpAccount != null){@if(qpAccount.user.isCivil){checked}}else{checked}>
-							<a class="radio-box">Civil
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isQECP){selected}}">
-						   	<input type="radio" name="isQECP" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isQECP){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isQECP){checked}}>
-							<a class="radio-box">QECP
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){selected}}">
-						   	<input type="radio" name="isGeo" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isGeotechnical){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isGeotechnical){checked}}>
-							<a class="radio-box">Geotechnical
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isElectric){selected}}">
-						   	<input type="radio" name="isElectric" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isElectric){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isElectric){checked}}>
-							<a class="radio-box">Electrical
-								<i class="icon-check"></i>
-							</a>
-						</label>
-						<label class="subject-lbl @if(qpAccount != null){@if(qpAccount.user.isMechanical){selected}}">
-						   	<input type="radio" name="isMechnical" class="form-control" value="@if(qpAccount != null){@if(qpAccount.user.isMechanical){1}else{0}}else{0}" @if(qpAccount != null){@if(qpAccount.user.isMechanical){checked}}>
-							<a class="radio-box">Mechanical
-								<i class="icon-check"></i>
-							</a>
-						</label>
-					</div>
+					<table class="tb-form">
+						<tr>
+							<td>
+								<div class="form-group">
+						           <div class="form-label">	
+						              <label for="pe-no">@messages.at("pe_no"):</label>
+								   </div>	
+					           	   <div class="form-input">
+						           	  <input id="pe-no" type="text" class="form-control" name="peNo" placeholder="@messages.at("placeholder_no")" value="@if(qpAccount != null){@qpAccount.user.peNo}">
+					         	   </div>
+						        </div>
+					        </td>
+					        <td>
+								<div class="form-group @if(qpAccount != null){@if(qpAccount.user.isQECP == false){hidden}}else{hidden}">
+						           <div class="form-label">	
+						              <label for="qecp-no">@messages.at("qecp_no"):</label>
+								   </div>	
+					           	   <div class="form-input">
+						           	  <input id="qecp-no" type="text" class="form-control" name="qecpNo" placeholder="@messages.at("placeholder_qecp")" value="@if(qpAccount != null){@qpAccount.user.qecpNo}">
+					         	   </div>
+						        </div>
+					        </td>
+						</tr>
+					</table>
+					
+					
+					<div class="form-group">
+			           <div class="form-label">	
+			              <label>@messages.at("attach_cert")</label>
+					   </div>	
+			           <input type="file" name="document" multiple>
+			           <a id="add-file-btn" class="btn">Add</a>
+		         	</div>
+					
+				   </div>
 				</div>
-				
-				<table class="tb-form">
-					<tr>
-						<td>
-							<div class="form-group">
-					           <div class="form-label">	
-					              <label for="pe-no">@messages.at("pe_no"):</label>
-							   </div>	
-				           	   <div class="form-input">
-					           	  <input id="pe-no" type="text" class="form-control" name="peNo" placeholder="@messages.at("placeholder_no")" value="@if(qpAccount != null){@qpAccount.user.peNo}">
-				         	   </div>
-					        </div>
-				        </td>
-				        <td>
-							<div class="form-group @if(qpAccount != null){@if(qpAccount.user.isQECP == false){hidden}}else{hidden}">
-					           <div class="form-label">	
-					              <label for="qecp-no">@messages.at("qecp_no"):</label>
-							   </div>	
-				           	   <div class="form-input">
-					           	  <input id="qecp-no" type="text" class="form-control" name="qecpNo" placeholder="@messages.at("placeholder_qecp")" value="@if(qpAccount != null){@qpAccount.user.qecpNo}">
-				         	   </div>
-					        </div>
-				        </td>
-					</tr>
-				</table>
-				
-				
-				<div class="form-group">
-		           <div class="form-label">	
-		              <label>@messages.at("attach_cert")</label>
-				   </div>	
-		           <input type="file" name="document" multiple>
-		           <a id="add-file-btn" class="btn">Add</a>
-	         	</div>
-				
-			   </div>
-			</div>
-			<div class="form-group txt-center form-submit">
-			   <input class="btn btn-success" type="submit" value="Submit"/>
-			</div>
-		}
-	</div>
+				<div class="form-group txt-center form-submit">
+				   <input class="btn btn-success" type="submit" value="Submit"/>
+				</div>
+			}
+		</div>
+	</div>	
 }
 
 
