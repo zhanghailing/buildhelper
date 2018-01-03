@@ -1,7 +1,7 @@
 @import tags._
 @import tools.Constants
 
-@(projects: List[Project], pageIndex: Integer, totalAmount: Integer)
+@(account: Account, projects: List[Project], pageIndex: Integer, totalAmount: Integer)
 
 @sidemenu("engineer", 8){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -67,9 +67,11 @@
 								}
 							</td>
 							<td>
-								<a class="upload-action action-btn" href="@routes.ProjectController.drawingFile(projects(index).id)">Upload Drawing/Calculations</a>
+								@if(account.engineer != null){
+									<a class="upload-action action-btn" href="@routes.ProjectController.drawingFile(projects(index).id)">Upload Drawing/Calculations</a>
+								}
 								<a class="request-action action-btn" href="@routes.COSController.createCOS(projects(index).id)">Request for COS</a>
-								<a class="view-action action-btn">View COS</a>
+								<a class="view-action action-btn" href="@routes.COSController.viewCOS(projects(index).id, 0)">View COS</a>
 							</td>
 				        </tr>
 					}

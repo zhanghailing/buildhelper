@@ -9,6 +9,14 @@ html, body {
 	position: relative;
 }
 
+iframe { 
+	margin: none;
+    padding: none;
+    border: none;
+    line-height: 0;
+    float: left; 
+}
+
 ul, ol, li, dl, dd {
     margin: 0;
     padding: 0;
@@ -63,6 +71,20 @@ a.action-btn{
 	display: inline-block;
 	border: 1px solid #676a6c;
 	margin: -3px 0;
+}
+
+a.approve-action{
+	color: #5ED531;
+	border: none;
+	line-height: 42px;
+	ertical-align: top;
+}
+
+a.reject-action{
+	color: #F9054F;
+	border: none;
+	line-height: 42px;
+	ertical-align: top;
 }
 
 a.disabled{
@@ -126,6 +148,18 @@ input[type="submit"]{
 
 .right-align{
 	float: right;
+}
+
+.left-content{
+	align-text: left;
+}
+
+.right-content{
+	align-text: right;
+}
+
+.center-align{
+	text-align: center;
 }
 
 .radial-bg {
@@ -833,7 +867,7 @@ input.file-input{
 	margin: 0 5px;
 }
 
-#logo-link, #lh-link, .cos-link{
+#logo-link, #lh-link{
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -1265,9 +1299,8 @@ p.cos-header{
 
 p.cos-subheader{
 	color: #777;
-	font-weight: 400;
+	font-weight: 600;
 	font-size: 1.2em;
-	
 }
 
 p.cos-content{
@@ -1276,6 +1309,7 @@ p.cos-content{
 
 .value-box{
 	display: inline-block;
+	width: 100%;
 }
 
 .opt-wrapper > p.ques{
@@ -1366,14 +1400,64 @@ i.draw-btn{
 #draw-model .modal-dialog{
 	width: 900px !important;
 }
+	
+.note-title{
+	width: 60%;
+	padding: 10px;
+	color: #676a6c;
+    font-weight: 200;
+    margin-bottom: 0 !important;
+    vertical-align: middle;
+}
 
-@media only screen and (max-width: 980px) {
+#inspect-form .submit-wrapper{
+	text-align: right;
+}
+
+
+
+@media only screen and (max-width: 980px) {	
     .a4 {
         width: 100%;
     }
 }
 	
 /** Create COS End  **/
+
+/** Inspect COS Start **/
+
+.cos-sec{
+	margin: 10px 0;
+}
+	
+p.sec-header{
+	margin-top: 30px;
+	padding: 15px;
+	background-color: #eee;
+}
+
+/** Inspect COS End **/
+
+/** Approve COS Start **/
+
+.reason-item{
+	display: inline-block;
+    height: 36px;
+    padding: 4px 8px;
+    line-height: 30px;
+    background-color: #eee;
+    border-radius: 16px;
+}
+
+.long-txt{
+	width: 100%;
+	margin-top: 30px;
+}
+
+#sign-wrapper .submit-wrapper{
+	text-align: right;
+}
+/** Approve COS End **/
 
 /** Footer start **/
 

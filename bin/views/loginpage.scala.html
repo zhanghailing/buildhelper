@@ -40,13 +40,9 @@
 		                		}else if(data.data.accType === "ADMIN"){
 		                			location.assign("@routes.CompanyController.company()");
 		                		}else if(data.data.accType === "QP"){
-		                			if(data.data.isEngineer){
-		                				location.assign("@routes.ProjectController.projectOfEngineer()");
-		                			}
+		                			location.assign("@routes.ProjectController.projectOfEngineer()");
 		                		}else if(data.data.accType === "INSPECTOR"){
-									if(data.data.isEngineer){
-										location.assign("@routes.ProjectController.projectOfEngineer()");
-		                			}	
+		                			location.assign("@routes.ProjectController.projectOfEngineer()");
 		                		}
 		                	}
 		                	spinner.remove();
