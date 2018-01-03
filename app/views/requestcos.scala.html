@@ -224,33 +224,19 @@
 					var contentType = block[0].split(":")[1];
 					var blob = b64toBlob(realData, contentType);
 					
-					var formDataToUpload = new FormData(document.getElementById('cos-form'));
+					var formDataToUpload = new FormData(document.getElementById('cos-form'));	
 					formDataToUpload.append("signature", blob, 'signature.png');
-					
-					
-					var newFormData = new FormData();
-					for (var pair of formDataToUpload.entries()) {
-						newFormData.set(pair[0], pair[1]);
-					}
-					
-					/* $("input.file-input").each(function(index) {
-						var itemId = $(this).parents('.uploader-wrapper').attr('id');
-						if(itemId in blobMap){
-							
-							console.log('---------> ' + itemId);
-						}
-					}); */
 					
 					var btn = $('#submit');
 					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
 						btn.after(spinner);
-			        	btn.css('color', '#1ab394');
-			        	btn.attr("disabled", true);
+				        	btn.css('color', '#1ab394');
+				        	btn.attr("disabled", true);
 					
 					$.ajax({
 		                url: "@routes.COSController.saveCOS()",
 		                type: "POST",
-		                data: newFormData,
+		                data: formDataToUpload,
 		                contentType: false, 
 		                processData: false,
 		                success: function(response, status) {
