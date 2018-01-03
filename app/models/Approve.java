@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,8 +23,13 @@ public class Approve {
 	@GeneratedValue	
 	public long id;
 	
+	@Lob
 	@Column(name="reason")
 	public String reason;
+	
+	@Lob
+	@Column(name="comment")
+	public String comment;
 	
 	@OneToOne(mappedBy = "approve")
 	public ApproveSign approveSign;
@@ -35,6 +41,10 @@ public class Approve {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="creation_datetime")
 	public Date creationDateTime;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name="approve_date")
+	public Date approveDate;
 	
 	public Approve() {}
 	

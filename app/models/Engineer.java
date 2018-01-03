@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -44,7 +45,9 @@ public class Engineer {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Project> projects;
 	
-	public Engineer(){}
+	public Engineer(){
+		this.projects = new ArrayList<>();
+	}
 	public Engineer(Account account, Company company){
 		this.account = account;
 		this.company = company;

@@ -49,7 +49,7 @@ public class HomeController extends Controller {
 
 	@With(AuthAction.class)
     public Result index() {
-        return ok(index.render("Your new application is ready."));
+        return ok(index.render());
     }    
 }
 

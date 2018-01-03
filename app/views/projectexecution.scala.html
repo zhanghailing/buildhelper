@@ -30,8 +30,19 @@
 	   	});
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">Registered MOM Project</p>
-		<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>
+		<table class="header-tb">
+			<tr>
+				<td class="left-content" width="60%">
+					<div class="note-title">Registered MOM Project</div>
+				</td>
+				<td class="right-content" width="40%">
+					<div class="link-group right-content">
+						<a class="btn btn-success export-btn" href="@routes.ExportController.exportProjectSummary()">Export Summary</a>
+						<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 	
 	@if(projects == null || projects.size == 0){

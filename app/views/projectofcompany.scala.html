@@ -30,8 +30,19 @@
 	   	});
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">@messages.at("manage_project_engineer")</p>
-		<a class="btn btn-success create-btn" href="@routes.CompanyController.addEngineerPage()">@messages.at("add_project_engineer")</a>
+		<table class="header-tb">
+			<tr>
+				<td class="left-content" width="60%">
+					<div class="note-title">@messages.at("manage_project_engineer")</div>
+				</td>
+				<td class="right-content" width="40%">
+					<div class="link-group right-content">
+						<a class="btn btn-success export-btn" href="@routes.ExportController.exportProjectSummary()">Export Summary</a>
+						<a class="btn btn-success create-btn" href="@routes.CompanyController.addEngineerPage()">@messages.at("add_project_engineer")</a>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 	
 	@if(projects == null || projects.size == 0){

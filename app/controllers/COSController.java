@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +27,6 @@ import models.Avatar;
 import models.COS;
 import models.COSImage;
 import models.COSTerm;
-import models.Engineer;
 import models.LetterHead;
 import models.Project;
 import models.Reject;
@@ -392,6 +392,7 @@ public class COSController extends Controller{
 				try {
 					cos.passType = passType;
 					cos.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
+					cos.inspectedBy = account;
 					jpaApi.em().persist(cos);
 					
 					if(cos.passType.equals("approve")) {
@@ -434,7 +435,6 @@ public class COSController extends Controller{
 				//remove all rejects
 				if(cos.rejects != null && cos.rejects.size() > 0) {
 					for(Reject reject : cos.rejects) {
-						System.out.println("Size----> " + reject.rejectSign);
 						jpaApi.em().remove(reject);
 					}
 				}
@@ -447,6 +447,10 @@ public class COSController extends Controller{
 				try {
 					RejectSign rejectSign = new RejectSign(reject, rejectSignPart.getFile());
 					jpaApi.em().persist(rejectSign);
+					
+					cos.issueDate = new Date();
+					cos.issuedBy = account;
+					jpaApi.em().persist(cos);
 				} catch (IOException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();
@@ -468,6 +472,8 @@ public class COSController extends Controller{
 		DynamicForm requestData = formFactory.form().bindFromRequest();
 		String cosId = requestData.get("cosId");
 		String reason = requestData.get("reason");
+		String comment = requestData.get("comment");
+		String approveDate = requestData.get("approveDate");
 		
 		long accountId = ((Account) ctx().args.get("account")).id;
 		Account account = jpaApi.em().find(Account.class, accountId);
@@ -484,15 +490,22 @@ public class COSController extends Controller{
 					}
 				}
 				
-				Approve approve = new Approve(cos, reason);
-				jpaApi.em().persist(approve);
-				
-				MultipartFormData<File> body = request().body().asMultipartFormData();
-				FilePart<File> approveSignPart = body.getFile("approveSign");
 				try {
+					Approve approve = new Approve(cos, reason);
+					approve.approveDate = Utils.parse("yyyy-MM-dd", approveDate);
+					approve.comment = comment;
+					jpaApi.em().persist(approve);
+					
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					FilePart<File> approveSignPart = body.getFile("approveSign");
+					
 					ApproveSign approveSign = new ApproveSign(approve, approveSignPart.getFile());
 					jpaApi.em().persist(approveSign);
-				} catch (IOException e) {
+					
+					cos.issueDate = new Date();
+					cos.issuedBy = account;
+					jpaApi.em().persist(cos);
+				} catch (ParseException | IOException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();
 				}
@@ -503,6 +516,27 @@ public class COSController extends Controller{
 		}
 		
 		return ok(Json.toJson(responseData));
+	}
+	
+	@Transactional
+	public Result showSignature(String uuid, boolean isLarge) {
+		TypedQuery<Signature> query = jpaApi.em().createQuery("from Signature sn where sn.uuid = :uuid", Signature.class)
+				.setParameter("uuid", uuid);
+
+		InputStream imageStream = null;
+		try {
+			Signature sign = query.getSingleResult();
+
+			if (isLarge) {
+				imageStream = sign.download();
+			} else {
+				imageStream = sign.downloadThumbnail();
+			}
+		} catch (NoResultException e) {
+			imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+		}
+		
+		return ok(imageStream);
 	}
 }
 

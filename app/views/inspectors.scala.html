@@ -59,9 +59,21 @@
 	    
 	   	});
 	</script>
+	
 	<div class="dash-detail-header">
-		<p class="title">@messages.at("inspector_accounts")</p>
-		<a class="btn btn-success create-btn" href="@routes.CompanyController.createInspectorAccount()">Create Inspector Account</a>
+		<table class="header-tb">
+			<tr>
+				<td class="left-content" width="60%">
+					<div class="note-title">@messages.at("inspector_accounts")</div>
+				</td>
+				<td class="right-content"  width="40%">
+					<div class="link-group right-content">
+						<a class="btn btn-success export-btn" href="@routes.ExportController.exportInspectorByCompany()">Export Inspector Summary</a>
+						<a class="btn btn-success create-btn" href="@routes.CompanyController.createInspectorAccount()">Create Inspector Account</a>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 
 	@if(inspectors == null || inspectors.size == 0){

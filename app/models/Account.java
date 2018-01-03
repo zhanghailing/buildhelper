@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -92,6 +93,16 @@ public class Account{
 	@JsonIgnore
     public List<Project> projectsJoined;
 	
+	@OneToMany(mappedBy = "inspectedBy")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@JsonIgnore
+	public List<COS> inspectedCOSes;
+	
+	@OneToMany(mappedBy = "issuedBy")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@JsonIgnore
+	public List<COS> issuedCOSes;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cos_id")
 	@JsonIgnore
@@ -106,7 +117,11 @@ public class Account{
 	@Column(columnDefinition = "boolean default true")
 	public boolean active;
 	
-	public Account(){}
+	public Account(){
+		this.inspectedCOSes = new ArrayList<>();
+		this.projectsJoined = new ArrayList<>();
+		this.issuedCOSes = new ArrayList<>();
+	}
 	
 	public Account(String email, String password){
 		this.accType = AccountType.CLIENT;

@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import tools.Utils;
+
 @Entity
 @Table(name = "cos")
 public class COS {
@@ -33,6 +36,9 @@ public class COS {
     @JoinColumn(name = "project_id")
 	@JsonIgnore
     public Project project;
+	
+	@Column(name="ref_no")
+	public String referenceNo;
 	
 	@Column(name="loc")
 	public String location;
@@ -102,11 +108,27 @@ public class COS {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Approve> approves; //use onetomany to be alternative to onetoone
 	
-	public COS() {}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "inspect_acc_id")
+	@JsonIgnore
+	public Account inspectedBy;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "issue_acc_id")
+	@JsonIgnore
+	public Account issuedBy;
+	
+	public COS() {
+		this.routeAccounts = new ArrayList<>();
+		this.cosTerms = new ArrayList<>();
+		this.rejects = new ArrayList<>();
+		this.approves = new ArrayList<>();
+	}
 	public COS(Project project, String subject) {
 		this.project = project;
 		this.subject = subject;
 		this.issueDate = new Date();
+		this.referenceNo = (System.currentTimeMillis()+"").substring(5);
 	}
 	
 }

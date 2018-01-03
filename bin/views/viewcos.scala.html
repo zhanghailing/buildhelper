@@ -27,6 +27,311 @@
 		            $('form#page-form').submit();
 		        }
 		    });
+		    
+		    $('.s-print-action').on('click', function(){
+		    		var cosId = $(this).parent().attr('class');
+		    		
+		    		var ref = $(this).data('ref');
+		    		var projectTitle = $(this).data("project-title");
+		    		var client = $(this).data("client");
+		    		var builder = $(this).data("builder");
+		    		var subject = $(this).data('subject');
+		    		var inspectedDate = $(this).data('inspectedDate');
+		    		var gondolaNo = $(this).data('gondola-no');
+		    		var gondolaLE = $(this).data('gondola-le');
+		    		var gondolaDistinctiveNo = $(this).data('gondola-distinctiveNo');
+		    		var gondolaMaxlength = $(this).data('gondola-maxlength');
+		    		var username = $(this).data('username');
+		    		var peNo = $(this).data('pe-no');
+		    		var signUUID = $(this).data('sign-uuid');
+		    		var date = new Date();
+		    		var gondolaSWL = $(this).data('gondola-swl');
+		    		var isGondola = $(this).data("is-gondola");
+		    		var isMCWP = $(this).data("is-MCWP");
+		    		var isScaffold = $(this).data("is-Scaffold");
+		    		var isFormwork = $(this).data("is-Formwork");
+		    		
+		    		var cosPrint = '';
+		    		if(isGondola){
+		    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
+		    			cosPrint += '<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>';
+		    			cosPrint += '<hr>';
+		    			cosPrint += '<span>Our Ref No.: </span><span>' + ref + '</span>';
+		    			cosPrint += '<div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">';
+		    			cosPrint += '<h3 style="text-align: center;">CERTIFICATION OF SUPERVISION</h3>';
+		    			cosPrint += '<div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Project Title</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + projectTitle + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Client</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + client + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Specialist contractor</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Subject</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + subject + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Inspection date</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + inspectedDate + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Gondola Particular Gondola No.</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>'+gondolaNo+'</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>L E Registration No.</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + gondolaLE + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Distinctive no.</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + gondolaDistinctiveNo + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Max. Length</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + gondolaMaxlength + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<div style="display: flex;">';
+		    			cosPrint += '<div style="width: 28%;">';
+		    			cosPrint += '<p>Max. S.W.L</p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="width: 72%;">';
+		    			cosPrint += '<p>: <span>' + gondolaSWL + '</span></p>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<p style="text-align: justify;">I, <span>' + username + '</span>, PE No. <span>' + peNo + '</span>, hereby certify that the structural supporting the lifting equipment and tension of safety wire described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns and parapet walls) are safe for the taking of gondola loads to carrying out the building works.</p>';
+		    			cosPrint += '<br>';
+		    			cosPrint += '<p>Yours truly,</p>';
+		    			cosPrint += '<div style="position:relative;">';
+		    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px; margin-left: 50px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
+		    			cosPrint += '<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:120px;height:60px;top: 37px;left: 65px;" src="/cos/show/signature?uuid='+signUUID+'&isLarge=true"/>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="display: flex; text-align: center;">';
+		    			cosPrint += '<div style="float: left; width: 50%;">';
+		    			cosPrint += '<div style="float: left;">';
+		    			cosPrint += '<br>';
+		    			cosPrint += '<hr style="width: 200px;">Professional Engineer';
+		    			cosPrint += '<br>(Signature and Stamp)';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="float: right; width: 50%;">';
+		    			cosPrint += '<div style="float: right;">';
+		    			cosPrint += '<span>' + date.yyyymmdd() + '</span>';
+		    			cosPrint += '<br><hr style="width: 200px;">';
+		    			cosPrint += '<span>Date</span>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '<div style="padding-top: 0px;">';
+		    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
+		    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
+		    			cosPrint += '</div>';
+		    			cosPrint += '</div>';
+		    		}else if(isMCWP){
+		    			
+		    		}else if(isScaffold){
+		    			
+		    		}else if(isFormwork){
+		    			
+		    		}
+		    		
+		    		var newWin=window.open('','Print-Window');
+					newWin.document.open();
+					newWin.document.write('<html><body onload="window.print()">'+cosPrint+'</body></html>');
+					newWin.document.close();
+		    });
+		    
+		    $('.h-print-action').on('click', function(){
+	    		var cosId = $(this).parent().attr('class');
+	    		var isGondola = $(this).data("is-gondola");
+	    		var isMCWP = $(this).data("is-MCWP");
+	    		var isScaffold = $(this).data("is-Scaffold");
+	    		var isFormwork = $(this).data("is-Formwork");
+	    		
+	    		var cosPrint = '';
+	    		if(isGondola){
+	    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
+	    			cosPrint += '<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>';
+	    			cosPrint += '<hr>';
+	    			cosPrint += '<span>Our Ref No.: </span><span></span>';
+	    			cosPrint += '<div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">';
+	    			cosPrint += '<h3 style="text-align: center;">CERTIFICATION OF SUPERVISION</h3>';
+	    			cosPrint += '<div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Project Title</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Client</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Specialist contractor</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Subject</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Inspection date</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Gondola Particular Gondola No.</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>L E Registration No.</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Distinctive no.</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Max. Length</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<div style="display: flex;">';
+	    			cosPrint += '<div style="width: 28%;">';
+	    			cosPrint += '<p>Max. S.W.L</p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="width: 72%;">';
+	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<p style="text-align: justify;">I, <span></span>, PE No. <span></span>, hereby certify that the structural supporting the lifting equipment and tension of safety wire described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns and parapet walls) are safe for the taking of gondola loads to carrying out the building works.</p>';
+	    			cosPrint += '<br>';
+	    			cosPrint += '<p>Yours truly,</p>';
+	    			cosPrint += '<div style="position:relative;">';
+	    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px; margin-left: 50px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="display: flex; text-align: center;">';
+	    			cosPrint += '<div style="float: left; width: 50%;">';
+	    			cosPrint += '<div style="float: left;">';
+	    			cosPrint += '<br>';
+	    			cosPrint += '<hr style="width: 200px;">Professional Engineer';
+	    			cosPrint += '<br>(Signature and Stamp)';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="float: right; width: 50%;">';
+	    			cosPrint += '<div style="float: right;">';
+	    			cosPrint += '<span> </span>';
+	    			cosPrint += '<br><hr style="width: 200px;">';
+	    			cosPrint += '<span>Date</span>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '<div style="padding-top: 0px;">';
+	    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
+	    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
+	    			cosPrint += '</div>';
+	    			cosPrint += '</div>';
+	    		}else if(isMCWP){
+	    			
+	    		}else if(isScaffold){
+	    			
+	    		}else if(isFormwork){
+	    			
+	    		}
+	    		
+	    		var newWin=window.open('','Print-Window');
+				newWin.document.open();
+				newWin.document.write('<html><body onload="window.print()">'+cosPrint+'</body></html>');
+				newWin.document.close();
+	    });
+		    			
+		    Date.prototype.yyyymmdd = function() {
+		    	  var mm = this.getMonth() + 1; 
+		    	  var dd = this.getDate();
+
+		    	  return [this.getFullYear(),
+		    	          (mm>9 ? '' : '0') + mm,
+		    	          (dd>9 ? '' : '0') + dd
+		    	         ].join('/');
+		    	};
 		});	
 		
 	</script>
@@ -71,10 +376,38 @@
 							<td>@coses(index).subject</td>
 							<td>@coses(index).inspectDate</td>
 							<td>@coses(index).issueDate</td>
-							<td>
-								<a href="" class="action-btn h-print-action center-align">Print<br>Hard Copy</a>
-								<a class="action-btn upload-action center-align">Upload <br> Hard Copy</a>
-								<a class="action-btn s-print-action center-align">Print<br>E-Copy</a>
+							<td class="@coses(index).id">
+								<div class="link-wrapper">
+									<a class="action-btn h-print-action center-align"
+										data-is-gondola="@coses(index).project.isGondola"
+										data-is-MCWP="@coses(index).project.isMCWP"
+										data-is-Scaffold="@coses(index).project.isScaffold"
+										data-is-Formwork="@coses(index).project.isFormwork">Print<br>Hard Copy</a>
+								</div>
+								<div class="link-wrapper">
+									<a class="action-btn upload-action center-align">Upload <br> Hard Copy</a>
+								</div>
+								<div class="link-wrapper">
+									<a class="action-btn s-print-action center-align" 
+										data-ref="@coses(index).referenceNo"
+										data-project-title="@coses(index).project.title"
+										data-client="@if(coses(index).project.clients != null){coses(index).project.clients(0).companyName}"
+										data-builder="@if(coses(index).project.builders != null){coses(index).project.builders(0).companyName}"
+										data-subject="@coses(index).subject"
+										data-inspectedDate="@coses(index).inspectDate"
+										data-gondola-no="@coses(index).gondolaNo"
+										data-gondola-le="@coses(index).leRegistrationNo"
+										data-gondola-distinctiveNo="@coses(index).distinctiveNo"
+										data-gondola-maxlength="@coses(index).gondolaMaxLength"
+										data-gondola-swl="@coses(index).gondolaMaxSWL"
+										data-is-gondola="@coses(index).project.isGondola"
+										data-is-MCWP="@coses(index).project.isMCWP"
+										data-is-Scaffold="@coses(index).project.isScaffold"
+										data-is-Formwork="@coses(index).project.isFormwork"
+										data-username="@account.user.name"
+										data-pe-no="@account.user.peNo"
+										data-sign-uuid="@if(coses(index).signature != null){@coses(index).signature.uuid}">Print<br>E-Copy</a>
+									</div>
 								@if(coses(index).passType == "approve"){
 									<a class="approve-action action-btn center-align" >Approved</a>
 								}else{
