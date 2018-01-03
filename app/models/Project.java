@@ -1,6 +1,7 @@
 package models;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -90,7 +91,13 @@ public class Project {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<COS> coses;
 	
-	public Project() {}
+	public Project() {
+		this.clients = new ArrayList<>();
+		this.builders = new ArrayList<>();
+		this.teamAccounts = new ArrayList<>();
+		this.drawings = new ArrayList<>();
+		this.coses = new ArrayList<>();
+	}
 	public Project(Engineer engineer, String title) {
 		this.engineer = engineer;
 		this.title = title;

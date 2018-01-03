@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -69,7 +70,9 @@ public class User{
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Document> documents;
 	
-	public User(){}
+	public User(){
+		this.documents = new ArrayList<>();
+	}
 	
 	public User(Account account){
 		this.account = account;

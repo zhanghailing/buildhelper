@@ -1,8 +1,3 @@
-@import tags._
-
-@(message: String)
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +29,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="">E-SPECTOR</a>
+                    <a class="navbar-brand" href="@routes.AuthController.loginPage()">E-SPECTOR</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -59,7 +54,7 @@
                         <h1>Automate<br/>safety<br/>inspection</h1>
                         <p>Automated. Connected. Proactive.</p>
                         <p>
-                            <a class="btn btn-lg btn-success" href="#" role="button">SIGN IN</a>
+                            <a class="btn btn-lg btn-success" href="@routes.AuthController.loginPage()" role="button">SIGN IN</a>
                             <a class="caption-link" href="#" role="button">Sign up</a>
                         </p>
                     </div>
@@ -75,7 +70,7 @@
                     <div class="carousel-caption">
                         <h1>Request<br/>for inspection<br/>on the go</h1>
                         <p>Automated. Connected. Proactive.</p>
-                        <p><a class="btn btn-lg btn-success" href="#" role="button">SIGN IN</a></p>
+                        <p><a class="btn btn-lg btn-success" href="@routes.AuthController.loginPage()" role="button">SIGN IN</a></p>
                     </div>
                 </div>
                 <!-- Set background for slide in css -->

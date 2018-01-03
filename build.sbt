@@ -1,6 +1,6 @@
 name := """BuildHelper"""
 
-version := "1.18"
+version := "1.23"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
@@ -21,7 +21,8 @@ libraryDependencies ++= Seq(
   "net.coobird" % "thumbnailator" % "[0.4, 0.5)",
   "com.paypal.sdk" % "rest-api-sdk" % "1.13.1",
   "com.sun.mail" % "javax.mail" % "1.6.0",
-  "org.apache.poi" % "poi" % "3.9"
+  "org.apache.poi" % "poi" % "3.9",
+  "org.apache.poi" % "poi-ooxml" % "3.11"
 )
 
 // Running Play in development mode while using JPA will work fine, 

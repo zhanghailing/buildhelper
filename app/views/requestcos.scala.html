@@ -160,6 +160,7 @@
 			});
 			canvas.setWidth($('#cos-basic').width());
 			
+			blobMap = {};
 			$('#draw-sure-btn').on('click', function(){
 				var canvas =document.getElementById("draw-canvas");
 				var data = canvas.toDataURL("image/png");
@@ -180,14 +181,15 @@
 						var contentType = block[0].split(":")[1];
 						var blob = b64toBlob(realData, contentType);
 						
-						
 						var shReader  = new FileReader();
 						shReader.onloadend = function() {
 							var uploaderEle = currentDrawBtn.parents('.uploader');
 			                var linkEle = uploaderEle.find('.link-img');
 			                var fileInput = uploaderEle.find('input[type="file"]');
-			                fileInput[0].files[0] = blob;
-			               
+			                
+			                var itemId = fileInput.parents('.uploader-wrapper').attr('id');
+			                blobMap[itemId] = blob;
+			                
 			                linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
@@ -225,6 +227,20 @@
 					var formDataToUpload = new FormData(document.getElementById('cos-form'));
 					formDataToUpload.append("signature", blob, 'signature.png');
 					
+					
+					var newFormData = new FormData();
+					for (var pair of formDataToUpload.entries()) {
+						newFormData.set(pair[0], pair[1]);
+					}
+					
+					/* $("input.file-input").each(function(index) {
+						var itemId = $(this).parents('.uploader-wrapper').attr('id');
+						if(itemId in blobMap){
+							
+							console.log('---------> ' + itemId);
+						}
+					}); */
+					
 					var btn = $('#submit');
 					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
 						btn.after(spinner);
@@ -234,7 +250,7 @@
 					$.ajax({
 		                url: "@routes.COSController.saveCOS()",
 		                type: "POST",
-		                data: formDataToUpload,
+		                data: newFormData,
 		                contentType: false, 
 		                processData: false,
 		                success: function(response, status) {
@@ -316,7 +332,7 @@
 		function createUploder(e, i){
 			var uploader = e.parents('.uploader-group');
 			var id = uploader.parents('.opt-wrapper').attr('id');
-			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
+			var uploaderItem = '<div id="' + $('input.file-input').length + '" class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
 			uploaderItem += '<a class="link-img cos-link"></a>';
 			uploaderItem += '<div class="upload-wrap">';
@@ -503,7 +519,7 @@
 									         	</div>
 									        </div>
 									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+										         <div id="@index" class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
 										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
@@ -521,7 +537,6 @@
 								}
 							}
 						</div>
-						
 						
 						<div class="compliance-sec">
 							<p class="cos-subheader">Formwork</p>
@@ -554,7 +569,7 @@
 									        </div>
 									        <div class="uploader-group form-group row">
 										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-										         	 <div class="cos-uploader-wrapper uploader">
+										         	 <div id="@index" class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
 											               <i class="fa fa-picture-o" aria-hidden="true"></i>

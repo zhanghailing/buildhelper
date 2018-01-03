@@ -355,60 +355,66 @@
 			<div class="cos-sec">
 				<div class="opt-wrapper">
 				@if(cos.cosTerms != null){
-					<p class="cos-subheader">General</p>
-					@for(index <- 0 until cos.cosTerms.size){
-						@if(cos.cosTerms(index).term.termType == TermType.GENTERAL){
-							<p class="ques">
-								<span class="num">@(index+1). </span>
-								<span>@cos.cosTerms(index).term.subject</span>
-							</p>
-							<div class="value-box">
-								<ul class="opt-list">
-									<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
-									<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
-									<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
-								</ul>
-								<button class="remark-btn">Remark</button>
-								<div class="remark-body">
-									<div class="form-group">
-							           	<div class="form-input">
-							           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
-						         		</div>
-							        </div>
-							        @if(cos.cosTerms(index).cosImages != null){
-								        	@for(index <- 0 until cos.cosTerms(index).cosImages.size){
-									         <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid))"></a>
-								     	}
-							        	}
-								</div>
-							</div>
-						}
-						
-						@if(cos.cosTerms(index).term.termType == TermType.FORMWORK){
-							<p class="ques">
-								<span class="num">@(index+1). </span>
-								<span>@cos.cosTerms(index).term.subject</span>
-							</p>
-							<div class="value-box">
-								<ul class="opt-list">
-									<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
-									<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
-									<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
-								</ul>
-								<button class="remark-btn">Remark</button>
-								<div class="remark-body">
-									<div class="form-group">
-							           	<div class="form-input">
-							           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
-						         		</div>
-							        </div>
-							        @if(cos.cosTerms(index).cosImages != null){
-							        		@for(index <- 0 until cos.cosTerms(index).cosImages.size){
-								    		    <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(index).uuid))"></a>
+					@if(cos.cosTerms.size > 0){
+						<p class="cos-subheader">General</p>
+						@for(index <- 0 until cos.cosTerms.size){
+							@if(cos.cosTerms(index).term.termType == TermType.GENTERAL){
+								<p class="ques">
+									<span class="num">@(index+1). </span>
+									<span>@cos.cosTerms(index).term.subject</span>
+								</p>
+								<div class="value-box">
+									<ul class="opt-list">
+										<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
+									</ul>
+									<button class="remark-btn">Remark</button>
+									<div class="remark-body">
+										<div class="form-group">
+								           	<div class="form-input">
+								           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
+							         		</div>
+								        </div>
+								        @if(cos.cosTerms(index).cosImages != null){
+								        		@if(cos.cosTerms(index).cosImages.size > 0){
+												@for(j <- 0 until cos.cosTerms(index).cosImages.size){
+											         <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
+										     	}
+								        		}
 								        	}
-							        }
+									</div>
 								</div>
-							</div>
+							}
+							
+							@if(cos.cosTerms(index).term.termType == TermType.FORMWORK){
+								<p class="ques">
+									<span class="num">@(index+1). </span>
+									<span>@cos.cosTerms(index).term.subject</span>
+								</p>
+								<div class="value-box">
+									<ul class="opt-list">
+										<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
+									</ul>
+									<button class="remark-btn">Remark</button>
+									<div class="remark-body">
+										<div class="form-group">
+								           	<div class="form-input">
+								           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
+							         		</div>
+								        </div>
+								        @if(cos.cosTerms(index).cosImages != null){
+								        		@if(cos.cosTerms(index).cosImages.size() >= 1){
+								        			@for(j <- 0 until cos.cosTerms(index).cosImages.size){
+								        				<a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
+										        	}
+								        		}
+								        }
+									</div>
+								</div>
+							}
 						}
 					}
 				}

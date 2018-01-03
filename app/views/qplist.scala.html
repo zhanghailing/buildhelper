@@ -35,7 +35,7 @@
 	                url: url,
 	                type: "POST",
 	                data: {
-	                	accountId:accountId
+	                		accountId:accountId
 	                },
 	                success: function(response, status) {
 		                	var data = $.parseJSON(JSON.stringify(response));
@@ -49,18 +49,29 @@
 		    });
 		    
 		    $('#del-model').on('show.bs.modal', function(e) {
-		    	var accountId = $(e.relatedTarget).data('id');
-				$('input[name="accountId"]').val(accountId);
-		    });
-		    
-		    $('.sure-btn').on('click', function(){
-		    	$("#del-acc-form").submit();
+			    	var accountId = $(e.relatedTarget).data('id');
+					$('input[name="accountId"]').val(accountId);
+			    });
+			    
+			    $('.sure-btn').on('click', function(){
+			    	$("#del-acc-form").submit();
 		    });
 	   	});
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">@messages.at("qp_accounts")</p>
-		<a class="btn btn-success create-btn" href="@routes.CompanyController.createQPAccount()">Create QP Account</a>
+		<table class="header-tb">
+			<tr>
+				<td class="left-content" width="60%">
+					<div class="note-title">@messages.at("qp_accounts")</div>
+				</td>
+				<td class="right-content"  width="40%">
+					<div class="link-group right-content">
+						<a class="btn btn-success export-btn" href="@routes.ExportController.exportQPByCompany()">Export QP Summary</a>
+						<a class="btn btn-success create-btn" href="@routes.CompanyController.createQPAccount()">Create QP Account</a>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</div>
 	
 	@if(qpAccounts == null || qpAccounts.size == 0){

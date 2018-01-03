@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -39,7 +40,9 @@ public class Term {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<COSTerm> cosTerms;
 	
-	public Term() {}
+	public Term() {
+		this.cosTerms = new ArrayList<>();
+	}
 	public Term(String subject, TermType type) {
 		this.subject = subject;
 		this.termType = type;

@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -39,7 +40,9 @@ public class COSTerm {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<COSImage> cosImages;
     
-    public COSTerm(){}
+    public COSTerm(){
+    		this.cosImages = new ArrayList<>();
+    }
     
     public COSTerm(COS cos, Term term){
 	    	this.cos = cos;

@@ -81,6 +81,14 @@ POST		/verify/cos						controllers.COSController.verifyCOS()
 POST		/issue/cos						controllers.COSController.issueCOS()
 POST		/reject/cos						controllers.COSController.rejectCOS()
 POST		/approve/cos						controllers.COSController.approveCOS()
+GET     /cos/show/signature          	controllers.COSController.showSignature(uuid: String ?= "", isLarge: Boolean ?= false)
+
+
+GET 		/export/qp/summary				controllers.ExportController.exportQPByCompany()
+GET 		/export/inspector/summary		controllers.ExportController.exportInspectorByCompany()
+GET 		/export/project/summary			controllers.ExportController.exportProjectSummary()
+GET 		/export/engineer/summary			controllers.ExportController.exportEngineers()
+GET 		/export/project/admin/summary	controllers.ExportController.exportProAdminSummary()
 
 
 
