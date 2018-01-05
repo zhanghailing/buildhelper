@@ -15,7 +15,7 @@
 			var width = $('.cos-sec').width();
 			var height = width * 3 / 4;
 			$('.draw-preview').width(width).height(height);
-			$('.cos-link').width(width).height(height);
+			$('.link-img').width(width).height(height);
 			
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
@@ -244,7 +244,7 @@
 			var id = uploader.parents('.opt-wrapper').attr('id');
 			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
-			uploaderItem += '<a class="link-img cos-link"></a>';
+			uploaderItem += '<a class="link-img"></a>';
 			uploaderItem += '<div class="upload-wrap">';
 			uploaderItem += '<i class="fa fa-picture-o" aria-hidden="true"></i>';
 			uploaderItem += '<div class="upload-text">';
@@ -379,7 +379,7 @@
 								        @if(cos.cosTerms(index).cosImages != null){
 								        		@if(cos.cosTerms(index).cosImages.size > 0){
 												@for(j <- 0 until cos.cosTerms(index).cosImages.size){
-											         <a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
+											         <a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
 										     	}
 								        		}
 								        	}
@@ -408,7 +408,7 @@
 								        @if(cos.cosTerms(index).cosImages != null){
 								        		@if(cos.cosTerms(index).cosImages.size() >= 1){
 								        			@for(j <- 0 until cos.cosTerms(index).cosImages.size){
-								        				<a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
+								        				<a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
 										        	}
 								        		}
 								        }

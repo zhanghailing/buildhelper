@@ -92,6 +92,9 @@
 			});
 			
 			var currentDrawBtn;
+			var imgCanvas = new fabric.Canvas('draw-canvas', {
+				isDrawingMode: true
+			});
 			$('#draw-model').on('shown.bs.modal', function (e) {
 				var drawBtn = $(e.relatedTarget);
 				currentDrawBtn = drawBtn;
@@ -108,9 +111,6 @@
 			    		var ratio = image.width/aLinkWidth;
 			    		var aLinkHeight = image.height / ratio;
 				    		
-			    		var imgCanvas = new fabric.Canvas('draw-canvas', {
-							isDrawingMode: true
-						});
 			    		imgCanvas.setWidth(aLinkWidth);
 			    		imgCanvas.setHeight(aLinkHeight);
 			    		
@@ -162,7 +162,7 @@
 			
 			blobMap = {};
 			$('#draw-sure-btn').on('click', function(){
-				var canvas =document.getElementById("draw-canvas");
+				var canvas = document.getElementById("draw-canvas");
 				var data = canvas.toDataURL("image/png");
 				var block = data.split(";");
 				var realData = block[1].split(",")[1];
@@ -184,13 +184,17 @@
 						var shReader  = new FileReader();
 						shReader.onloadend = function() {
 							var uploaderEle = currentDrawBtn.parents('.uploader');
-			                var linkEle = uploaderEle.find('.link-img');
-			                var fileInput = uploaderEle.find('input[type="file"]');
+			                	var linkEle = uploaderEle.find('.link-img');
+			                	var fileInput = uploaderEle.find('input[type="file"]');
 			                
-			                var itemId = fileInput.parents('.uploader-wrapper').attr('id');
-			                blobMap[itemId] = blob;
+			                	var inputName = fileInput.attr('name');
+			                	var fileItems = $('input[name="'+inputName+'"]');
+			                	var currentFileItem = uploaderEle.find('.file-input');
+			                	var currentIndex = fileItems.index(currentFileItem);
+			                var key = currentIndex + "|" + inputName;
+			                	blobMap[key] = blob;
 			                
-			                linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
+			                	linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
 						shReader.readAsDataURL(blob);
@@ -199,6 +203,10 @@
 				reader.readAsDataURL(blob);
 			});
 			
+			$('#draw-model').on('hidden.bs.modal', function () {
+				imgCanvas.clear();
+				$('.drawing-layer').css('background-image', 'url()');
+			});
 			
 			$("#cos-form").validate({
 				ignore: [],
@@ -226,6 +234,23 @@
 					
 					var formDataToUpload = new FormData(document.getElementById('cos-form'));	
 					formDataToUpload.append("signature", blob, 'signature.png');
+					
+					for (var key in blobMap) {
+						var splitArray = key.split('|');
+						var position = splitArray[0];
+						var name=splitArray[1]
+						var files = formDataToUpload.getAll('' + name + '');
+						if(files.length > 0){
+							formDataToUpload.delete('' + name + '');
+							$.each(files, function(index, value) {
+								if(index == position){
+									formDataToUpload.append(name, blobMap[key]);
+								}else{
+									formDataToUpload.append(name, value);
+								}
+							});
+						}
+					}
 					
 					var btn = $('#submit');
 					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
@@ -318,7 +343,7 @@
 		function createUploder(e, i){
 			var uploader = e.parents('.uploader-group');
 			var id = uploader.parents('.opt-wrapper').attr('id');
-			var uploaderItem = '<div id="' + $('input.file-input').length + '" class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
+			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
 			uploaderItem += '<a class="link-img cos-link"></a>';
 			uploaderItem += '<div class="upload-wrap">';
@@ -505,7 +530,7 @@
 									         	</div>
 									        </div>
 									        <div class="uploader-group form-group row">
-										         <div id="@index" class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
 										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
@@ -555,7 +580,7 @@
 									        </div>
 									        <div class="uploader-group form-group row">
 										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-										         	 <div id="@index" class="cos-uploader-wrapper uploader">
+										         	 <div class="cos-uploader-wrapper uploader">
 											            <a class="link-img cos-link"></a>
 											            <div class="upload-wrap">
 											               <i class="fa fa-picture-o" aria-hidden="true"></i>
