@@ -1151,28 +1151,33 @@ p.work-type{
 .doc-preview{
 	width: 100%;
 	padding-top: 100%;
-	margin: 15px;
     display: inline-block;
     position:relative;
-    color: white;
+    margin-bottom: 5px;
+}
+
+.doc-preview:hover{
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.08);
 }
 
 p.doc-title{
-	color: #777;
+	color: #676a6c;
 	font-size: 1.2em;
+} 
+
+.doc-wrap{
+	padding: 10px 10px 10px 10px;
+	background-color: #f3f3f4;
+	margin-bottom: 20px;
+	text-align: center;
 }
 
 .caption{
-	position: absolute;
-	bottom: 0;
-	padding: 4px 8px;
-	background-color: black;
-	opacity: 0.5;
 	width: 100%;
 }
 
 .doc-item{
-	margin-bottom: 30px;
+	margin-bottom: 10px;
 }
 
 /** Document Format End **/
@@ -1484,16 +1489,15 @@ footer{
   	background-color: #f3f3f4;
 }
 
+.main-footer{
+	padding-left: 0 !important;
+}
+
 footer p.copy-right {
 	margin-bottom: 0;
 }
 
 /** Footer end **/
-
-.link-wrapper{
-	display: inline-block;
-}
-
 
 /** Landing page start **/
 
@@ -1929,6 +1933,9 @@ footer p.copy-right {
 
 /** Landing page end **/
 
+.link-wrapper{
+	display: inline-block;
+}
 
 
 
