@@ -1,5 +1,5 @@
 package models;
 
 public enum TermType {
-	GENTERAL, GONDOLA, MCWP, FORMWORK
+	GENTERAL, GONDOLA, MCWP, FORMWORK, SCAFFOLD
 }

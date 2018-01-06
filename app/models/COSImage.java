@@ -34,6 +34,12 @@ public class COSImage extends Image{
 	@JsonIgnore
     public COSTerm cosTerm;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "issue_id")
+	@JsonIgnore
+    public Issue issue;
+	
+	
 	@Column(name="thumbnail_uuid")
 	public String thumbnailUUID;
 	
@@ -41,6 +47,13 @@ public class COSImage extends Image{
 	public COSImage(COSTerm cosTerm, File file) throws IOException{
 		super(file);
 		this.cosTerm = cosTerm;
+		this.thumbnailUUID = Utils.uuid();
+		uploadThumbnail(file);
+	}
+	
+	public COSImage(Issue issue, File file) throws IOException{
+		super(file);
+		this.issue = issue;
 		this.thumbnailUUID = Utils.uuid();
 		uploadThumbnail(file);
 	}

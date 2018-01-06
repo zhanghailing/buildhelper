@@ -31,27 +31,27 @@
 		                type: "POST",
 		                data: $(form).serialize(),
 		                success: function(response, status) {
-		                	var data = $.parseJSON(JSON.stringify(response));
-		                	if(data.code != 0){
-		                		showAlertToast(data.message, "alert-danger");
-		                	}else{
-		                		if(data.data.accType === "SADMIN"){
-		                			location.assign("@routes.CompanyController.companys()");
-		                		}else if(data.data.accType === "ADMIN"){
-		                			location.assign("@routes.CompanyController.company()");
-		                		}else if(data.data.accType === "QP"){
-		                			location.assign("@routes.ProjectController.projectOfEngineer()");
-		                		}else if(data.data.accType === "INSPECTOR"){
-		                			location.assign("@routes.ProjectController.projectOfEngineer()");
-		                		}
-		                	}
-		                	spinner.remove();
-		                	$('#login-btn').attr("disabled", false);
+			                	var data = $.parseJSON(JSON.stringify(response));
+			                	if(data.code != 0){
+			                		showAlertToast(data.message, "alert-danger");
+			                	}else{
+			                		if(data.data.accType === "SADMIN"){
+			                			location.assign("@routes.CompanyController.companys()");
+			                		}else if(data.data.accType === "ADMIN"){
+			                			location.assign("@routes.CompanyController.company()");
+			                		}else if(data.data.accType === "QP"){
+			                			location.assign("@routes.ProjectController.projectOfEngineer()");
+			                		}else if(data.data.accType === "INSPECTOR"){
+			                			location.assign("@routes.ProjectController.projectOfEngineer()");
+			                		}
+			                	}
+			                	spinner.remove();
+			                	$('#login-btn').attr("disabled", false);
 		                },
 		                error: function(request, status, err){
-		                	showAlertToast(err, "alert-danger");
-		                	spinner.remove();
-		                	$('#login-btn').attr("disabled", false);
+			                	showAlertToast(err, "alert-danger");
+			                	spinner.remove();
+			                	$('#login-btn').attr("disabled", false);
 		                }
 		            });
 		        }

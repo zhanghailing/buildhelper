@@ -14,8 +14,8 @@ import javax.mail.internet.MimeMessage;
 public class MailerService {
 	private static final String FROM = "niu2yue@gmail.com";
 	private static final String FROMNAME = "Changming";
-	private static final String SMTP_USERNAME = "AKIAJ37LSGDN5ZOLWDDA";
-	private static final String SMTP_PASSWORD = "Ap360D6PQP9YwDsrUygrcip81ynKO4TlfX/zTRu0zmOI";
+	private static final String SMTP_USERNAME = "AKIAI4GJJQAMGSRYARSQ";
+	private static final String SMTP_PASSWORD = "AvDf2TNfivXJ6LEF9xwZuZta/iWIKHuBZ+vZ4cQHpOj4";
 	private static final String HOST = "email-smtp.us-east-1.amazonaws.com";
 	private static MailerService mailerService;
 	

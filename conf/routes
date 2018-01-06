@@ -82,6 +82,7 @@ POST		/reject/cos						controllers.COSController.rejectCOS()
 POST		/approve/cos						controllers.COSController.approveCOS()
 GET     /cos/show/signature          	controllers.COSController.showSignature(uuid: String ?= "", isLarge: Boolean ?= false)
 GET 		/issue/cos						controllers.COSController.issueCOS(cosId: Long ?= 0)
+POST		/save/issue						controllers.COSController.saveIssue
 
 
 GET 		/export/qp/summary				controllers.ExportController.exportQPByCompany()

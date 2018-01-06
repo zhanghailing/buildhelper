@@ -15,7 +15,7 @@
 			var width = $('.cos-sec').width();
 			var height = width * 3 / 4;
 			$('.draw-preview').width(width).height(height);
-			$('.link-img').width(width).height(height);
+			$('.remark-body .link-img').width(width).height(height);
 			
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
@@ -27,10 +27,11 @@
 				}
 			});
 			
-			$(document).on('focus',".inspectdatepicker", function(){
+			$(document).on('focus',".issuedatepicker", function(){
 			    $(this).datetimepicker();
 			});
 			
+			blobMap = {};
 			$(document).on("change",".uploader",function(e) {
 				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
 				var inputId = $(srcTarget).attr('id');
@@ -52,10 +53,11 @@
 			                	
 			                	var drawIconBtn = '<i class="draw-btn glyphicon glyphicon-pencil"></i>';
 			                	$(uploaderEle).append(drawIconBtn);
+			                	
+			                	blobMap[inputId] = reader.result;
 				        }
 				        reader.readAsDataURL(file);
-				        createUploder($(srcTarget), inputId);
-				        $(srcTarget).removeAttr('id');
+				        createUploder($(srcTarget));
 					}else{
 						showAlertToast('@messages.at("error.file_size")', "alert-danger");
 					}
@@ -67,53 +69,41 @@
 			});
 			
 			var currentDrawBtn;
+			var imgCanvas = new fabric.Canvas('draw-canvas', {
+				isDrawingMode: true
+			});
 			$('#draw-model').on('shown.bs.modal', function (e) {
 				var drawBtn = $(e.relatedTarget);
 				currentDrawBtn = drawBtn;
-				var imgElement = drawBtn.siblings('img.hidden');
 				var fileInput = drawBtn.siblings('.upload-wrap').find('input[type="file"]');
+				var file = fileInput[0].files[0];
 				
 				var reader = new FileReader();
-				if(imgElement.length > 0){
-					var data = getBase64Image(imgElement[0]);
-					var block = data.split(";");
-					var realData = block[1].split(",")[1];
-					var contentType = block[0].split(":")[1];
-					var blob = b64toBlob(realData, contentType);
-					reader.readAsDataURL(blob);
-				}else{
-					var file = fileInput[0].files[0];
-					var reader = new FileReader();
-					reader.readAsDataURL(file);
-				}
 				reader.onloadend = function() {
 					var image = new Image();
 				    image.src = reader.result;
 				    image.onload = function() {
-				    		var linkEle = $('.drawing-content');
-				    		var aLinkWidth = linkEle.width();
-				    		var ratio = image.width/aLinkWidth;
-				    		var aLinkHeight = image.height / ratio;
-					    		
-				    		var imgCanvas = new fabric.Canvas('draw-canvas', {
-							isDrawingMode: true
-						});
+			    		var linkEle = $('.drawing-content');
+			    		var aLinkWidth = linkEle.width();
+			    		var ratio = image.width/aLinkWidth;
+			    		var aLinkHeight = image.height / ratio;
 				    		
-				    		imgCanvas.setWidth(aLinkWidth);
-				    		imgCanvas.setHeight(aLinkHeight);
+			    		imgCanvas.setWidth(aLinkWidth);
+			    		imgCanvas.setHeight(aLinkHeight);
 			    		
-				    		$('.drawing-layer').width(aLinkWidth);
-				    		$('.drawing-layer').height(aLinkHeight);
+			    		$('.drawing-layer').width(aLinkWidth);
+			    		$('.drawing-layer').height(aLinkHeight);
 				    		
-			    			linkEle.height(aLinkHeight);
+			    		linkEle.height(aLinkHeight);
 						linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 				    };
 	        		}
+				reader.readAsDataURL(file);
 			});
 			
 			$('#draw-sure-btn').on('click', function(){
-				var c = document.getElementById("draw-canvas");
-				var data=c.toDataURL("image/png");
+				var canvas = document.getElementById("draw-canvas");
+				var data = canvas.toDataURL("image/png");
 				var block = data.split(";");
 				var realData = block[1].split(",")[1];
 				var contentType = block[0].split(":")[1];
@@ -134,24 +124,34 @@
 						var shReader  = new FileReader();
 						shReader.onloadend = function() {
 							var uploaderEle = currentDrawBtn.parents('.uploader');
-			                var linkEle = uploaderEle.find('.link-img');
-			                var fileInput = uploaderEle.find('input[type="file"]');
-			                fileInput[0].files[0] = blob;
-			                linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
+			                	var linkEle = uploaderEle.find('.link-img');
+			                	var fileInput = uploaderEle.find('input[type="file"]');
+			                
+			                	var inputName = fileInput.attr('name');
+			                	var fileItems = $('input[name="'+inputName+'"]');
+			                	var currentFileItem = uploaderEle.find('.file-input');
+			                	var currentIndex = fileItems.index(currentFileItem);
+			                var key = currentIndex + "|" + inputName;
+			                	blobMap[key] = blob;
+			                
+			                	linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
 						shReader.readAsDataURL(blob);
 					});
-					
-					
 		        }
 				reader.readAsDataURL(blob);
 			});
 			
-			$("#inspect-form").validate({
+			$('#draw-model').on('hidden.bs.modal', function () {
+				imgCanvas.clear();
+				$('.drawing-layer').css('background-image', 'url()');
+			});
+			
+			$("#issue-form").validate({
 				ignore: [],
 		        rules: {
-		        		inspectDate:{
+		        		issueDate:{
 		            		required:true
 		        		}
         			},
@@ -163,6 +163,24 @@
 		        },
 		        submitHandler: function(form) {
 			        	$('.submit-wrapper button').attr("disabled", true);
+			        	
+			        	for (var key in blobMap) {
+						var splitArray = key.split('|');
+						var position = splitArray[0];
+						var name=splitArray[1]
+						var files = formDataToUpload.getAll('' + name + '');
+						if(files.length > 0){
+							formDataToUpload.delete('' + name + '');
+							$.each(files, function(index, value) {
+								if(index == position){
+									formDataToUpload.append(name, blobMap[key]);
+								}else{
+									formDataToUpload.append(name, value);
+								}
+							});
+						}
+					}
+			        	
 		        		form.submit();
 		        }
 		    });
@@ -239,18 +257,19 @@
 		    }	
 		}
 		
-		function createUploder(e, i){
+		function createUploder(e){
 			var uploader = e.parents('.uploader-group');
-			var id = uploader.parents('.opt-wrapper').attr('id');
+			var id = $('#addition-sec').find('input[type="file"]').length;
+			
 			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
-			uploaderItem += '<a class="link-img"></a>';
+			uploaderItem += '<a class="link-img cos-link"></a>';
 			uploaderItem += '<div class="upload-wrap">';
 			uploaderItem += '<i class="fa fa-picture-o" aria-hidden="true"></i>';
 			uploaderItem += '<div class="upload-text">';
 			uploaderItem += '<p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>';
 			uploaderItem += '</div>';
-			uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="'+ id + '-' +'generalImage[]" accept="image/*" capture="camera"/>';
+			uploaderItem += '<input id="'+id+'" class="file-input" type="file" name="images" accept="image/*" capture="camera"/>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
@@ -259,7 +278,7 @@
 		}
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">Inspect for COS</p>
+		<p class="title">Issue for COS</p>
 	</div>
 	<div class="cos-bg"> 
 		<div class="a4">
@@ -420,11 +439,32 @@
 				}
 				</div>
 			</div>
-			<form id="inspect-form" action="@routes.COSController.saveInspect()" method="POST">
+			
+			<div id="addition-sec" class="cos-sec">
+				<p class="cos-subheader">Additional Images</p>
+				<div class="uploader-group form-group row">
+					<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+						<div class="cos-uploader-wrapper uploader">
+							<a class="link-img cos-link"></a>
+							<div class="upload-wrap">
+								<i class="fa fa-picture-o" aria-hidden="true"></i>
+								<div class="upload-text">
+									<p>@messages.at("drop_image")  
+										<a class="browse-btn">@messages.at("browser_file")</a>
+									</p>
+								</div>
+								<input id="0" class="file-input" type="file" name="images[]" accept="image/*" capture="camera" multiple/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<form id="issue-form" action="@routes.COSController.saveIssue()" method="POST" enctype="multipart/form-data">
 				<input type="hidden" name="cosId" value="@cos.id"/>
 				<div class="form-group date-group">
 					<label>Issue Date</label>
-					<input type="text" class="form-control inspectdatepicker" name="inspectDate" data-date-format="YYYY-MM-DD">
+					<input type="text" class="form-control issuedatepicker" name="issueDate" data-date-format="YYYY-MM-DD">
 				</div>
 				
 				<div class="submit-wrapper">
@@ -434,6 +474,29 @@
 				</div> 
 				<div style="clear: both; margin-bottom: 30px"></div>
 			</form>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="draw-model" role="dialog">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">Image Drawing</h4>
+		      	</div>
+	      		<div class="modal-body">
+	      			<div id="draw-container">
+				    		<a class="drawing-content link-img"></a>
+				    		<a class="drawing-layer link-img"></a>
+				    		<canvas id="draw-canvas"></canvas>
+			    		</div>
+		      	</div>
+		      	<div class="modal-footer">
+			      	<div class="form-group">
+			        		<a id="draw-sure-btn" class="btn btn-success">确定</a>
+		        		</div>
+	    			</div>
+			</div>
 		</div>
 	</div>
 	

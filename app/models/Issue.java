@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -53,6 +54,16 @@ public class Issue {
 	
 	@Column(name="pass_type")
 	public String passType;//approve or reject by inspector
+	
+	@OneToMany(mappedBy = "issue")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<COSImage> additionalImages;
+	
+	@Column(name="check_idx")
+	public int checkIndex; //only for scaffold or formwork
+	
+	@Lob
+	public String comment;
 	
 	public Issue() {
 		this.rejects = new ArrayList<>();

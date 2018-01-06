@@ -27,6 +27,7 @@ import models.COS;
 import models.COSImage;
 import models.COSTerm;
 import models.Inspection;
+import models.Issue;
 import models.LetterHead;
 import models.Project;
 import models.Reject;
@@ -371,6 +372,64 @@ public class COSController extends Controller{
 						return ok(rejectcos.render(cos));
 					}
 				} catch (ParseException e) {
+					responseData.code = 4001;
+					responseData.message = e.getMessage();
+				}
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		return notFound(errorpage.render(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result saveIssue() {
+		ResponseData responseData = new ResponseData();
+		
+		DynamicForm requestData = formFactory.form().bindFromRequest();
+		String passType = requestData.get("passType");
+		String cosId = requestData.get("cosId");
+		String issueDate = requestData.get("issueDate");
+		
+		Account account = (Account) ctx().args.get("account");
+		Account issuedBy = jpaApi.em().find(Account.class, account.id);
+		if (issuedBy == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
+			if(cos != null) {
+				if(cos.issues.size() > 0) {
+					for(Issue issue : cos.issues) {
+						jpaApi.em().remove(issue);
+					}
+				}
+				try {
+					Issue issue = new Issue(cos, issuedBy);
+					issue.passType = passType;
+					issue.issueDate = Utils.parse("yyyy-MM-dd", issueDate);
+					jpaApi.em().persist(issue);
+					
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					List<FilePart<File>> generalPartFileParts = body.getFiles();
+					for (FilePart<File> generalFilePart : generalPartFileParts) {
+						if(generalFilePart.getFile() != null && generalFilePart.getFile().length() > 0) {
+							String key = generalFilePart.getKey();
+							if(key.equals("images")) {
+								COSImage cosImage = new COSImage(issue, generalFilePart.getFile());
+								jpaApi.em().persist(cosImage);
+							}
+						}
+			        }
+					
+					if(issue.passType.equals("approve")) {
+						return ok(approvecos.render(cos));
+					}else {
+						return ok(rejectcos.render(cos));
+					}
+				} catch (IOException | ParseException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();
 				}
