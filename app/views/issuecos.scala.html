@@ -423,7 +423,7 @@
 			<form id="inspect-form" action="@routes.COSController.saveInspect()" method="POST">
 				<input type="hidden" name="cosId" value="@cos.id"/>
 				<div class="form-group date-group">
-					<label>Starting Date</label>
+					<label>Issue Date</label>
 					<input type="text" class="form-control inspectdatepicker" name="inspectDate" data-date-format="YYYY-MM-DD">
 				</div>
 				
@@ -436,26 +436,5 @@
 			</form>
 		</div>
 	</div>
-	<div class="modal fade" id="draw-model" role="dialog">
-		<div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      	<div class="modal-header">
-			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        	<h4 class="modal-title">Image Drawing</h4>
-		      	</div>
-	      		<div class="modal-body">
-	      			<div id="draw-container">
-				    		<a class="drawing-content link-img"></a>
-				    		<a class="drawing-layer link-img"></a>
-				    		<canvas id="draw-canvas"></canvas>
-			    		</div>
-		      	</div>
-		      	<div class="modal-footer">
-			      	<div class="form-group">
-			        		<a id="draw-sure-btn" class="btn btn-success">确定</a>
-		        		</div>
-	    			</div>
-			</div>
-		</div>
-	</div>
+	
 }

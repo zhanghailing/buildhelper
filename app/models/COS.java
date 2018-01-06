@@ -22,8 +22,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import tools.Utils;
-
 @Entity
 @Table(name = "cos")
 public class COS {
@@ -78,14 +76,6 @@ public class COS {
 	@Column(name="mcwp_serial_no")
 	public String mcwpMaxLength;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name="issue_date")
-	public Date issueDate;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name="inspect_date")
-	public Date inspectDate;
-	
 	@OneToMany(mappedBy = "cos")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Account> routeAccounts;
@@ -97,37 +87,23 @@ public class COS {
 	@OneToOne(mappedBy = "cos")
 	public Signature signature;
 	
-	@Column(name="pass_type")
-	public String passType;
+	@OneToMany(mappedBy = "cos")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<Inspection> inspections;
 	
 	@OneToMany(mappedBy = "cos")
 	@LazyCollection(LazyCollectionOption.EXTRA)
-	public List<Reject> rejects; //use onetomany to be alternative to onetoone
-	
-	@OneToMany(mappedBy = "cos")
-	@LazyCollection(LazyCollectionOption.EXTRA)
-	public List<Approve> approves; //use onetomany to be alternative to onetoone
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "inspect_acc_id")
-	@JsonIgnore
-	public Account inspectedBy;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "issue_acc_id")
-	@JsonIgnore
-	public Account issuedBy;
+	public List<Issue> issues;
 	
 	public COS() {
 		this.routeAccounts = new ArrayList<>();
 		this.cosTerms = new ArrayList<>();
-		this.rejects = new ArrayList<>();
-		this.approves = new ArrayList<>();
+		this.inspections = new ArrayList<>();
+		this.issues = new ArrayList<>();
 	}
 	public COS(Project project, String subject) {
 		this.project = project;
 		this.subject = subject;
-		this.issueDate = new Date();
 		this.referenceNo = (System.currentTimeMillis()+"").substring(5);
 	}
 	

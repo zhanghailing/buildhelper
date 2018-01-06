@@ -374,8 +374,8 @@
 							<th>@((pageIndex-1) * Constants.ACCOUNT_PAGE_SIZE + index+1)</th>
 							<td>@coses(index).location</td>
 							<td>@coses(index).subject</td>
-							<td>@coses(index).inspectDate</td>
-							<td>@coses(index).issueDate</td>
+							<td>@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}</td>
+							<td>@if(coses(index).issues.size > 0){@coses(index).issues(0).issueDate}</td>
 							<td class="@coses(index).id">
 								<div class="link-wrapper">
 									<a class="action-btn h-print-action center-align"
@@ -391,10 +391,10 @@
 									<a class="action-btn s-print-action center-align" 
 										data-ref="@coses(index).referenceNo"
 										data-project-title="@coses(index).project.title"
-										data-client="@if(coses(index).project.clients != null){@coses(index).project.clients(0).companyName}"
-										data-builder="@if(coses(index).project.builders != null){@coses(index).project.builders(0).companyName}"
+										data-client="@if(coses(index).project.clients.size() > 0){@coses(index).project.clients(0).companyName}"
+										data-builder="@if(coses(index).project.builders.size() > 0){@coses(index).project.builders(0).companyName}"
 										data-subject="@coses(index).subject"
-										data-inspectedDate="@coses(index).inspectDate"
+										data-inspectedDate="@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}"
 										data-gondola-no="@coses(index).gondolaNo"
 										data-gondola-le="@coses(index).leRegistrationNo"
 										data-gondola-distinctiveNo="@coses(index).distinctiveNo"
@@ -408,15 +408,19 @@
 										data-pe-no="@account.user.peNo"
 										data-sign-uuid="@if(coses(index).signature != null){@coses(index).signature.uuid}">Print<br>E-Copy</a>
 									</div>
-								@if(coses(index).passType == "approve"){
-									<a class="approve-action action-btn center-align" >Approved</a>
-								}else{
-									@if(coses(index).passType == "reject"){
-										<a class="reject-action action-btn center-align" >Rejected</a>
+									@if(coses(index).inspections.size() > 0){
+										@if(coses(index).issues.size() > 0){
+											@if(coses(index).issues(0).passType == "approve"){
+												<a class="approve-action action-btn center-align" >Approved</a>
+											}else{
+												<a class="reject-action action-btn center-align" >Rejected</a>
+											}
+										}else{
+											<a class="upload-action action-btn center-align" href="@routes.COSController.issueCOS(coses(index).id)">Issue<br>COS</a>
+										}
 									}else{
 										<a class="upload-action action-btn center-align" href="@routes.COSController.inspectCOS(coses(index).id)">Inspect<br>COS</a>
 									}
-								}
 							</td>
 				        </tr>
 					}
