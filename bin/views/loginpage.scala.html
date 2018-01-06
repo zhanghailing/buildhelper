@@ -32,22 +32,17 @@
 		                data: $(form).serialize(),
 		                success: function(response, status) {
 		                	var data = $.parseJSON(JSON.stringify(response));
-		                	
 		                	if(data.code != 0){
 		                		showAlertToast(data.message, "alert-danger");
 		                	}else{
 		                		if(data.data.accType === "SADMIN"){
-		                			window.location.href = "@routes.CompanyController.companys()";
+		                			location.assign("@routes.CompanyController.companys()");
 		                		}else if(data.data.accType === "ADMIN"){
-		                			window.location.href = "@routes.CompanyController.company()";
+		                			location.assign("@routes.CompanyController.company()");
 		                		}else if(data.data.accType === "QP"){
-		                			if(data.data.isEngineer){
-		                				window.location.href = "@routes.ProjectController.projectOfEngineer()";
-		                			}
+		                			location.assign("@routes.ProjectController.projectOfEngineer()");
 		                		}else if(data.data.accType === "INSPECTOR"){
-									if(data.data.isEngineer){
-										window.location.href = "@routes.ProjectController.projectOfEngineer()";
-		                			}	
+		                			location.assign("@routes.ProjectController.projectOfEngineer()");
 		                		}
 		                	}
 		                	spinner.remove();
@@ -63,8 +58,12 @@
 		    });
 		});
 	</script>
-	<div class="login-content radial-bg">
+	<div class="login-content">
 		<div class="login-form-wrapper">
+			<div class="text-center">
+				<i id="login-icon" class="fa fa-search"></i>
+			</div>
+			<p class="text-center">Welcome to E-SPECTOR</p>
 			<form id="login-form">
 				<div class="line-form">
 	      			<input type="text" name="email" placeholder="@messages.at("login")">
@@ -73,7 +72,7 @@
 	      			<input type="password" name="password" placeholder="@messages.at("password")">
 				</div>
 				<div class="btn-gp">
-					<input id="login-btn" class="linear-bg" type="submit" >
+					<input id="login-btn" class="btn-success" type="submit" value="Login">
 				</div>
 			</form>
 		</div>

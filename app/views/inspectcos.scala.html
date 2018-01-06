@@ -1,0 +1,461 @@
+@import tags._
+@import models.TermType
+
+@(cos: COS)
+
+@sidemenu("engineer", 8) {
+	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets//bootstrap-datetimepicker.min.css")">
+	<script src="@routes.Assets.versioned("javascripts/fabric/fabric.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/html2canvas.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/moment.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
+	<script>
+		$(function(){
+			var width = $('.cos-sec').width();
+			var height = width * 3 / 4;
+			$('.draw-preview').width(width).height(height);
+			$('.link-img').width(width).height(height);
+			
+			$('.remark-btn').on('click', function(e){
+				e.preventDefault();
+				var remarkBlk = $(this).parents('.value-box').find('.remark-body');
+				if(remarkBlk.hasClass('hidden')){
+					remarkBlk.removeClass('hidden');
+				}else{
+					remarkBlk.addClass('hidden');
+				}
+			});
+			
+			$(document).on('focus',".inspectdatepicker", function(){
+			    $(this).datetimepicker();
+			});
+			
+			$(document).on("change",".uploader",function(e) {
+				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
+				var inputId = $(srcTarget).attr('id');
+				var file = srcTarget.files[0];
+				if(file){
+					var isValidFile = GetFileSize(srcTarget.id);
+					if(isValidFile){
+						var reader = new FileReader();
+			        		var inputEle = $(this);
+				        reader.onloadend = function() {
+					        	var uploaderEle = inputEle.closest('.uploader');
+			                	var browserEle = uploaderEle.find('.browse-btn');
+			                	var linkEle = uploaderEle.find('.link-img');
+			                	
+			                	uploaderEle.addClass('noborder');
+			                	linkEle.removeClass('hidden');
+			                	browserEle.hide();
+			                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+			                	
+			                	var drawIconBtn = '<i class="draw-btn glyphicon glyphicon-pencil"></i>';
+			                	$(uploaderEle).append(drawIconBtn);
+				        }
+				        reader.readAsDataURL(file);
+				        createUploder($(srcTarget), inputId);
+				        $(srcTarget).removeAttr('id');
+					}else{
+						showAlertToast('@messages.at("error.file_size")', "alert-danger");
+					}
+		        }
+			});
+			
+			$(document).on("click",".draw-btn",function(e) {
+				$('#draw-model').modal('show', $(this));
+			});
+			
+			var currentDrawBtn;
+			$('#draw-model').on('shown.bs.modal', function (e) {
+				var drawBtn = $(e.relatedTarget);
+				currentDrawBtn = drawBtn;
+				var imgElement = drawBtn.siblings('img.hidden');
+				var fileInput = drawBtn.siblings('.upload-wrap').find('input[type="file"]');
+				
+				var reader = new FileReader();
+				if(imgElement.length > 0){
+					var data = getBase64Image(imgElement[0]);
+					var block = data.split(";");
+					var realData = block[1].split(",")[1];
+					var contentType = block[0].split(":")[1];
+					var blob = b64toBlob(realData, contentType);
+					reader.readAsDataURL(blob);
+				}else{
+					var file = fileInput[0].files[0];
+					var reader = new FileReader();
+					reader.readAsDataURL(file);
+				}
+				reader.onloadend = function() {
+					var image = new Image();
+				    image.src = reader.result;
+				    image.onload = function() {
+				    		var linkEle = $('.drawing-content');
+				    		var aLinkWidth = linkEle.width();
+				    		var ratio = image.width/aLinkWidth;
+				    		var aLinkHeight = image.height / ratio;
+					    		
+				    		var imgCanvas = new fabric.Canvas('draw-canvas', {
+							isDrawingMode: true
+						});
+				    		
+				    		imgCanvas.setWidth(aLinkWidth);
+				    		imgCanvas.setHeight(aLinkHeight);
+			    		
+				    		$('.drawing-layer').width(aLinkWidth);
+				    		$('.drawing-layer').height(aLinkHeight);
+				    		
+			    			linkEle.height(aLinkHeight);
+						linkEle.css('background-image', 'url(\'' + reader.result + '\')');
+				    };
+	        		}
+			});
+			
+			$('#draw-sure-btn').on('click', function(){
+				var c = document.getElementById("draw-canvas");
+				var data=c.toDataURL("image/png");
+				var block = data.split(";");
+				var realData = block[1].split(",")[1];
+				var contentType = block[0].split(":")[1];
+				var blob = b64toBlob(realData, contentType);
+				
+				var reader  = new FileReader();
+				reader.onloadend = function() {
+					$('.drawing-layer').css('background-image', 'url(\'' + reader.result + '\')');
+					
+					html2canvas(document.getElementById("draw-container")).then(function(canvas) {
+						var data = canvas.toDataURL("image/png");
+						
+						var block = data.split(";");
+						var realData = block[1].split(",")[1];
+						var contentType = block[0].split(":")[1];
+						var blob = b64toBlob(realData, contentType);
+						
+						var shReader  = new FileReader();
+						shReader.onloadend = function() {
+							var uploaderEle = currentDrawBtn.parents('.uploader');
+			                var linkEle = uploaderEle.find('.link-img');
+			                var fileInput = uploaderEle.find('input[type="file"]');
+			                fileInput[0].files[0] = blob;
+			                linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
+			                $('#draw-model').modal('hide');
+				        }
+						shReader.readAsDataURL(blob);
+					});
+					
+					
+		        }
+				reader.readAsDataURL(blob);
+			});
+			
+			$("#inspect-form").validate({
+				ignore: [],
+		        rules: {
+		        		inspectDate:{
+		            		required:true
+		        		}
+        			},
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+			        	$('.submit-wrapper button').attr("disabled", true);
+		        		form.submit();
+		        }
+		    });
+			
+			$('#reject').on('click', function(){
+				$('#pass-input').val('reject');
+			});
+			$('#approve').on('click', function(){
+				$('#pass-input').val('approve');
+			});
+		});	
+		
+		function getBase64Image(img) {
+		    var canvas = document.createElement("canvas");
+		    canvas.width = img.width;
+		    canvas.height = img.height;
+
+		    var ctx = canvas.getContext("2d");
+		    ctx.drawImage(img, 0, 0);
+
+		    var dataURL = canvas.toDataURL("image/png");
+
+		    return dataURL;
+		}
+		
+		function b64toBlob(b64Data, contentType, sliceSize) {
+	        contentType = contentType || '';
+	        sliceSize = sliceSize || 512;
+	        var byteCharacters = atob(b64Data);
+	        var byteArrays = [];
+	        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+	            var slice = byteCharacters.slice(offset, offset + sliceSize);
+	            var byteNumbers = new Array(slice.length);
+	            for (var i = 0; i < slice.length; i++) {
+	                byteNumbers[i] = slice.charCodeAt(i);
+	            }
+	            var byteArray = new Uint8Array(byteNumbers);
+	            byteArrays.push(byteArray);
+	        }
+	      	var blob = new Blob(byteArrays, {type: contentType});
+	      	return blob;
+		}
+		
+		function GetFileSize(fileid) {
+			 try {
+				 var fileSize = 0;
+				 if(checkIE()) {
+					 var objFSO = new ActiveXObject("Scripting.FileSystemObject"); 
+					 var filePath = $("#" + fileid)[0].value;
+					 var objFile = objFSO.getFile(filePath);
+					 var fileSize = objFile.size; //size in kb
+					 fileSize = fileSize / 1048576; //size in mb 
+				 }else {
+					 fileSize = $("#" + fileid)[0].files[0].size //size in kb
+					 fileSize = fileSize / 1048576; //size in mb 
+				 }
+				 
+				 if(fileSize <= 2){
+					 return true; 
+				 }
+			 }catch (e) {
+			 	console.log("Error is :" + e);
+			 }
+			 return false;
+		}
+		
+		function checkIE() {
+		    var ua = window.navigator.userAgent;
+		    var msie = ua.indexOf("MSIE");
+		    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){  
+				return true;
+		    } else{
+		 		return false;
+		    }	
+		}
+		
+		function createUploder(e, i){
+			var uploader = e.parents('.uploader-group');
+			var id = uploader.parents('.opt-wrapper').attr('id');
+			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
+			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
+			uploaderItem += '<a class="link-img"></a>';
+			uploaderItem += '<div class="upload-wrap">';
+			uploaderItem += '<i class="fa fa-picture-o" aria-hidden="true"></i>';
+			uploaderItem += '<div class="upload-text">';
+			uploaderItem += '<p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>';
+			uploaderItem += '</div>';
+			uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="'+ id + '-' +'generalImage[]" accept="image/*" capture="camera"/>';
+			uploaderItem += '</div>';
+			uploaderItem += '</div>';
+			uploaderItem += '</div>';
+			
+			uploader.append(uploaderItem);
+		}
+	</script>
+	<div class="dash-detail-header">
+		<p class="title">Inspect for COS</p>
+	</div>
+	<div class="cos-bg"> 
+		<div class="a4">
+			<div class="cos-sec">
+				<p class="cos-subheader">Project Title</p>
+				<p class="cos-content">@cos.project.title</p>
+			</div>
+			<div class="cos-sec">
+				<p class="cos-subheader">Client</p>
+				@if(cos.project.clients != null){
+					@for(index <- 0 until cos.project.clients.size){
+						<p>@cos.project.clients(index).name</p>
+					}
+				}
+			</div>
+			<div class="cos-sec">
+				<p class="cos-subheader">Specialist Contractor</p>
+				@if(cos.project.builders != null){
+					@for(index <- 0 until cos.project.builders.size){
+						<p>@cos.project.builders(index).name</p>
+					}
+				}
+			</div>
+			
+			<div class="cos-sec">
+				<p class="cos-subheader">Serial No.</p>
+				<p>@cos.serialNo.toUpperCase()</p>
+			</div>
+			
+			<div class="cos-sec">
+				<p class="cos-subheader">Subject</p>
+				<p>@cos.subject</p>
+			</div>
+			
+			<div class="cos-sec">
+				<p class="cos-subheader">Location/Grid Line</p>
+				<p>@cos.gridLine</p>
+			</div>
+			
+			@if(cos.project.isGondola){
+				<div class="cos-sec">
+					<p class="cos-subheader">Gondola Particular Gondola No.</p>
+					<p>@cos.gondolaNo</p>
+				</div>
+				
+				<div class="cos-sec">
+					<p class="cos-subheader">L E Registration No.</p>
+					<p>@cos.leRegistrationNo</p>
+				</div>
+				
+				<div class="cos-sec">
+					<p class="cos-subheader">Distinctive No.</p>
+					<p>@cos.distinctiveNo</p>
+				</div>
+				
+				<div class="cos-sec">
+					<p class="cos-subheader">Max Length</p>
+					<p>@cos.gondolaMaxLength</p>
+				</div>
+				
+				<div class="cos-sec">
+					<p class="cos-subheader">Max S.W.L</p>
+					<p>@cos.gondolaMaxSWL</p>
+				</div>
+			}
+			
+			@if(cos.project.isMCWP){
+				<div class="cos-sec">
+					<p class="cos-subheader">CMWP Serial No.</p>
+					<p>@cos.cmwpSerialNo</p>
+				</div>
+				
+				<div class="cos-sec">
+					<p class="cos-subheader">Max Length</p>
+					<p>@cos.mcwpMaxLength/p>
+				</div>
+				
+				<div class="cos-sec">
+					<p class="cos-subheader">Max Height</p>
+					<p>@cos.mcwpMaxHeight</p>
+				</div>
+			}
+			
+			<div class="cos-sec">
+				<p class="cos-subheader">Drawing/Calculations</p>
+				@if(cos.project.drawings != null){
+					@for(index <- 0 until cos.project.drawings.size){
+						<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/>
+					}
+				}
+			</div>
+			<p class="sec-header center-align">COMPLIANCE CRITERIA</p>
+			<div class="cos-sec">
+				<div class="opt-wrapper">
+				@if(cos.cosTerms != null){
+					@if(cos.cosTerms.size > 0){
+						<p class="cos-subheader">General</p>
+						@for(index <- 0 until cos.cosTerms.size){
+							@if(cos.cosTerms(index).term.termType == TermType.GENTERAL){
+								<p class="ques">
+									<span class="num">@(index+1). </span>
+									<span>@cos.cosTerms(index).term.subject</span>
+								</p>
+								<div class="value-box">
+									<ul class="opt-list">
+										<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
+									</ul>
+									<button class="remark-btn">Remark</button>
+									<div class="remark-body">
+										<div class="form-group">
+								           	<div class="form-input">
+								           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
+							         		</div>
+								        </div>
+								        @if(cos.cosTerms(index).cosImages != null){
+								        		@if(cos.cosTerms(index).cosImages.size > 0){
+												@for(j <- 0 until cos.cosTerms(index).cosImages.size){
+											         <a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
+										     	}
+								        		}
+								        	}
+									</div>
+								</div>
+							}
+							
+							@if(cos.cosTerms(index).term.termType == TermType.FORMWORK){
+								<p class="ques">
+									<span class="num">@(index+1). </span>
+									<span>@cos.cosTerms(index).term.subject</span>
+								</p>
+								<div class="value-box">
+									<ul class="opt-list">
+										<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
+										<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
+									</ul>
+									<button class="remark-btn">Remark</button>
+									<div class="remark-body">
+										<div class="form-group">
+								           	<div class="form-input">
+								           		@if(cos.cosTerms(index).remark){@cos.cosTerms(index).remark}
+							         		</div>
+								        </div>
+								        @if(cos.cosTerms(index).cosImages != null){
+								        		@if(cos.cosTerms(index).cosImages.size() >= 1){
+								        			@for(j <- 0 until cos.cosTerms(index).cosImages.size){
+								        				<a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).cosImages(j).uuid))"></a>
+										        	}
+								        		}
+								        }
+									</div>
+								</div>
+							}
+						}
+					}
+				}
+				</div>
+			</div>
+			<form id="inspect-form" action="@routes.COSController.saveInspect()" method="POST">
+				<input type="hidden" name="cosId" value="@cos.id"/>
+				<div class="form-group date-group">
+					<label>Starting Date</label>
+					<input type="text" class="form-control inspectdatepicker" name="inspectDate" data-date-format="YYYY-MM-DD">
+				</div>
+				
+				<div class="submit-wrapper">
+					<input id="pass-input" type="hidden" name="passType" value="approve"/>
+					<button id="reject" class="btn btn-default">Reject</button>
+					<button id="approve" class="btn btn-success">Approve</button>
+				</div> 
+				<div style="clear: both; margin-bottom: 30px"></div>
+			</form>
+		</div>
+	</div>
+	<div class="modal fade" id="draw-model" role="dialog">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">Image Drawing</h4>
+		      	</div>
+	      		<div class="modal-body">
+	      			<div id="draw-container">
+				    		<a class="drawing-content link-img"></a>
+				    		<a class="drawing-layer link-img"></a>
+				    		<canvas id="draw-canvas"></canvas>
+			    		</div>
+		      	</div>
+		      	<div class="modal-footer">
+			      	<div class="form-group">
+			        		<a id="draw-sure-btn" class="btn btn-success">确定</a>
+		        		</div>
+	    			</div>
+			</div>
+		</div>
+	</div>
+}

@@ -30,16 +30,17 @@ public class COSImage extends Image{
 	public static final String DEFAULT_AVATAR = "public/images/image_placeholder.png";
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "term_id")
+    @JoinColumn(name = "costerm_id")
 	@JsonIgnore
-    public Term term;
+    public COSTerm cosTerm;
 	
 	@Column(name="thumbnail_uuid")
 	public String thumbnailUUID;
 	
 	public COSImage(){}
-	public COSImage(Term term, File file) throws IOException{
+	public COSImage(COSTerm cosTerm, File file) throws IOException{
 		super(file);
+		this.cosTerm = cosTerm;
 		this.thumbnailUUID = Utils.uuid();
 		uploadThumbnail(file);
 	}

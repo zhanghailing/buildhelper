@@ -1,9 +1,9 @@
-/views/
-/actions/
 /controllers/
+/views/
 /models/
-/tools/
 /META-INF/
 /ModelVOs/
+/actions/
 /filters/
 /services/
+/tools/
