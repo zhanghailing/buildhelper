@@ -29,8 +29,12 @@ public class Reject {
 	public RejectSign rejectSign;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cos_id") 
-    public COS cos;
+    @JoinColumn(name = "inspection_id") 
+    public Inspection inspection;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "issue_id") 
+    public Issue issue;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="creation_datetime")
@@ -39,8 +43,14 @@ public class Reject {
 	
 	public Reject() {}
 	
-	public Reject(COS cos, String reason) {
-		this.cos = cos;
+	public Reject(Inspection inspection, String reason) {
+		this.inspection = inspection;
+		this.reason = reason;
+		this.creationDateTime = new Date();
+	}
+	
+	public Reject(Issue issue, String reason) {
+		this.issue = issue;
 		this.reason = reason;
 		this.creationDateTime = new Date();
 	}

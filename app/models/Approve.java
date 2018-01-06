@@ -35,8 +35,12 @@ public class Approve {
 	public ApproveSign approveSign;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cos_id") 
-    public COS cos;
+    @JoinColumn(name = "inspection_id") 
+    public Inspection inspection;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "issue_id") 
+    public Issue issue;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="creation_datetime")
@@ -48,10 +52,16 @@ public class Approve {
 	
 	public Approve() {}
 	
-	public Approve(COS cos, String reason) {
-		this.cos = cos;
+	public Approve(Issue issue, String reason) {
+		this.issue = issue;
 		this.reason = reason;
 		this.creationDateTime = new Date();
-	}	
+	}
+	
+	public Approve(Inspection inspection, String reason) {
+		this.inspection = inspection;
+		this.reason = reason;
+		this.creationDateTime = new Date();
+	}
 	
 }

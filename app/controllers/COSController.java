@@ -7,7 +7,6 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +26,7 @@ import models.Avatar;
 import models.COS;
 import models.COSImage;
 import models.COSTerm;
+import models.Inspection;
 import models.LetterHead;
 import models.Project;
 import models.Reject;
@@ -284,34 +284,11 @@ public class COSController extends Controller{
 					List<COS> coses = jpaApi.em()
 							   .createNativeQuery("SELECT * FROM cos cs WHERE cs.project_id = :projectId", COS.class)
 							   .setParameter("projectId", project.id).getResultList();
-				   
+					
 				return ok(viewcos.render(account, coses, pageIndex, totalAmount));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";
-			}
-		}
-		
-		return notFound(errorpage.render(responseData));
-	}
-	
-	@With(AuthAction.class)
-	@Transactional
-	public Result inspectCOS(long cosId) {
-		ResponseData responseData = new ResponseData();
-		
-		long accountId = ((Account) ctx().args.get("account")).id;
-		Account account = jpaApi.em().find(Account.class, accountId);
-		if (account == null) {
-			responseData.code = 4000;
-			responseData.message = "Account doesn't exist.";
-		}else{
-			COS cos = jpaApi.em().find(COS.class, cosId);
-			if(cos != null) {
-				return ok(inspectcos.render(cos));
-			}else {
-				responseData.code = 4000;
-				responseData.message = "COS doesn't exist.";
 			}
 		}
 		
@@ -339,42 +316,30 @@ public class COSController extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result verifyCOS() {
+	public Result inspectCOS(long cosId) {
 		ResponseData responseData = new ResponseData();
 		
-		DynamicForm requestData = formFactory.form().bindFromRequest();
-		String passType = requestData.get("passType");
-		String cosId = requestData.get("cosId");
-		String inspectDate = requestData.get("inspectDate");
-		
-		Account account = (Account) ctx().args.get("account");
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
 		if (account == null) {
 			responseData.code = 4000;
 			responseData.message = "Account doesn't exist.";
 		}else{
 			COS cos = jpaApi.em().find(COS.class, cosId);
 			if(cos != null) {
-				try {
-					cos.passType = passType;
-					cos.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
-					jpaApi.em().persist(cos);
-				} catch (ParseException e) {
-					responseData.code = 4001;
-					responseData.message = e.getMessage();
-				}
+				return ok(inspectcos.render(cos));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "COS doesn't exist.";
 			}
 		}
 		
-		return ok(Json.toJson(responseData));
+		return notFound(errorpage.render(responseData));
 	}
-	
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result issueCOS() {
+	public Result saveInspect() {
 		ResponseData responseData = new ResponseData();
 		
 		DynamicForm requestData = formFactory.form().bindFromRequest();
@@ -383,24 +348,28 @@ public class COSController extends Controller{
 		String inspectDate = requestData.get("inspectDate");
 		
 		Account account = (Account) ctx().args.get("account");
-		if (account == null) {
+		Account inspectedBy = jpaApi.em().find(Account.class, account.id);
+		if (inspectedBy == null) {
 			responseData.code = 4000;
 			responseData.message = "Account doesn't exist.";
 		}else{
 			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
 			if(cos != null) {
+				if(cos.inspections.size() > 0) {
+					for(Inspection inspection : cos.inspections) {
+						jpaApi.em().remove(inspection);
+					}
+				}
 				try {
-					cos.passType = passType;
-					cos.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
-					cos.inspectedBy = account;
-					jpaApi.em().persist(cos);
-					
-					if(cos.passType.equals("approve")) {
+					Inspection inspection = new Inspection(cos, inspectedBy);
+					inspection.passType = passType;
+					inspection.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
+					jpaApi.em().persist(inspection);
+					if(inspection.passType.equals("approve")) {
 						return ok(approvecos.render(cos));
 					}else {
 						return ok(rejectcos.render(cos));
 					}
-					
 				} catch (ParseException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();
@@ -410,7 +379,6 @@ public class COSController extends Controller{
 				responseData.message = "COS doesn't exist.";
 			}
 		}
-		
 		return notFound(errorpage.render(responseData));
 	}
 	
@@ -432,28 +400,29 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
 			if(cos != null) {
-				//remove all rejects
-				if(cos.rejects != null && cos.rejects.size() > 0) {
-					for(Reject reject : cos.rejects) {
-						jpaApi.em().remove(reject);
+				if(cos.inspections.size() > 0) {
+					Inspection inspection = cos.inspections.get(0);
+					if(inspection.rejects != null && inspection.rejects.size() > 0) {
+						for(Reject reject : inspection.rejects) {
+							jpaApi.em().remove(reject);
+						}
 					}
-				}
-				
-				Reject reject = new Reject(cos, reason);
-				jpaApi.em().persist(reject);
-				
-				MultipartFormData<File> body = request().body().asMultipartFormData();
-				FilePart<File> rejectSignPart = body.getFile("rejectSign");
-				try {
-					RejectSign rejectSign = new RejectSign(reject, rejectSignPart.getFile());
-					jpaApi.em().persist(rejectSign);
+
+					Reject reject = new Reject(inspection, reason);
+					jpaApi.em().persist(reject);
 					
-					cos.issueDate = new Date();
-					cos.issuedBy = account;
-					jpaApi.em().persist(cos);
-				} catch (IOException e) {
-					responseData.code = 4001;
-					responseData.message = e.getMessage();
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					FilePart<File> rejectSignPart = body.getFile("rejectSign");
+					try {
+						RejectSign rejectSign = new RejectSign(reject, rejectSignPart.getFile());
+						jpaApi.em().persist(rejectSign);
+					} catch (IOException e) {
+						responseData.code = 4001;
+						responseData.message = e.getMessage();
+					}
+				}else {
+					responseData.code = 4000;
+					responseData.message = "COS haven't inspection.";
 				}
 			}else {
 				responseData.code = 4000;
@@ -483,31 +452,29 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
 			if(cos != null) {
-				//remove all approves
-				if(cos.approves != null && cos.approves.size() > 0) {
-					for(Approve approve : cos.approves) {
+				if(cos.inspections.size() > 0) {
+					Inspection inspection = cos.inspections.get(0);
+					for(Approve approve: inspection.approves) {
 						jpaApi.em().remove(approve);
 					}
-				}
-				
-				try {
-					Approve approve = new Approve(cos, reason);
-					approve.approveDate = Utils.parse("yyyy-MM-dd", approveDate);
-					approve.comment = comment;
-					jpaApi.em().persist(approve);
-					
-					MultipartFormData<File> body = request().body().asMultipartFormData();
-					FilePart<File> approveSignPart = body.getFile("approveSign");
-					
-					ApproveSign approveSign = new ApproveSign(approve, approveSignPart.getFile());
-					jpaApi.em().persist(approveSign);
-					
-					cos.issueDate = new Date();
-					cos.issuedBy = account;
-					jpaApi.em().persist(cos);
-				} catch (ParseException | IOException e) {
-					responseData.code = 4001;
-					responseData.message = e.getMessage();
+					try {
+						Approve approve = new Approve(inspection, reason);
+						approve.approveDate = Utils.parse("yyyy-MM-dd", approveDate);
+						approve.comment = comment;
+						jpaApi.em().persist(approve);
+						
+						MultipartFormData<File> body = request().body().asMultipartFormData();
+						FilePart<File> approveSignPart = body.getFile("approveSign");
+						
+						ApproveSign approveSign = new ApproveSign(approve, approveSignPart.getFile());
+						jpaApi.em().persist(approveSign);
+					} catch (ParseException | IOException e) {
+						responseData.code = 4001;
+						responseData.message = e.getMessage();
+					}
+				}else {
+					responseData.code = 4000;
+					responseData.message = "COS haven't inspection.";
 				}
 			}else {
 				responseData.code = 4000;
@@ -537,6 +504,29 @@ public class COSController extends Controller{
 		}
 		
 		return ok(imageStream);
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result issueCOS(long cosId) {
+		ResponseData responseData = new ResponseData();
+		
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if (account == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, cosId);
+			if(cos != null) {
+				return ok(issuecos.render(cos));
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		
+		return notFound(errorpage.render(responseData));
 	}
 }
 

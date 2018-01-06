@@ -22,6 +22,8 @@ import models.AccountType;
 import models.COS;
 import models.Company;
 import models.Engineer;
+import models.Inspection;
+import models.Issue;
 import models.Project;
 import models.ResponseData;
 import play.db.jpa.JPAApi;
@@ -269,13 +271,20 @@ public class ExportController extends Controller{
 			        		cosData[1] = cos.location;
 			        		cosData[2] = cos.referenceNo;
 			        		cosData[3] = cos.subject;
-			        		if(cos.inspectedBy != null) {
-			        			cosData[4] = cos.inspectedBy.user.name;
-				        		cosData[5] = cos.inspectDate;	
+			        		if(cos.inspections.size() > 0) {
+			        			Inspection inspection = cos.inspections.get(0);
+			        			if(inspection.inspectedBy != null) {
+				        			cosData[4] = inspection.inspectedBy.user.name;
+					        		cosData[5] = inspection.inspectDate;	
+				        		}
 			        		}
-			        		if(cos.issuedBy != null) {
-			        			cosData[6] = cos.issuedBy.user.name;
-				        		cosData[7] = cos.issueDate;
+			        		
+			        		if(cos.issues.size() > 0) {
+			        			Issue issue = cos.issues.get(0);
+			        			if(issue.issuedBy != null) {
+				        			cosData[6] = issue.issuedBy.user.name;
+					        		cosData[7] = issue.issueDate;
+				        		}
 			        		}
 						excelData.add(cosData);
 						rowNum++;

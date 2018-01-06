@@ -96,12 +96,12 @@ public class Account{
 	@OneToMany(mappedBy = "inspectedBy")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
-	public List<COS> inspectedCOSes;
+	public List<Inspection> inspections;
 	
 	@OneToMany(mappedBy = "issuedBy")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
-	public List<COS> issuedCOSes;
+	public List<Issue> issues;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cos_id")
@@ -118,9 +118,9 @@ public class Account{
 	public boolean active;
 	
 	public Account(){
-		this.inspectedCOSes = new ArrayList<>();
+		this.inspections = new ArrayList<>();
 		this.projectsJoined = new ArrayList<>();
-		this.issuedCOSes = new ArrayList<>();
+		this.issues = new ArrayList<>();
 	}
 	
 	public Account(String email, String password){

@@ -77,11 +77,11 @@ POST		/save/cos						controllers.COSController.saveCOS()
 GET 		/view/cos						controllers.COSController.viewCOS(projectId: Long ?= 0, offset: Integer ?= 0)
 GET 		/inspect/cos						controllers.COSController.inspectCOS(cosId: Long ?= 0)
 GET     /cos/show/image          		controllers.COSController.showCOSImage(uuid: String ?= "", isLarge: Boolean ?= false)
-POST		/verify/cos						controllers.COSController.verifyCOS()
-POST		/issue/cos						controllers.COSController.issueCOS()
+POST		/save/inspect					controllers.COSController.saveInspect()
 POST		/reject/cos						controllers.COSController.rejectCOS()
 POST		/approve/cos						controllers.COSController.approveCOS()
 GET     /cos/show/signature          	controllers.COSController.showSignature(uuid: String ?= "", isLarge: Boolean ?= false)
+GET 		/issue/cos						controllers.COSController.issueCOS(cosId: Long ?= 0)
 
 
 GET 		/export/qp/summary				controllers.ExportController.exportQPByCompany()
