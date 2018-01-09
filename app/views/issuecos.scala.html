@@ -126,14 +126,8 @@
 							var uploaderEle = currentDrawBtn.parents('.uploader');
 			                	var linkEle = uploaderEle.find('.link-img');
 			                	var fileInput = uploaderEle.find('input[type="file"]');
-			                
-			                	var inputName = fileInput.attr('name');
-			                	var fileItems = $('input[name="'+inputName+'"]');
-			                	var currentFileItem = uploaderEle.find('.file-input');
-			                	var currentIndex = fileItems.index(currentFileItem);
-			                var key = currentIndex + "|" + inputName;
-			                	blobMap[key] = blob;
-			                
+			                	var inputId = fileInput.attr('id');
+			                	blobMap[inputId] = blob;
 			                	linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
@@ -164,24 +158,42 @@
 		        submitHandler: function(form) {
 			        	$('.submit-wrapper button').attr("disabled", true);
 			        	
+			        	var formDataToUpload = new FormData(document.getElementById('issue-form'));
+			        	formDataToUpload.delete('images[]');
 			        	for (var key in blobMap) {
-						var splitArray = key.split('|');
-						var position = splitArray[0];
-						var name=splitArray[1]
-						var files = formDataToUpload.getAll('' + name + '');
-						if(files.length > 0){
-							formDataToUpload.delete('' + name + '');
-							$.each(files, function(index, value) {
-								if(index == position){
-									formDataToUpload.append(name, blobMap[key]);
-								}else{
-									formDataToUpload.append(name, value);
-								}
-							});
-						}
+				       	formDataToUpload.append("images[]", blobMap[key]);
 					}
 			        	
-		        		form.submit();
+			        var btn = $('#submit');
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+					btn.after(spinner);
+			        	btn.css('color', '#1ab394');
+			        	btn.attr("disabled", true);
+						
+					$.ajax({
+						url: "@routes.COSController.saveIssue()",
+						type: "POST",
+						data: formDataToUpload,
+						contentType: false, 
+						processData: false,
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+			            		if(data.code == 0){
+			            			var passType = $('#pass-input').val();
+			            			if(passType == 'reject'){
+			            				location.assign("@routes.COSController.issueRejectPage(cos.id)");
+			            			}else{
+			            				location.assign("@routes.COSController.issueApprovePage(cos.id)");
+			            			}
+			                }else{
+	                				showAlertToast(data.message, "alert-warning");
+			                }
+			            	
+				            	spinner.remove();
+				            	btn.css('color', 'white');
+		            	    		btn.attr("disabled", false);
+			            }
+		            });
 		        }
 		    });
 			
@@ -269,7 +281,7 @@
 			uploaderItem += '<div class="upload-text">';
 			uploaderItem += '<p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>';
 			uploaderItem += '</div>';
-			uploaderItem += '<input id="'+id+'" class="file-input" type="file" name="images" accept="image/*" capture="camera"/>';
+			uploaderItem += '<input id="'+id+'" class="file-input" type="file" name="images[]" accept="image/*" capture="camera"/>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
@@ -440,28 +452,27 @@
 				</div>
 			</div>
 			
-			<div id="addition-sec" class="cos-sec">
-				<p class="cos-subheader">Additional Images</p>
-				<div class="uploader-group form-group row">
-					<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-						<div class="cos-uploader-wrapper uploader">
-							<a class="link-img cos-link"></a>
-							<div class="upload-wrap">
-								<i class="fa fa-picture-o" aria-hidden="true"></i>
-								<div class="upload-text">
-									<p>@messages.at("drop_image")  
-										<a class="browse-btn">@messages.at("browser_file")</a>
-									</p>
+			<form id="issue-form" action="@routes.COSController.saveIssue()" method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="cosId" value="@cos.id"/>
+				<div id="addition-sec" class="cos-sec">
+					<p class="cos-subheader">Additional Images</p>
+					<div class="uploader-group form-group row">
+						<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+							<div class="cos-uploader-wrapper uploader">
+								<a class="link-img cos-link"></a>
+								<div class="upload-wrap">
+									<i class="fa fa-picture-o" aria-hidden="true"></i>
+									<div class="upload-text">
+										<p>@messages.at("drop_image")  
+											<a class="browse-btn">@messages.at("browser_file")</a>
+										</p>
+									</div>
+									<input id="0" class="file-input" type="file" name="images[]" accept="image/*" capture="camera" multiple/>
 								</div>
-								<input id="0" class="file-input" type="file" name="images[]" accept="image/*" capture="camera" multiple/>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			
-			<form id="issue-form" action="@routes.COSController.saveIssue()" method="POST" enctype="multipart/form-data">
-				<input type="hidden" name="cosId" value="@cos.id"/>
 				<div class="form-group date-group">
 					<label>Issue Date</label>
 					<input type="text" class="form-control issuedatepicker" name="issueDate" data-date-format="YYYY-MM-DD">

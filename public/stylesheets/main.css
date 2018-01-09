@@ -75,6 +75,7 @@ a.action-btn{
 	display: inline-block;
 	border: 1px solid #676a6c;
 	margin: -3px 0;
+	min-width: 64px;
 }
 
 a.approve-action{
@@ -1937,6 +1938,32 @@ footer p.copy-right {
 	display: inline-block;
 }
 
+
+.notice-item{
+	position: relative;
+	padding: 10px 15px;
+	border-bottom:1px solid #eee;
+}
+
+.notice-item p{
+	font-size: 16px;	
+	color: black;
+}
+
+.notice-item p.title{
+	font-weight: 600;
+}
+
+.notice-item p.date{
+	position:absolute;
+	right: 15px;
+  	top: 50%;
+	transform: translate(0, -50%);
+}
+
+#cos-form .form-label{
+	vertical-align: top;
+}
 
 
 

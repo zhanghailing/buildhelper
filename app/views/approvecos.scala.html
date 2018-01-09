@@ -17,6 +17,10 @@
 			});
 			canvas.setWidth($('#sign-wrapper').width());
 			
+			$('.sign-clear-btn').on('click', function(){
+				canvas.clear();
+			});
+			
 			$('.reason-item').on('click', function(){
 				$('textarea').text($(this).text());
 			});
@@ -108,6 +112,7 @@
 		<div class="a4">
 			<form id="approve-form">
 				<input type="hidden" name="cosId" value="@cos.id"/>
+				<input type="hidden" name="approveType" value="inspect" />
 				<p class="sec-header center-align"><span style="font-weight: 600;">To: </span>Contractor's Name</p>
 				<div>
 					<input type="radio" name="reason" value="I/my representative have checked the above items and certify that they are in order and according to the design." checked>I/my representative have checked the above items and certify that they are in order and according to the design.<br>
@@ -128,7 +133,10 @@
 		       	
 		       	<div id="sign-wrapper">
 		       		<canvas id="canvas" width="" height="400"></canvas>
-					<input id="signature" type="file" value="signature"/>
+		       		<div class="drawing-wrapper center-align">
+						<input id="signature" type="file" value="signature"/>
+						<a class="sign-clear-btn btn btn-default">Clear</a>
+					</div>
 					<div class="submit-wrapper">
 						<input id="submit" class="btn btn-success" type="submit" value="Confirm and Send"/>
 					</div>
