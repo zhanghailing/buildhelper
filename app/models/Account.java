@@ -93,6 +93,10 @@ public class Account{
 	@JsonIgnore
     public List<Project> projectsJoined;
 	
+	@OneToMany(mappedBy = "account")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<AccountNotification> accNotifications;
+	
 	@OneToMany(mappedBy = "inspectedBy")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore

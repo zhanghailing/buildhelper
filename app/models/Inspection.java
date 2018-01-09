@@ -48,6 +48,10 @@ public class Inspection {
 	
 	@OneToMany(mappedBy = "inspection")
 	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<COSImage> additionalImages;
+	
+	@OneToMany(mappedBy = "inspection")
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Reject> rejects; //use onetomany to be alternative to onetoone
 	
 	@OneToMany(mappedBy = "inspection")

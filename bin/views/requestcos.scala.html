@@ -14,6 +14,10 @@
 		        e.preventDefault();
 		    });
 			
+			$('.num').each(function(index){
+				$(this).text(index+1 + ". ");
+			});
+			
 			$('.location-group .subject-lbl:first-child').addClass('selected');
 			$('.location-group .subject-lbl.selected').find('input[type="radio"]').attr('checked', true);
 			
@@ -160,6 +164,14 @@
 			});
 			canvas.setWidth($('#cos-basic').width());
 			
+			$('.sign-clear-btn').on('click', function(){
+				canvas.clear();
+			});
+			
+			$('#draw-clear-btn').on('click', function(){
+				imgCanvas.clear();
+			});
+			
 			blobMap = {};
 			$('#draw-sure-btn').on('click', function(){
 				var canvas = document.getElementById("draw-canvas");
@@ -193,7 +205,7 @@
 			                	var currentIndex = fileItems.index(currentFileItem);
 			                var key = currentIndex + "|" + inputName;
 			                	blobMap[key] = blob;
-			                
+			                	
 			                	linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
@@ -250,6 +262,10 @@
 								}
 							});
 						}
+					}
+					
+					for (var pair of formDataToUpload.entries()) {
+					    console.log(pair[0]+ ', ' + pair[1] + ", " + pair[1].size); 
 					}
 					
 					var btn = $('#submit');
@@ -342,7 +358,16 @@
 		
 		function createUploder(e, i){
 			var uploader = e.parents('.uploader-group');
-			var id = uploader.parents('.opt-wrapper').attr('id');
+			var optWrapper = uploader.parents('.opt-wrapper');
+			var isTerm = optWrapper.length > 0;
+			var id;
+			if(isTerm){
+				id = optWrapper.attr('id')
+			}else{
+				id = $('.additional-sec .uploader').length;
+			}
+			var name = e.attr('name').split('-')[1];
+			
 			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
 			uploaderItem += '<a class="link-img cos-link"></a>';
@@ -351,7 +376,11 @@
 			uploaderItem += '<div class="upload-text">';
 			uploaderItem += '<p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>';
 			uploaderItem += '</div>';
-			uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="'+ id + '-' +'generalImage[]" accept="image/*" capture="camera"/>';
+			if(isTerm){
+				uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="'+ id + '-' +'' + name + '" accept="image/*" capture="camera"/>';
+			}else{
+				uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="additionImages[]" accept="image/*" capture="camera"/>';
+			}
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
@@ -400,7 +429,7 @@
 					@if(project.isScaffold || project.isFormwork){
 						<div class="form-group">
 				           <div class="form-label">	
-				              <label for="locgrid">Gondola No.</label>
+				              <label for="locgrid">Location/Grid Line</label>
 				           </div>
 				           <div class="form-input">
 				           	  <textarea id="locgrid" class="form-control" name="locgrid" rows="5" placeholder="Shifting of Gondola System from Blk79 to Blk81"></textarea>
@@ -470,7 +499,7 @@
 						<p class="tb-header center">Working Platform Particulars</p>
 						<div class="form-group">
 				           <div class="form-label">	
-				              <label for="mcwp-serial-no">Serial N.</label>
+				              <label for="mcwp-serial-no">Serial No.</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="mcwp-serial-no" class="form-control" name="cmwpSerialNo" placeholder="Fill in Serial No." />
@@ -500,103 +529,278 @@
 				<section id="cos-compliance">
 					<p class="tb-header">Compliance Criteria</p>
 					
-						<div class="compliance-sec">
-							<p class="cos-subheader">General</p>
-							
-							@for(index <- 0 until terms.size){
-								@if(terms(index).termType == TermType.GENTERAL){
-									<div id="@terms(index).id" class="opt-wrapper">
-										<p class="ques">
-											<span class="num">@(index+1). </span>
-											<span>@terms(index).subject</span>
-										</p>
-										<div class="value-box">
-											<ul class="opt-list">
-												<li class="opt-item selected">YES</li>
-												<li class="opt-item">NO</li>
-												<li class="opt-item">NA</li>
-											</ul>
-											<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
-											<button class="remark-btn">Remark</button>
-										</div>
-										
-										<div class="remark-body">
-											<div class="form-group">
-									           <div class="form-label">	
-									              <label>Remark</label>
-									           </div>
-									           <div class="form-input">
-									           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
-									         	</div>
-									        </div>
-									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-										         	 <div class="cos-uploader-wrapper uploader">
-											            <a class="link-img cos-link"></a>
-											            <div class="upload-wrap">
-											               <i class="fa fa-picture-o" aria-hidden="true"></i>
-											               <div class="upload-text">
-											                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
-											               </div>
-											               <input id="general-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-generalImage[]" accept="image/*" capture="camera" multiple/>
-											            </div>
+						@if(project.isScaffold){
+							<div class="compliance-sec">
+								<p class="cos-subheader">General</p>
+								
+								@for(index <- 0 until terms.size){
+									@if(terms(index).termType == TermType.GENTERAL){
+										<div id="@terms(index).id" class="opt-wrapper">
+											<p class="ques">
+												<span class="num">@(index+1). </span>
+												<span>@terms(index).subject</span>
+											</p>
+											<div class="value-box">
+												<ul class="opt-list">
+													<li class="opt-item selected">YES</li>
+													<li class="opt-item">NO</li>
+													<li class="opt-item">N/A</li>
+												</ul>
+												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
+												<button class="remark-btn">Remark</button>
+											</div>
+											
+											<div class="remark-body">
+												<div class="form-group">
+										           <div class="form-label">	
+										              <label>Remark</label>
+										           </div>
+										           <div class="form-input">
+										           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
+										         	</div>
+										        </div>
+										        <div class="uploader-group form-group row">
+											         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+											         	 <div class="cos-uploader-wrapper uploader">
+												            <a class="link-img cos-link"></a>
+												            <div class="upload-wrap">
+												               <i class="fa fa-picture-o" aria-hidden="true"></i>
+												               <div class="upload-text">
+												                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+												               </div>
+												               <input id="general-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-generalImage[]" accept="image/*" capture="camera" multiple/>
+												            </div>
+												         </div>
 											         </div>
-										         </div>
-										    </div>
+											    </div>
+											</div>
 										</div>
-									</div>
+									}
 								}
-							}
-						</div>
+							</div>
+							
+							<div class="compliance-sec">
+								<p class="cos-subheader">Scaffold</p>
+								
+								@for(index <- 0 until terms.size){
+									@if(terms(index).termType == TermType.SCAFFOLD){
+										<div id="@terms(index).id" class="opt-wrapper">
+											<p class="ques">
+												<span class="num">@(index+1). </span>
+												<span>@terms(index).subject</span>
+											</p>
+											<div class="value-box">
+												<ul class="opt-list">
+													<li class="opt-item selected">YES</li>
+													<li class="opt-item">NO</li>
+													<li class="opt-item">N/A</li>
+												</ul>
+												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
+												<button class="remark-btn">Remark</button>
+											</div>
+											
+											<div class="remark-body">
+												<div class="form-group">
+										           <div class="form-label">	
+										              <label>Remark</label>
+										           </div>
+										           <div class="form-input">
+										           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
+										         	</div>
+										        </div>
+										        <div class="uploader-group form-group row">
+											         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+											         	 <div class="cos-uploader-wrapper uploader">
+												            <a class="link-img cos-link"></a>
+												            <div class="upload-wrap">
+												               <i class="fa fa-picture-o" aria-hidden="true"></i>
+												               <div class="upload-text">
+												                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+												               </div>
+												               <input id="scaffold-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-scaffoldImage[]" accept="image/*" capture="camera" multiple/>
+												            </div>
+												         </div>
+											         </div>
+											    </div>
+											</div>
+										</div>
+									}
+								}
+							</div>
+						}
 						
-						<div class="compliance-sec">
-							<p class="cos-subheader">Formwork</p>
-							
-							@for(index <- 0 until terms.size){
-								@if(terms(index).termType == TermType.FORMWORK){
-									<div id="@terms(index).id" class="opt-wrapper">
-										<p class="ques">
-											<span class="num">@(index+1). </span>
-											<span>@terms(index).subject</span>
-										</p>
-										<div class="value-box">
-											<ul class="opt-list">
-												<li class="opt-item selected">YES</li>
-												<li class="opt-item">NO</li>
-												<li class="opt-item">NA</li>
-											</ul>
-											<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
-											<button class="remark-btn">Remark</button>
-										</div>
-										
-										<div class="remark-body">
-											<div class="form-group">
-									           <div class="form-label">	
-									              <label>Remark</label>
-									           </div>
-									           <div class="form-input">
-									           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
-									         	</div>
-									        </div>
-									        <div class="uploader-group form-group row">
-										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
-										         	 <div class="cos-uploader-wrapper uploader">
-											            <a class="link-img cos-link"></a>
-											            <div class="upload-wrap">
-											               <i class="fa fa-picture-o" aria-hidden="true"></i>
-											               <div class="upload-text">
-											                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
-											               </div>
-											               <input id="formwork-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-formworkImage[]" accept="image/*" capture="camera" multiple/>
-											            </div>
+						@if(project.isGondola){
+							<div class="compliance-sec">
+								<p class="cos-subheader">Gondola</p>
+								
+								@for(index <- 0 until terms.size){
+									@if(terms(index).termType == TermType.GONDOLA){
+										<div id="@terms(index).id" class="opt-wrapper">
+											<p class="ques">
+												<span class="num">@(index+1). </span>
+												<span>@terms(index).subject</span>
+											</p>
+											<div class="value-box">
+												<ul class="opt-list">
+													<li class="opt-item selected">YES</li>
+													<li class="opt-item">NO</li>
+													<li class="opt-item">N/A</li>
+												</ul>
+												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
+												<button class="remark-btn">Remark</button>
+											</div>
+											
+											<div class="remark-body">
+												<div class="form-group">
+										           <div class="form-label">	
+										              <label>Remark</label>
+										           </div>
+										           <div class="form-input">
+										           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
+										         	</div>
+										        </div>
+										        <div class="uploader-group form-group row">
+											         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+											         	 <div class="cos-uploader-wrapper uploader">
+												            <a class="link-img cos-link"></a>
+												            <div class="upload-wrap">
+												               <i class="fa fa-picture-o" aria-hidden="true"></i>
+												               <div class="upload-text">
+												                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+												               </div>
+												               <input id="gondola-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-gondolaImage[]" accept="image/*" capture="camera" multiple/>
+												            </div>
+												         </div>
 											         </div>
-										         </div>
-										    </div>
+											    </div>
+											</div>
 										</div>
-									</div>
+									}
 								}
-							}
+							</div>
+						}
+						
+						@if(project.isMCWP){
+							<div class="compliance-sec">
+								<p class="cos-subheader">MCWP</p>
+								
+								@for(index <- 0 until terms.size){
+									@if(terms(index).termType == TermType.MCWP){
+										<div id="@terms(index).id" class="opt-wrapper">
+											<p class="ques">
+												<span class="num">@(index+1). </span>
+												<span>@terms(index).subject</span>
+											</p>
+											<div class="value-box">
+												<ul class="opt-list">
+													<li class="opt-item selected">YES</li>
+													<li class="opt-item">NO</li>
+													<li class="opt-item">N/A</li>
+												</ul>
+												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
+												<button class="remark-btn">Remark</button>
+											</div>
+											
+											<div class="remark-body">
+												<div class="form-group">
+										           <div class="form-label">	
+										              <label>Remark</label>
+										           </div>
+										           <div class="form-input">
+										           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
+										         	</div>
+										        </div>
+										        <div class="uploader-group form-group row">
+											         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+											         	 <div class="cos-uploader-wrapper uploader">
+												            <a class="link-img cos-link"></a>
+												            <div class="upload-wrap">
+												               <i class="fa fa-picture-o" aria-hidden="true"></i>
+												               <div class="upload-text">
+												                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+												               </div>
+												               <input id="mcwp-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-mcwpImage[]" accept="image/*" capture="camera" multiple/>
+												            </div>
+												         </div>
+											         </div>
+											    </div>
+											</div>
+										</div>
+									}
+								}
+							</div>
+						}
+						
+						@if(project.isFormwork){
+							<div class="compliance-sec">
+								<p class="cos-subheader">Formwork</p>
+								
+								@for(index <- 0 until terms.size){
+									@if(terms(index).termType == TermType.FORMWORK){
+										<div id="@terms(index).id" class="opt-wrapper">
+											<p class="ques">
+												<span class="num">@(index+1). </span>
+												<span>@terms(index).subject</span>
+											</p>
+											<div class="value-box">
+												<ul class="opt-list">
+													<li class="opt-item selected">YES</li>
+													<li class="opt-item">NO</li>
+													<li class="opt-item">N/A</li>
+												</ul>
+												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
+												<button class="remark-btn">Remark</button>
+											</div>
+											
+											<div class="remark-body">
+												<div class="form-group">
+										           <div class="form-label">	
+										              <label>Remark</label>
+										           </div>
+										           <div class="form-input">
+										           	  <input class="form-control" name="@terms(index).id-remark" placeholder="Fill in remark" />
+										         	</div>
+										        </div>
+										        <div class="uploader-group form-group row">
+											         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+											         	 <div class="cos-uploader-wrapper uploader">
+												            <a class="link-img cos-link"></a>
+												            <div class="upload-wrap">
+												               <i class="fa fa-picture-o" aria-hidden="true"></i>
+												               <div class="upload-text">
+												                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+												               </div>
+												               <input id="formwork-uploader-@terms(index).id" class="file-input" type="file" name="@terms(index).id-formworkImage[]" accept="image/*" capture="camera" multiple/>
+												            </div>
+												         </div>
+											         </div>
+											    </div>
+											</div>
+										</div>
+									}
+								}
+							</div>
+						}
+						
+					<div class="cos-sec additional-sec">
+						<p class="cos-subheader">Additional Images</p>
+						<div class="uploader-group form-group row">
+							<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+								<div class="cos-uploader-wrapper uploader">
+									<a class="link-img cos-link"></a>
+									<div class="upload-wrap">
+										<i class="fa fa-picture-o" aria-hidden="true"></i>
+										<div class="upload-text">
+											<p>@messages.at("drop_image")  
+												<a class="browse-btn">@messages.at("browser_file")</a>
+											</p>
+										</div>
+										<input id="0" class="file-input" type="file" name="additionImages[]" accept="image/*" capture="camera" multiple/>
+									</div>
+								</div>
+							</div>
 						</div>
+					</div>
 				</section>
 				
 				<section id="cos-route">
@@ -633,7 +837,10 @@
 						</div>
 					</div>
 					<canvas id="canvas" width="" height="400"></canvas>
-					<input id="signature" type="file" value="signature"/>
+					<div class="drawing-wrapper center-align">
+						<input id="signature" type="file" value="signature"/>
+						<a class="sign-clear-btn btn btn-default">Clear</a>
+					</div>
 					<div class="submit-wrapper">
 						<input id="submit" class="btn btn-success" type="submit" value="Submit"/>
 					</div>
@@ -659,7 +866,8 @@
 		      	</div>
 		      	<div class="modal-footer">
 			      	<div class="form-group">
-			        		<a id="draw-sure-btn" class="btn btn-success">确定</a>
+			      		<a id="draw-clear-btn" class="btn btn-success">Clear</a>
+			        		<a id="draw-sure-btn" class="btn btn-success">OK</a>
 		        		</div>
 	    			</div>
 			</div>

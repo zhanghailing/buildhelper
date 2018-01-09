@@ -83,6 +83,9 @@ POST		/approve/cos						controllers.COSController.approveCOS()
 GET     /cos/show/signature          	controllers.COSController.showSignature(uuid: String ?= "", isLarge: Boolean ?= false)
 GET 		/issue/cos						controllers.COSController.issueCOS(cosId: Long ?= 0)
 POST		/save/issue						controllers.COSController.saveIssue
+GET		/issue/approve/page				controllers.COSController.issueApprovePage(cosId: Long ?= 0)
+GET		/issue/reject/page				controllers.COSController.issueRejectPage(cosId: Long ?= 0)
+GET 		/preview/cos						controllers.COSController.previewCOS(cosId: Long ?= 0)
 
 
 GET 		/export/qp/summary				controllers.ExportController.exportQPByCompany()
@@ -91,6 +94,8 @@ GET 		/export/project/summary			controllers.ExportController.exportProjectSummar
 GET 		/export/engineer/summary			controllers.ExportController.exportEngineers()
 GET 		/export/project/admin/summary	controllers.ExportController.exportProAdminSummary()
 
+
+GET   	/notifications           		controllers.NotificationController.notifications(offset: Integer ?= 0)
 
 
 

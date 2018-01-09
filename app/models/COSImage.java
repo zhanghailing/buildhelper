@@ -35,10 +35,19 @@ public class COSImage extends Image{
     public COSTerm cosTerm;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inspection_id")
+	@JsonIgnore
+    public Inspection inspection;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "issue_id")
 	@JsonIgnore
     public Issue issue;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cos_id")
+	@JsonIgnore
+    public COS cos;
 	
 	@Column(name="thumbnail_uuid")
 	public String thumbnailUUID;
@@ -51,9 +60,23 @@ public class COSImage extends Image{
 		uploadThumbnail(file);
 	}
 	
+	public COSImage(Inspection inspection, File file) throws IOException{
+		super(file);
+		this.inspection = inspection;
+		this.thumbnailUUID = Utils.uuid();
+		uploadThumbnail(file);
+	}
+	
 	public COSImage(Issue issue, File file) throws IOException{
 		super(file);
 		this.issue = issue;
+		this.thumbnailUUID = Utils.uuid();
+		uploadThumbnail(file);
+	}
+	
+	public COSImage(COS cos, File file) throws IOException{
+		super(file);
+		this.cos = cos;
 		this.thumbnailUUID = Utils.uuid();
 		uploadThumbnail(file);
 	}

@@ -138,16 +138,17 @@ public class ProjectController extends Controller{
 				if(!Utils.isBlank(engineerIDCause)){
 					countSql = countSql + " WHERE " + engineerIDCause;
 					sql = sql + " WHERE " + engineerIDCause;
+					
+					int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
+					int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
+					
+					List<Project> projects = jpaApi.em().createNativeQuery(sql, Project.class)
+							.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
+					
+					return ok(projectofcompany.render(projects, pageIndex, totalAmount));
+				}else {
+					return ok(projectofcompany.render(null, 1, 0));
 				}
-				
-				
-				int totalAmount = ((BigInteger) jpaApi.em().createNativeQuery(countSql).getSingleResult()).intValue();
-				int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
-				
-				List<Project> projects = jpaApi.em().createNativeQuery(sql, Project.class)
-						.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-				
-				return ok(projectofcompany.render(projects, pageIndex, totalAmount));
 			}catch(NoResultException e) {
 				responseData.code = 4000;
 				responseData.message = "Cannot find the company.";

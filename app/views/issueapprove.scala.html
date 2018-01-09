@@ -1,13 +1,15 @@
 @import tags._
 @import models.TermType
 
-@(cos: COS)
+@(account: Account, cos: COS)
 
 @sidemenu("engineer", 8) {
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets//bootstrap-datetimepicker.min.css")">
 	<script src="@routes.Assets.versioned("javascripts/fabric/fabric.min.js")" type="text/javascript"></script>
 	<script src="@routes.Assets.versioned("javascripts/html2canvas.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/moment.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
 	<script>
 		$(function(){
 			var canvas = new fabric.Canvas('canvas', {
@@ -23,13 +25,18 @@
 				$('textarea').text($(this).text());
 			});
 			
-			$("#reject-form").validate({
+			$(document).on('focus',".approveatepicker", function(){
+			    $(this).datetimepicker();
+			});
+			
+			$("#approve-form").validate({
 				ignore: [],
 		        rules: {
 		        		reason:{
-			            	minlength: 5,
-		            		maxlength: 500,
 		            		required:true
+		        		},
+		        		approveDate:{
+		        			required:true
 		        		}
         			},
 		        highlight: function (element) {
@@ -47,8 +54,8 @@
 					var contentType = block[0].split(":")[1];
 					var blob = b64toBlob(realData, contentType);
 					
-					var formDataToUpload = new FormData(document.getElementById('reject-form'));
-					formDataToUpload.append("rejectSign", blob, 'reject_sign.png');
+					var formDataToUpload = new FormData(document.getElementById('approve-form'));
+					formDataToUpload.append("approveSign", blob, 'approve_sign.png');
 					
 					var btn = $('#submit');
 					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
@@ -57,7 +64,7 @@
 			        	btn.attr("disabled", true);
 					
 					$.ajax({
-		                url: "@routes.COSController.rejectCOS()",
+		                url: "@routes.COSController.approveCOS()",
 		                type: "POST",
 		                data: formDataToUpload,
 		                contentType: false, 
@@ -99,25 +106,35 @@
 	</script>
 	
 	<div class="dash-detail-header">
-		<p class="title">COS Rejected</p>
+		<p class="title">COS Issue Approved</p>
 	</div>
 	<div class="cos-bg"> 
 		<div class="a4">
-			<form id="reject-form">
+			<form id="approve-form">
 				<input type="hidden" name="cosId" value="@cos.id"/>
-				<input type="hidden" name="rejectType" value="issue" />
+				<input type="hidden" name="approveType" value="issue" />
 				<p class="sec-header center-align"><span style="font-weight: 600;">To: </span>Contractor's Name</p>
-				<ul class="reason-blk">
-					<li class="reason-item">reason oneoneoneoneoneone</li>
-					<li class="reason-item">reason twotwotwotwotwo</li>
-					<li class="reason-item">reason threethreethreethreethree</li>
-				</ul>
+				<div>
+					<input type="radio" name="reason" value="I/my representative have checked the above items and certify that they are in order and according to the design." checked>I/my representative have checked the above items and certify that they are in order and according to the design.<br>
+					<input type="radio" name="reason" value="Work may proceed subject to incorporato">Work may proceed subject to incorporato<br>
+					<input type="radio" name="reason" value="Above work is not in accordance with the design, the following rectification works are to be carried out before next inspection:"> Above work is not in accordance with the design, the following rectification works are to be carried out before next inspection:
+				</div>
 				
 				<div class="form-group">
 			        <div class="form-input long-txt">
-		            		<textarea id="reason-txt" class="form-control" name="reason" rows="5" placeholder="eg：Reason for rejection ..."></textarea>
+		            		<textarea id="comment-txt" class="form-control" name="comment" rows="5" placeholder="eg：Comment ..."></textarea>
 		         	</div>
 		       	</div>
+		       	
+		       	<div class="form-group date-group">
+					<label>Date of Approval</label>
+					<input type="text" class="form-control approveatepicker" name="approveDate" data-date-format="YYYY-MM-DD">
+				</div>
+				
+				<div class="form-group">
+					I, <b>@account.user.name</b>, <b>@account.user.peNo, </b>hereby verify that the structural supporting to the Commuters strolling towards the station stopped and looked around. But there were no loud groans, only quick sighs. Nobody seemed irritated that the trains were shutting shop earlier than usual.
+					Commuters strolling towards the station stopped and looked around. But there were no loud groans, only quick sighs. Nobody seemed irritated that the trains were shutting shop earlier than usual.
+				</div>
 		       	
 		       	<div id="sign-wrapper">
 		       		<canvas id="canvas" width="" height="400"></canvas>
@@ -133,4 +150,4 @@
 	       	</form>
 		</div>
 	</div>
-}
+}s
