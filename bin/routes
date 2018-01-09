@@ -21,6 +21,7 @@ POST		/block/account					controllers.AuthController.blockAccount()
 POST		/unblock/account					controllers.AuthController.unBlockAccount()
 POST		/delete/account					controllers.AuthController.deleteAccount()
 GET		/account/active					controllers.AuthController.activeAccount(token: String ?= "")
+POST		/show/my/info					controllers.AuthController.showMyInfo()
 
 GET   	/companys           				controllers.CompanyController.companys(offset: Integer ?= 0)
 GET 		/create/company			   		controllers.CompanyController.createCompany(companyId: Long ?= 0)
@@ -42,6 +43,7 @@ POST 	/search/account					controllers.CompanyController.searchAccount()
 GET 		/doc/formats						controllers.CompanyController.documentFormat()
 GET		/download/file					controllers.CompanyController.downloadFile(uuid: String ?= "")
 GET		/download/doc/thumbnail			controllers.CompanyController.downloadDocThumbnail(uuid: String ?= "")
+GET 		/public/logo						controllers.CompanyController.showLogoWithoutParam()
 
 GET		/engineer/projects				controllers.ProjectController.projectOfEngineer(offset: Integer ?= 0)
 GET		/company/projects				controllers.ProjectController.projectOfCompany(offset: Integer ?= 0)
@@ -85,6 +87,8 @@ GET 		/issue/cos						controllers.COSController.issueCOS(cosId: Long ?= 0)
 POST		/save/issue						controllers.COSController.saveIssue
 GET		/issue/approve/page				controllers.COSController.issueApprovePage(cosId: Long ?= 0)
 GET		/issue/reject/page				controllers.COSController.issueRejectPage(cosId: Long ?= 0)
+GET		/inspect/approve/page			controllers.COSController.inspectApprovePage(cosId: Long ?= 0)
+GET		/inspect/reject/page				controllers.COSController.inspectRejectPage(cosId: Long ?= 0)
 GET 		/preview/cos						controllers.COSController.previewCOS(cosId: Long ?= 0)
 
 

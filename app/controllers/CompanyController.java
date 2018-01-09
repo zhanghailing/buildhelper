@@ -344,7 +344,29 @@ public class CompanyController extends Controller {
 		}
 		return ok(imageStream);
 	}
-
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result showLogoWithoutParam() {
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if(account != null) {
+			InputStream imageStream = null;
+			try {
+				if(account.company != null && account.company.logo != null) {
+					imageStream = account.company.logo.downloadThumbnail();
+				}else {
+					imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+				}
+			} catch (NoResultException e) {
+				imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+			}
+			return ok(imageStream);
+		}
+		
+		return ok();
+	}
+	
 	@With(AuthAction.class)
 	@Transactional
 	public Result createQPAccount(long qpAccountId) {

@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import ModelVOs.AccountVO;
+import ModelVOs.UserVO;
 import actions.AuthAction;
 import models.Account;
 import models.AccountType;
@@ -462,7 +463,23 @@ public class AuthController extends Controller{
 		}
 	}
 	
-	
+	@With(AuthAction.class)
+	@Transactional
+	public Result showMyInfo() {
+		ResponseData responseData = new ResponseData();
+		
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		
+		System.out.println("------------> " + account);
+		
+		if(account != null) {
+			UserVO userVO = new UserVO(account);
+			responseData.data = userVO;
+		}
+		
+		return ok(Json.toJson(responseData));
+	}
 	
 }
 

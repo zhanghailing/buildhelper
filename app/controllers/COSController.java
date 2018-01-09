@@ -361,6 +361,12 @@ public class COSController extends Controller{
 			if(cos != null) {
 				if(cos.inspections.size() > 0) {
 					for(Inspection inspection : cos.inspections) {
+						for(COSImage image : inspection.additionalImages) {
+							image.delete();
+							image.deleteThumbnail();
+							jpaApi.em().remove(image);
+						}
+						
 						jpaApi.em().remove(inspection);
 					}
 				}
@@ -370,12 +376,18 @@ public class COSController extends Controller{
 					inspection.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
 					jpaApi.em().persist(inspection);
 					
-					if(inspection.passType.equals("approve")) {
-						return ok(approvecos.render(cos));
-					}else {
-						return ok(rejectcos.render(cos));
-					}
-				} catch (ParseException e) {
+					MultipartFormData<File> body = request().body().asMultipartFormData();
+					List<FilePart<File>> generalPartFileParts = body.getFiles();
+					for (FilePart<File> generalFilePart : generalPartFileParts) {
+						if(generalFilePart.getFile() != null && generalFilePart.getFile().length() > 0) {
+							String key = generalFilePart.getKey();
+							if(key.equals("images[]")) {
+								COSImage cosImage = new COSImage(inspection, generalFilePart.getFile());
+								jpaApi.em().persist(cosImage);
+							}
+						}
+			        }
+				} catch (ParseException | IOException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();
 				}
@@ -384,7 +396,7 @@ public class COSController extends Controller{
 				responseData.message = "COS doesn't exist.";
 			}
 		}
-		return notFound(errorpage.render(responseData));
+		return ok(Json.toJson(responseData));
 	}
 	
 	@With(AuthAction.class)
@@ -443,6 +455,52 @@ public class COSController extends Controller{
 			}
 		}
 		return ok(Json.toJson(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result inspectApprovePage(long cosId) {
+		ResponseData responseData = new ResponseData();
+		
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if (account == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, cosId);
+			if(cos != null) {
+				return ok(approvecos.render(cos));
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		
+		return notFound(errorpage.render(responseData));
+	}
+	
+	@With(AuthAction.class)
+	@Transactional
+	public Result inspectRejectPage(long cosId) {
+		ResponseData responseData = new ResponseData();
+		
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
+		if (account == null) {
+			responseData.code = 4000;
+			responseData.message = "Account doesn't exist.";
+		}else{
+			COS cos = jpaApi.em().find(COS.class, cosId);
+			if(cos != null) {
+				return ok(rejectcos.render(cos));
+			}else {
+				responseData.code = 4000;
+				responseData.message = "COS doesn't exist.";
+			}
+		}
+		
+		return notFound(errorpage.render(responseData));
 	}
 	
 	

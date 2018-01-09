@@ -876,6 +876,12 @@
 									<i class="icon-check"></i>
 								</a>
 							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isOthers){selected}}">
+							   	<input type="radio" name="others" class="form-control" value="@if(project != null){@if(project.isOthers){1}else{0}}else{0}" @if(project != null){@if(project.isOthers){checked}}>
+								<a class="radio-box">Others
+									<i class="icon-check"></i>
+								</a>
+							</label>
 						</div>
 					</div>
 					<div class="form-group">

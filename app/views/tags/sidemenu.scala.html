@@ -11,6 +11,16 @@
 	            		$('.label-primary').text(data.data);
 	            }
             });
+			
+			$.ajax({
+                url: "@routes.AuthController.showMyInfo()",
+                type: "POST",
+                success: function(response, status) {
+	                var data = $.parseJSON(JSON.stringify(response));
+	            		$('.sidebar-name').text(data.data.company);
+	            		$('.sidebar-role').text(data.data.accType);
+	            }
+            });
 		});
 	</script>
 }
@@ -21,7 +31,7 @@
 		    <ul class="sidebar-menu" id="nav-accordion">
 		    	<li class="sub-menu dcjq-parent-li">
 		            <a class="sidebar-header">
-		                <img src="/assets/images/default_avatar.png">
+		                <img src="@routes.CompanyController.showLogoWithoutParam()">
 		                <span class="sidebar-name">G Top International Pte Ltd</span>
 		                <span class="sidebar-role">Master Admin</span>
 		            </a>

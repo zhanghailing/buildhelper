@@ -83,18 +83,18 @@
 					var image = new Image();
 				    image.src = reader.result;
 				    image.onload = function() {
-			    		var linkEle = $('.drawing-content');
-			    		var aLinkWidth = linkEle.width();
-			    		var ratio = image.width/aLinkWidth;
-			    		var aLinkHeight = image.height / ratio;
+				    		var linkEle = $('.drawing-content');
+				    		var aLinkWidth = linkEle.width();
+				    		var ratio = image.width/aLinkWidth;
+				    		var aLinkHeight = image.height / ratio;
+					    		
+				    		imgCanvas.setWidth(aLinkWidth);
+				    		imgCanvas.setHeight(aLinkHeight);
 				    		
-			    		imgCanvas.setWidth(aLinkWidth);
-			    		imgCanvas.setHeight(aLinkHeight);
-			    		
-			    		$('.drawing-layer').width(aLinkWidth);
-			    		$('.drawing-layer').height(aLinkHeight);
-				    		
-			    		linkEle.height(aLinkHeight);
+				    		$('.drawing-layer').width(aLinkWidth);
+				    		$('.drawing-layer').height(aLinkHeight);
+					    		
+				    		linkEle.height(aLinkHeight);
 						linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 				    };
 	        		}

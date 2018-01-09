@@ -58,6 +58,9 @@ public class Project {
 	@Column(name="is_formwork", columnDefinition = "boolean default false")
 	public boolean isFormwork;
 	
+	@Column(name="is_others", columnDefinition = "boolean default false")
+	public boolean isOthers;
+	
 	public ProjectStatus status;
 	
 	@Column(name="is_archived", columnDefinition = "boolean default false")
