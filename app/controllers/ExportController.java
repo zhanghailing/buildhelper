@@ -26,6 +26,7 @@ import models.Inspection;
 import models.Issue;
 import models.Project;
 import models.ResponseData;
+import models.SubGrid;
 import play.db.jpa.JPAApi;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
@@ -270,7 +271,18 @@ public class ExportController extends Controller{
 			        		cosData[0] = rowNum+"";
 			        		cosData[1] = cos.location;
 			        		cosData[2] = cos.referenceNo;
-			        		cosData[3] = cos.subject;
+			        		
+			        		String subject = "";
+			        		if(cos.subGrids.size() > 0) {
+			        			for(SubGrid subGrid : cos.subGrids) {
+			        				subject += subGrid.subject+",";
+			        			}
+			        		}
+			        		
+			        		if(subject.length() > 1) {
+			        			cosData[3] = subject.substring(0, subject.length() - 1);
+			        		}
+			        		
 			        		if(cos.inspections.size() > 0) {
 			        			Inspection inspection = cos.inspections.get(0);
 			        			if(inspection.inspectedBy != null) {

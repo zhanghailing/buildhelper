@@ -295,6 +295,34 @@
 		            });
 		        }
 		    });
+			
+			$(document).on('click', "a.add-more-btn", function(){
+				var experRow = '<div class="multi-subject-row">';
+				experRow += '<div class="form-group">';
+				experRow += '<div class="form-label">';
+				experRow += ' <label for="subject">Subject</label>';
+				experRow += '</div>';
+				experRow += '<div class="form-input">';
+				experRow += ' <input id="subject" class="form-control" name="subject[]" placeholder="Fill in Subject" />';
+				experRow += '</div>';
+				experRow += '</div>';
+				experRow += '<div class="form-group">';
+				experRow += '<div class="form-label">';
+				experRow += '<label for="locgrid">Location/Grid Line</label>';
+				experRow += '</div>';
+				experRow += '<div class="form-input">';
+				experRow += '<input id="locgrid" class="form-control" name="locgrid[]" placeholder="Fill in Location/Grid Line" />';
+				experRow += '</div>';
+				experRow += '</div>';
+				experRow += '<a href="javascript:;" class="del-btn">Remove</a>';
+				experRow += '</div>';
+				
+				$(this).before(experRow);
+			});
+			
+			$(document).on('click', "a.del-btn", function(){
+				$(this).closest('.multi-subject-row').remove();
+			});
 		});	
 		
 		function b64toBlob(b64Data, contentType, sliceSize) {
@@ -416,23 +444,39 @@
 						</div>
 					</div>
 					
-					<div class="form-group">
-			           <div class="form-label">	
-			              <label for="subject">Subject</label>
-			           </div>
-			           <div class="form-input">
-			           	  <input id="subject" class="form-control" name="subject" placeholder="Fill in Subject" />
-			         	</div>
-			        </div>
 					
 					
 					@if(project.isScaffold || project.isFormwork){
+						<div class="multi-subject-block">
+							<div class="multi-subject-row">
+								<div class="form-group">
+									<div class="form-label">	
+										<label for="subject">Subject</label>
+									</div>
+									<div class="form-input">
+										<input id="subject" class="form-control" name="subject[]" placeholder="Fill in Subject" />
+						         	</div>
+						        </div>
+								<div class="form-group">
+									<div class="form-label">	
+										<label for="locgrid">Location/Grid Line</label>
+									</div>
+									<div class="form-input">
+										<input id="locgrid" class="form-control" name="locgrid[]" placeholder="Fill in Location/Grid Line" />
+									</div>
+								</div>
+							</div>
+							<a class="add-more-btn">
+							      +More
+							</a>
+						</div>
+					}else{
 						<div class="form-group">
 				           <div class="form-label">	
-				              <label for="locgrid">Location/Grid Line</label>
+				              <label for="subject">Subject</label>
 				           </div>
 				           <div class="form-input">
-				           	  <textarea id="locgrid" class="form-control" name="locgrid" rows="5" placeholder="Shifting of Gondola System from Blk79 to Blk81"></textarea>
+				           	  <input id="subject" class="form-control" name="subject" placeholder="Fill in Subject" />
 				         	</div>
 				        </div>
 					}

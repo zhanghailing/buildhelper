@@ -322,12 +322,16 @@
 			
 			<div class="cos-sec">
 				<p class="cos-subheader">Subject</p>
-				<p>@cos.subject</p>
+				@for(index <- 0 until cos.subGrids.size){
+					<p>@cos.subGrids(index).subject</p>
+				}
 			</div>
 			
 			<div class="cos-sec">
 				<p class="cos-subheader">Location/Grid Line</p>
-				<p>@cos.gridLine</p>
+				@for(index <- 0 until cos.subGrids.size){
+					<p>@cos.subGrids(index).gridLine</p>
+				}
 			</div>
 			
 			@if(cos.project.isGondola){

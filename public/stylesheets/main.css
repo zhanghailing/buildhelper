@@ -1372,6 +1372,10 @@ p.cos-content{
 	float: right;
 }
 
+#cos-form .form-input{
+	display: block;	
+}
+
 .submit-wrapper{
 	position: relative;
 }
