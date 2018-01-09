@@ -2,7 +2,10 @@ package models;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,10 +45,9 @@ public class COS {
 	@Column(name="extra_loc")
 	public String extraLocation;
 	
-	public String subject;
-
-	@Column(name="grid_line")
-	public String gridLine;
+	@OneToMany(mappedBy = "cos")
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	public List<SubGrid> subGrids;
 
 	@Column(name="serial_no")
 	public String serialNo;
@@ -108,10 +110,48 @@ public class COS {
 		this.issues = new ArrayList<>();
 		this.notifications = new ArrayList<>();
 	}
-	public COS(Project project, String subject) {
+	public COS(Project project) {
 		this.project = project;
-		this.subject = subject;
 		this.referenceNo = (System.currentTimeMillis()+"").substring(5);
+	}
+	
+	public void initSubGrid(Map<String, String> data) {
+		Iterator<String> iterator = data.keySet().iterator();
+		Map<Integer, String> subjectMap = new HashMap<>();
+	    Map<Integer, String> gridMap = new HashMap<>();
+	    
+	    String key;
+	    while(iterator.hasNext()){
+		    	key = iterator.next();
+		    	if(key.contains("subject")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		subjectMap.put(pos, data.get(key));
+		    	}
+		    	
+		    	if(key.contains("locgrid")){
+		    		int startIdx = key.indexOf("[") + 1;
+		    		int endIdx = key.indexOf("]");
+		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));
+		    		gridMap.put(pos, data.get(key));
+		    	}
+	    }
+	    
+	    int size = Math.max(subjectMap.size(), gridMap.size());
+	    
+	    if(this.subGrids != null && this.subGrids.size() > 0){
+		    	for(SubGrid subGrid : this.subGrids){
+		    		JPA.em().remove(subGrid);
+		    	}
+	    }
+	    
+	    for(int i = 0; i < size; i++){
+	    		SubGrid subGrid = new SubGrid(this);
+	    		subGrid.subject = subjectMap.get(i);
+	    		subGrid.gridLine = gridMap.get(i);
+		    	JPA.em().persist(subGrid);
+	    }
 	}
 	
 	public void inspectorApproveCOS(String reason, String comment, String approveDate, File signImage) throws Exception{

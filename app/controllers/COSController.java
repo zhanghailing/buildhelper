@@ -111,8 +111,6 @@ public class COSController extends Controller{
 		String projectId = requestData.get("projectId");
 		String location = requestData.get("location");
 		String extraLocation = requestData.get("extraLocation");
-		String subject = requestData.get("subject");
-		String locgrid = requestData.get("locgrid");
 		String serialNo = requestData.get("serialNo");
 		//Gondola
 		String gondolaNo = requestData.get("gondolaNo");
@@ -134,10 +132,9 @@ public class COSController extends Controller{
 		}else{
 			Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
 			if(project != null) {
-				COS cos = new COS(project, subject);
+				COS cos = new COS(project);
 				cos.extraLocation = extraLocation;
 				cos.location = location;
-				cos.gridLine = locgrid;
 				cos.serialNo = serialNo;
 				if(project.isGondola) {
 					cos.gondolaNo = gondolaNo;
@@ -152,6 +149,7 @@ public class COSController extends Controller{
 					cos.mcwpMaxLength = mcwpMaxLength;
 				}
 				jpaApi.em().persist(cos); //EOF cos
+				cos.initSubGrid(requestData.data());
 				
 				try {
 					List<Term> terms = jpaApi.em().createQuery("FROM Term", Term.class).getResultList();

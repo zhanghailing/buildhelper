@@ -373,7 +373,14 @@
 					    <tr class="paginate">
 							<th>@((pageIndex-1) * Constants.ACCOUNT_PAGE_SIZE + index+1)</th>
 							<td>@coses(index).location</td>
-							<td>@coses(index).subject</td>
+							<td>
+								@for(j <- 0 until coses(index).subGrids.size){
+									@coses(index).subGrids(j).subject
+									@if(j < coses(index).subGrids.size){
+										, 
+									}
+								}
+							</td>
 							<td>@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}</td>
 							<td>@if(coses(index).issues.size > 0){@coses(index).issues(0).issueDate}</td>
 							<td class="@coses(index).id">
@@ -393,7 +400,12 @@
 										data-project-title="@coses(index).project.title"
 										data-client="@if(coses(index).project.clients.size() > 0){@coses(index).project.clients(0).companyName}"
 										data-builder="@if(coses(index).project.builders.size() > 0){@coses(index).project.builders(0).companyName}"
-										data-subject="@coses(index).subject"
+										data-subject="@for(j <- 0 until coses(index).subGrids.size){
+														@coses(index).subGrids(j).subject
+														@if(j < coses(index).subGrids.size){
+															, 
+														}
+													}"
 										data-inspectedDate="@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}"
 										data-gondola-no="@coses(index).gondolaNo"
 										data-gondola-le="@coses(index).leRegistrationNo"
