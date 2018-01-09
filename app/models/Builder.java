@@ -1,7 +1,9 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -10,12 +12,17 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NoResultException;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,19 +58,21 @@ public class Builder {
 	@Column(name="is_notify")
 	public boolean isNotify;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "project_builder", joinColumns = @JoinColumn(name = "builder_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
-    public Project project;
+    public List<Project> projects;
 	
-	public Builder() {}
-	
-	public Builder(Account account, Project project) {
-		this.account = account;
-		this.project = project;
+	public Builder() {
+		this.projects = new ArrayList<Project>();
 	}
 	
-	public static void initBuilder(String companyName, Project project, Map<String, String> data) throws Exception{
+	public Builder(Account account) {
+		this.account = account;
+	}
+	
+	public static void initBuilder(String companyName, Project project, Map<String, String> data) throws Exception, NoResultException{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> builderEmailMap = new HashMap<>();
 	    Map<Integer, String> builderPasswordMap = new HashMap<>();
@@ -119,20 +128,28 @@ public class Builder {
 	    }
 	    
 	    for(int i = 0; i < builderEmailMap.size(); i++){
+	    		Account account;
+	    		Builder builder = null;
 		    	if(!AuthController.notExists(builderEmailMap.get(i))){
-	    			throw new Exception("Account already exist."); 
+		    		account = JPA.em()
+		    				.createQuery("from Account ac where ac.email=:email", Account.class)
+		    				.setParameter("email", builderEmailMap.get(i)).getSingleResult();
+		    		builder = account.builder;
+	    		}else {
+	    			account = new Account(builderEmailMap.get(i), builderPasswordMap.get(i));
+		    		account.accType = AccountType.CONTRACTOR;
+		    		JPA.em().persist(account);
+		    		builder = new Builder(account);
 	    		}
-	    		Account account = new Account(builderEmailMap.get(i), builderPasswordMap.get(i));
-	    		account.accType = AccountType.CONTRACTOR;
-	    		JPA.em().persist(account);
-	    		
-	    		String useNotifyStr = Utils.isBlank(builderNotifyMap.get(i)) ? "0" : builderNotifyMap.get(i);
-	    		Builder builder = new Builder(account, project);
+		    	String useNotifyStr = Utils.isBlank(builderNotifyMap.get(i)) ? "0" : builderNotifyMap.get(i);
 	    		builder.companyName = companyName;
 	    		builder.name = builderNameMap.get(i);
 	    		builder.hpNo = builderHpNoMap.get(i);
 	    		builder.designation = builderDesignationMap.get(i);
 	    		builder.isNotify = useNotifyStr.equals("1") ? true : false;
+	    		
+	    		builder.projects.add(project);
+	    		
 	    		JPA.em().persist(builder);
 	    }
 	}

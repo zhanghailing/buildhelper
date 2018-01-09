@@ -73,7 +73,7 @@ public class Project {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Client> clients;
 	
-	@OneToMany(mappedBy = "project")
+	@ManyToMany(mappedBy = "projects")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Builder> builders;
 	

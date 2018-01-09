@@ -408,7 +408,8 @@ public class ProjectController extends Controller{
 				    		JPA.em().persist(builderAccount);
 				    		
 				    		String useNotifyStr = Utils.isBlank(builderNotify) ? "0" : builderNotify;
-				    		Builder builder = new Builder(builderAccount, project);
+				    		Builder builder = new Builder(builderAccount);
+				    		builder.projects.add(project);
 				    		builder.companyName = builderCompanyName;
 				    		builder.name = builderName;
 				    		builder.designation = builderDesignation;
