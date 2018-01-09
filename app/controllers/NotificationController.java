@@ -55,7 +55,7 @@ public class NotificationController  extends Controller{
 	
 	@With(AuthAction.class)
 	@Transactional
-	public Result notificationAmount(int offset) {
+	public Result notificationAmount() {
 		ResponseData responseData = new ResponseData();
 
 		long accountId = ((Account) ctx().args.get("account")).id;
@@ -64,12 +64,13 @@ public class NotificationController  extends Controller{
 			responseData.code = 4000;
 			responseData.message = "Account doesn't exist.";
 		}else {
-			int totalAmount = ((Long) jpaApi.em()
-					.createNativeQuery("SELECT count(*) FROM notification nf LEFT JOIN acc_notification an ON an.notification_id=nf.id WHERE an.account_id=:accountId")
+			int totalAmount = ((BigInteger) jpaApi.em()
+					.createNativeQuery("SELECT count(*) FROM notification nf LEFT JOIN acc_notification an ON an.notification_id=nf.id WHERE an.account_id=:accountId AND an.is_read=:isRead")
 					.setParameter("accountId", account.id)
+					.setParameter("isRead", false)
 					.getSingleResult())
 					.intValue();
-			return ok(totalAmount+"");
+			responseData.data = totalAmount;
 		}
 
 		return ok(Json.toJson(responseData));

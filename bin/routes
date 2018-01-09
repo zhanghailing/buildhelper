@@ -96,6 +96,7 @@ GET 		/export/project/admin/summary	controllers.ExportController.exportProAdminS
 
 
 GET   	/notifications           		controllers.NotificationController.notifications(offset: Integer ?= 0)
+POST   	/notification/amount           	controllers.NotificationController.notificationAmount()
 
 
 

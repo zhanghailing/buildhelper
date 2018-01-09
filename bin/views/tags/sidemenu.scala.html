@@ -3,7 +3,14 @@
 @scripts = {
 	<script>
 		$(function(){
-			
+			$.ajax({
+                url: "@routes.NotificationController.notificationAmount()",
+                type: "POST",
+                success: function(response, status) {
+	                var data = $.parseJSON(JSON.stringify(response));
+	            		$('.label-primary').text(data.data);
+	            }
+            });
 		});
 	</script>
 }
@@ -108,7 +115,7 @@
 				</a>
 				<div class="nav navbar-right" style="margin-right: 30px; height: 100%; padding-top: 20px;">
 					<i class="fa fa-bell"></i>
-					<span class="label label-primary">8</span>
+					<a class="label label-primary" href="@routes.NotificationController.notifications(0)">0</a>
 				</div>
 				<div class="nav navbar-right" style="margin-right: 30px; height: 100%; padding-top: 20px;">
 					<span>Welcome to E-SPECTOR.</span>
