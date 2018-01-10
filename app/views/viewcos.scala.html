@@ -42,6 +42,9 @@
 		    		var gondolaLE = $(this).data('gondola-le');
 		    		var gondolaDistinctiveNo = $(this).data('gondola-distinctiveNo');
 		    		var gondolaMaxlength = $(this).data('gondola-maxlength');
+		    		var mcwpNo = $(this).data('mcwp-no');
+		    		var mcwpHeight = $(this).data('mcwp-height');
+		    		var mcwpLength = $(this).data('mcwp-length');
 		    		var username = $(this).data('username');
 		    		var peNo = $(this).data('pe-no');
 		    		var signUUID = $(this).data('sign-uuid');
@@ -174,7 +177,7 @@
 		    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
 		    			cosPrint += '<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>';
 		    			cosPrint += '<hr>';
-		    			cosPrint += '<span>Our Ref No.: </span><span>YMW-MOM-COS-A001-TONOOOS</span>';
+		    			cosPrint += '<span>Our Ref No.: </span><span>' + ref + '</span>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">';
 		    			cosPrint += '<h3 style="text-align: center;">CERTIFICATION OF SUPERVISION</h3>';
@@ -184,7 +187,7 @@
 		    			cosPrint += '<p><b>Project Title</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>Blk 29 (Tower E) Blue Horizon @@ West Coast Crescent</span></p>';
+		    			cosPrint += '<p>: <span>' + projectTitle + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -192,7 +195,7 @@
 		    			cosPrint += '<p><b>Developer/Client</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>LTC Coatings (S) Pte Ltd</span></p>';
+		    			cosPrint += '<p>: <span>' + client + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -200,7 +203,7 @@
 		    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>Mega Engineering (S) Pte Ltd</span></p>';
+		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -224,7 +227,7 @@
 		    			cosPrint += '<p><b>Working Platform Serial No.</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>318</span></p>';
+		    			cosPrint += '<p>: <span>' + mcwpNo + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -232,7 +235,7 @@
 		    			cosPrint += '<p><b>Max. Height</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>43.50m</span></p>';
+		    			cosPrint += '<p>: <span>' + mcwpHeight + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -240,12 +243,12 @@
 		    			cosPrint += '<p><b>Max. Length</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>10.10m</span></p>';
+		    			cosPrint += '<p>: <span>' + mcwpLength + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<br><br>';
-		    			cosPrint += '<p style="text-align: justify;"><b>I</b>, <span>Wong Yew Fai</span>, <b>PE No.</b> <span>4439</span>, hereby certify that the structure supporting the lifting equipment described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns, parapet walls, floor slab) are safe for the taking of mast climbing working platform loads to carrying out the building works.</p>';
+		    			cosPrint += '<p style="text-align: justify;"><b>I</b>, <span>' + username + '</span>, <b>PE No.</b> <span>' + peNo + '</span>, hereby certify that the structure supporting the lifting equipment described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns, parapet walls, floor slab) are safe for the taking of mast climbing working platform loads to carrying out the building works.</p>';
 		    			cosPrint += '<br><br><br>';
 		    			cosPrint += '<p>Yours truly,</p>';
 		    			cosPrint += '<div>';
@@ -277,7 +280,7 @@
 		    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
 		    			cosPrint += '<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>';
 		    			cosPrint += '<hr>';
-		    			cosPrint += '<span>Our Ref No.: </span><span>YMW-MOM-COS-A001-TONOOOS</span>';
+		    			cosPrint += '<span>Our Ref No.: </span><span>' + ref + '</span>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">';
 		    			cosPrint += '<h3 style="text-align: center; margin-top: 0; margin-bottom: 0;">CERTIFICATION OF SUPERVISION</h3>';
@@ -287,7 +290,7 @@
 		    			cosPrint += '<p><b>Project Title</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>T202</span></p>';
+		    			cosPrint += '<p>: <span>' + projectTitle + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -295,7 +298,7 @@
 		    			cosPrint += '<p><b>Location (Plot/Block/Storey)</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>Roof Slab</span></p>';
+		    			cosPrint += '<p>: <span>' + location + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -303,7 +306,7 @@
 		    			cosPrint += '<p><b>Developer/Client</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>LTC Coatings (S) Pte Ltd</span></p>';
+		    			cosPrint += '<p>: <span>' + client + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -311,7 +314,7 @@
 		    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>Mega Engineering (S) Pte Ltd</span></p>';
+		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -547,6 +550,9 @@
 	    		var gondolaLE = $(this).data('gondola-le');
 	    		var gondolaDistinctiveNo = $(this).data('gondola-distinctiveNo');
 	    		var gondolaMaxlength = $(this).data('gondola-maxlength');
+	    		var mcwpNo = $(this).data('mcwp-no');
+	    		var mcwpHeight = $(this).data('mcwp-height');
+	    		var mcwpLength = $(this).data('mcwp-length');
 	    		var username = $(this).data('username');
 	    		var peNo = $(this).data('pe-no');
 	    		var signUUID = $(this).data('sign-uuid');
@@ -675,7 +681,7 @@
 	    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
 	    			cosPrint += '<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>';
 	    			cosPrint += '<hr>';
-	    			cosPrint += '<span>Our Ref No.: </span><span>YMW-MOM-COS-A001-TONOOOS</span>';
+	    			cosPrint += '<span>Our Ref No.: </span><span>' + ref + '</span>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">';
 	    			cosPrint += '<h3 style="text-align: center;">CERTIFICATION OF SUPERVISION</h3>';
@@ -685,7 +691,7 @@
 	    			cosPrint += '<p><b>Project Title</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>Blk 29 (Tower E) Blue Horizon @@ West Coast Crescent</span></p>';
+	    			cosPrint += '<p>: <span>' + projectTitle + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -693,7 +699,7 @@
 	    			cosPrint += '<p><b>Developer/Client</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>LTC Coatings (S) Pte Ltd</span></p>';
+	    			cosPrint += '<p>: <span>' + client + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -701,7 +707,7 @@
 	    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>Mega Engineering (S) Pte Ltd</span></p>';
+	    			cosPrint += '<p>: <span>' + builder + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -725,7 +731,7 @@
 	    			cosPrint += '<p><b>Working Platform Serial No.</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>318</span></p>';
+	    			cosPrint += '<p>: <span>' + mcwpNo + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -733,7 +739,7 @@
 	    			cosPrint += '<p><b>Max. Height</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>43.50m</span></p>';
+	    			cosPrint += '<p>: <span>' + mcwpHeight + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -741,12 +747,12 @@
 	    			cosPrint += '<p><b>Max. Length</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>10.10m</span></p>';
+	    			cosPrint += '<p>: <span>' + mcwpLength + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<br><br>';
-	    			cosPrint += '<p style="text-align: justify;"><b>I</b>, <span>Wong Yew Fai</span>, <b>PE No.</b> <span>4439</span>, hereby certify that the structure supporting the lifting equipment described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns, parapet walls, floor slab) are safe for the taking of mast climbing working platform loads to carrying out the building works.</p>';
+	    			cosPrint += '<p style="text-align: justify;"><b>I</b>, <span>' + username + '</span>, <b>PE No.</b> <span>' + peNo + '</span>, hereby certify that the structure supporting the lifting equipment described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns, parapet walls, floor slab) are safe for the taking of mast climbing working platform loads to carrying out the building works.</p>';
 	    			cosPrint += '<br><br><br>';
 	    			cosPrint += '<p style="margin-bottom: 100px;">Yours truly,</p>';
 	    			cosPrint += '<div style="display: flex; text-align: center;">';
@@ -1109,6 +1115,9 @@
 										data-gondola-distinctiveNo="@coses(index).distinctiveNo"
 										data-gondola-maxlength="@coses(index).gondolaMaxLength"
 										data-gondola-swl="@coses(index).gondolaMaxSWL"
+										data-mcwp-no="@coses(index).cmwpSerialNo"
+										data-mcwp-height="@coses(index).mcwpMaxHeight"
+										data-mcwp-length="@coses(index).mcwpMaxLength"
 										data-is-gondola="@coses(index).project.isGondola"
 										data-is-mcwp="@coses(index).project.isMCWP"
 										data-is-scaffold="@coses(index).project.isScaffold"
