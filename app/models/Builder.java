@@ -69,6 +69,7 @@ public class Builder {
 	}
 	
 	public Builder(Account account) {
+		this();
 		this.account = account;
 	}
 	
@@ -134,21 +135,28 @@ public class Builder {
 		    		account = JPA.em()
 		    				.createQuery("from Account ac where ac.email=:email", Account.class)
 		    				.setParameter("email", builderEmailMap.get(i)).getSingleResult();
-		    		builder = account.builder;
+		    		if(account.builder == null) {
+		    			builder = new Builder(account);
+		    		}else {
+		    			builder = account.builder;
+		    		}
 	    		}else {
 	    			account = new Account(builderEmailMap.get(i), builderPasswordMap.get(i));
 		    		account.accType = AccountType.CONTRACTOR;
 		    		JPA.em().persist(account);
 		    		builder = new Builder(account);
 	    		}
+		    
 		    	String useNotifyStr = Utils.isBlank(builderNotifyMap.get(i)) ? "0" : builderNotifyMap.get(i);
 	    		builder.companyName = companyName;
 	    		builder.name = builderNameMap.get(i);
 	    		builder.hpNo = builderHpNoMap.get(i);
 	    		builder.designation = builderDesignationMap.get(i);
 	    		builder.isNotify = useNotifyStr.equals("1") ? true : false;
-	    		
+	    		System.out.println("8------------> " + builder.projects);
 	    		builder.projects.add(project);
+	    		
+	    		System.out.println("9------------> " + builder.companyName);
 	    		
 	    		JPA.em().persist(builder);
 	    }

@@ -1,6 +1,6 @@
 name := """BuildHelper"""
 
-version := "1.29"
+version := "1.31"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
@@ -35,3 +35,9 @@ EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClass
 
 
 fork in run := true
+
+
+
+
+
+

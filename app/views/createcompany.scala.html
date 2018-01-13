@@ -1,8 +1,8 @@
 @import tags._
 
-@(company: Company)
+@(account: Account, company: Company)
 
-@sidemenu("admin", 0){
+@sidemenu(account, 0){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<script type="text/javascript">
 		$(function(){

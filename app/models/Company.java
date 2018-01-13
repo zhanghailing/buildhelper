@@ -55,9 +55,7 @@ public class Company {
 	@JsonIgnore
 	public Account account;
 	
-	public Company(){
-		this.useCustomizedLetterHead = false;
-	}
+	public Company(){}
 }
 
 

@@ -44,7 +44,9 @@
 			                		}else if(data.data.accType === "INSPECTOR"){
 			                			location.assign("@routes.ProjectController.projectOfEngineer()");
 			                		}else if(data.data.accType == "CONTRACTOR"){
-			                			location.assign("@routes.ProjectController.projectOfEngineer()");
+			                			location.assign("@routes.ProjectController.projectExecution()");
+			                		}else if(data.data.accType == "CLIENT"){
+			                			location.assign("@routes.ProjectController.projectExecution()");
 			                		}
 			                	}
 			                	spinner.remove();
