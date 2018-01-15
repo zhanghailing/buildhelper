@@ -73,7 +73,7 @@ public class Project {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Client> clients;
 	
-	@OneToMany(mappedBy = "project")
+	@ManyToMany(mappedBy = "projects")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Builder> builders;
 	
@@ -136,7 +136,7 @@ public class Project {
 	    String key;
 	    while(iterator.hasNext()){
 		    	key = iterator.next();
-		    	if(key.contains("qpAccounts")){
+		    	if(key.contains("inspectorAccounts")){
 		    		int startIdx = key.indexOf("[") + 1;
 		    		int endIdx = key.indexOf("]");
 		    		int pos = Integer.parseInt(key.substring(startIdx, endIdx));

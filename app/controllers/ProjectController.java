@@ -96,7 +96,7 @@ public class ProjectController extends Controller{
 					.createNativeQuery("SELECT * FROM project pro WHERE " + projectCause + " AND pro.is_archived = :isArchived", Project.class)
 					.setParameter("isArchived", false)
 					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-			return ok(projectofengineer.render(projects, pageIndex,totalAmount));
+			return ok(projectofengineer.render(account, projects, pageIndex,totalAmount));
 		}
 		return notFound(errorpage.render(responseData));
 	}
@@ -145,9 +145,9 @@ public class ProjectController extends Controller{
 					List<Project> projects = jpaApi.em().createNativeQuery(sql, Project.class)
 							.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 					
-					return ok(projectofcompany.render(projects, pageIndex, totalAmount));
+					return ok(projectofcompany.render(account, projects, pageIndex, totalAmount));
 				}else {
-					return ok(projectofcompany.render(null, 1, 0));
+					return ok(projectofcompany.render(account, null, 1, 0));
 				}
 			}catch(NoResultException e) {
 				responseData.code = 4000;
@@ -179,7 +179,7 @@ public class ProjectController extends Controller{
 				project = jpaApi.em().find(Project.class, projectId);
 			}
 			
-			return ok(createproject.render(project, qpList, inspectors));
+			return ok(createproject.render(account, project, qpList, inspectors));
 		}
 
 		return notFound(errorpage.render(responseData));
@@ -408,7 +408,8 @@ public class ProjectController extends Controller{
 				    		JPA.em().persist(builderAccount);
 				    		
 				    		String useNotifyStr = Utils.isBlank(builderNotify) ? "0" : builderNotify;
-				    		Builder builder = new Builder(builderAccount, project);
+				    		Builder builder = new Builder(builderAccount);
+				    		builder.projects.add(project);
 				    		builder.companyName = builderCompanyName;
 				    		builder.name = builderName;
 				    		builder.designation = builderDesignation;
@@ -680,7 +681,7 @@ public class ProjectController extends Controller{
 		}else{
 			Project project = jpaApi.em().find(Project.class, projectId);
 			if(project != null) {
-				return ok(uploaddrawfile.render(project));
+				return ok(uploaddrawfile.render(account, project));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";

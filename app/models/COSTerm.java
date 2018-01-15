@@ -34,20 +34,17 @@ public class COSTerm {
     @Column(nullable = false, columnDefinition = "int default 1")
     public int value;
     
-    public String remark;
-    
     @OneToMany(mappedBy = "cosTerm")
 	@LazyCollection(LazyCollectionOption.EXTRA)
-	public List<COSImage> cosImages;
+	public List<Remark> remarks;
     
     public COSTerm(){
-    		this.cosImages = new ArrayList<>();
+    		this.remarks = new ArrayList<>();
     }
     
     public COSTerm(COS cos, Term term){
 	    	this.cos = cos;
 	    	this.term = term;
     }
-    
     
 }

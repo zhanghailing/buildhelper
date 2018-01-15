@@ -29,6 +29,7 @@ import models.Issue;
 import models.LetterHead;
 import models.Notification;
 import models.Project;
+import models.Remark;
 import models.ResponseData;
 import models.Signature;
 import models.Term;
@@ -91,7 +92,7 @@ public class COSController extends Controller{
 					}
 				}
 				
-				return ok(requestcos.render(project, locations, terms, qpList, inspectors));
+				return ok(requestcos.render(account, project, locations, terms, qpList, inspectors));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";
@@ -180,42 +181,30 @@ public class COSController extends Controller{
 						}
 			        }
 					
-					List<COSTerm> cosTerms = new ArrayList<>();
 					for(Term term : terms) {
 						String remark = requestData.get(term.id + "-remark");
 						String optVal = requestData.get(term.id + "-value");
 						
 						if(!Utils.isBlank(optVal)) {
-							COSTerm generalcosTerm = new COSTerm(cos, term);
-							generalcosTerm.value = Integer.parseInt(optVal);
-							if(!Utils.isBlank(remark)) {
-								generalcosTerm.remark = remark;
-							}
-							jpaApi.em().persist(generalcosTerm);
-							cosTerms.add(generalcosTerm);
-							if(project.isFormwork && term.termType == TermType.FORMWORK) {
-								COSTerm formworkCOSTerm = new COSTerm(cos, term);
-								if(!Utils.isBlank(remark)) {
-									formworkCOSTerm.remark = remark;
+							COSTerm cosTerm = new COSTerm(cos, term);
+							cosTerm.value = Integer.parseInt(optVal);
+							jpaApi.em().persist(cosTerm);
+							
+							List<FilePart<File>> filePartList = fileMap.get(cosTerm.id+"");
+							if(!Utils.isBlank(remark) || filePartList != null) {
+								Remark remarkObj = new Remark(account, cosTerm);
+								remarkObj.remark = remark;
+								jpaApi.em().persist(remarkObj);
+								if(filePartList != null) {
+									for(FilePart<File> filePart : filePartList) {
+										COSImage cosImage = new COSImage(remarkObj, filePart.getFile());
+										jpaApi.em().persist(cosImage);
+									}
 								}
-								jpaApi.em().persist(formworkCOSTerm);
-								cosTerms.add(formworkCOSTerm);
 							}
+							
 						}
 						
-					}
-					
-					for(COSTerm cosTerm : cosTerms) {
-						String key = cosTerm.term.id+"";
-						if(fileMap.size() > 0) {
-							if(fileMap.containsKey(key)) {
-								List<FilePart<File>> filePartList = fileMap.get(key);
-								for(FilePart<File> filePart : filePartList) {
-									COSImage cosImage = new COSImage(cosTerm, filePart.getFile());
-									jpaApi.em().persist(cosImage);
-								}
-							}
-						}
 					}
 					
 					//Start add route member
@@ -331,7 +320,7 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, cosId);
 			if(cos != null) {
-				return ok(inspectcos.render(cos));
+				return ok(inspectcos.render(account, cos));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "COS doesn't exist.";
@@ -470,7 +459,7 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, cosId);
 			if(cos != null) {
-				return ok(approvecos.render(cos));
+				return ok(approvecos.render(account, cos));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "COS doesn't exist.";
@@ -493,7 +482,7 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, cosId);
 			if(cos != null) {
-				return ok(rejectcos.render(cos));
+				return ok(rejectcos.render(account, cos));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "COS doesn't exist.";
@@ -622,7 +611,7 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, cosId);
 			if(cos != null) {
-				return ok(issuecos.render(cos));
+				return ok(issuecos.render(account, cos));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "COS doesn't exist.";

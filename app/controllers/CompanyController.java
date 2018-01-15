@@ -81,7 +81,7 @@ public class CompanyController extends Controller {
 			return notFound(errorpage.render(responseData));
 		}
 
-		return ok(company.render(cy));
+		return ok(company.render(account, cy));
 	}
 
 	@With(AuthAction.class)
@@ -112,6 +112,9 @@ public class CompanyController extends Controller {
 					company.account = account;
 					jpaApi.em().persist(company);
 					
+					account.company = company;
+					jpaApi.em().persist(account);
+					
 					CompletableFuture.supplyAsync(() 
 							-> MailerService.getInstance()
 							.send(email, "Account Information", "Your account is: " + email + " and password is: " + password));
@@ -128,7 +131,7 @@ public class CompanyController extends Controller {
 	@With(AuthAction.class)
 	@Transactional
 	public Result companys(int offset) {
-
+		Account account = (Account) ctx().args.get("account");
 		int totalAmount = ((Long) jpaApi.em().createQuery("select count(*) from Company cy").getSingleResult())
 				.intValue();
 		int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
@@ -137,7 +140,7 @@ public class CompanyController extends Controller {
 				.createQuery("from Company cy order by cy.createDatetime asc", Company.class).setFirstResult(offset)
 				.setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 
-		return ok(companys.render(companyList, pageIndex, totalAmount));
+		return ok(companys.render(account, companyList, pageIndex, totalAmount));
 	}
 
 	@With(AuthAction.class)
@@ -157,7 +160,7 @@ public class CompanyController extends Controller {
 			company = jpaApi.em().find(Company.class, companyId);
 		}
 
-		return ok(createcompany.render(company));
+		return ok(createcompany.render(account, company));
 	}
 
 	@With(AuthAction.class)
@@ -165,7 +168,8 @@ public class CompanyController extends Controller {
 	public Result saveCompany() {
 		ResponseData responseData = new ResponseData();
 
-		Account account = (Account) ctx().args.get("account");
+		long accountId = ((Account) ctx().args.get("account")).id;
+		Account account = jpaApi.em().find(Account.class, accountId);
 		if (account.accType != AccountType.SADMIN) {
 			responseData.code = 4000;
 			responseData.message = "You do not have permission.";
@@ -384,7 +388,7 @@ public class CompanyController extends Controller {
 			qpAccount = jpaApi.em().find(Account.class, qpAccountId);
 		}
 
-		return ok(createqpaccount.render(qpAccount));
+		return ok(createqpaccount.render(account, qpAccount));
 	}
 
 	@With(AuthAction.class)
@@ -425,7 +429,7 @@ public class CompanyController extends Controller {
 						Account.class)
 				.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 
-		return ok(qplist.render(qpAccounts, pageIndex, totalAmount));
+		return ok(qplist.render(account, qpAccounts, pageIndex, totalAmount));
 	}
 
 	@With(AuthAction.class)
@@ -445,7 +449,7 @@ public class CompanyController extends Controller {
 			inspectorAccount = jpaApi.em().find(Account.class, inspectorAccountId);
 		}
 
-		return ok(createinspectoraccount.render(inspectorAccount));
+		return ok(createinspectoraccount.render(account, inspectorAccount));
 	}
 
 	@With(AuthAction.class)
@@ -485,7 +489,7 @@ public class CompanyController extends Controller {
 						Account.class)
 				.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 
-		return ok(inspectors.render(inpectors, pageIndex, totalAmount));
+		return ok(inspectors.render(account, inpectors, pageIndex, totalAmount));
 	}
 	
 	@With(AuthAction.class)
@@ -595,7 +599,7 @@ public class CompanyController extends Controller {
 				}
 				
 				accounts.removeAll(accountAdded);
-				return ok(createngineer.render(accounts, engineers));
+				return ok(createngineer.render(account, accounts, engineers));
 			}else{
 				responseData.code = 4000;
 				responseData.message = "Account cannot be found.";
@@ -681,7 +685,7 @@ public class CompanyController extends Controller {
 			responseData.message = "You do not have permission.";
 		}else{
 		    	List<DocFormat> docFormats = jpaApi.em().createQuery("FROM DocFormat", DocFormat.class).getResultList();
-		    	return ok(docformat.render(docFormats));
+		    	return ok(docformat.render(account, docFormats));
 		}
 		
 		return notFound(errorpage.render(responseData));

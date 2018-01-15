@@ -1,9 +1,9 @@
 @import tags._
 @import tools.Constants
 
-@(project: Project, qpList: List[Account], inspectors: List[Account])
+@(account: Account, project: Project, qpList: List[Account], inspectors: List[Account])
 
-@sidemenu("engineer", 5){
+@sidemenu(account, 5){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/simplePagination.css")">
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets//bootstrap-datetimepicker.min.css")">
@@ -904,16 +904,7 @@
 			         </div>
 			         <div class="form-input full-width">
 			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")" 
-			            	value="
-			            		@if(project != null){
-				            		@if(project.clients != null){
-				            			@if(project.clients != null){
-				            				@if(project.clients.size > 0){
-				            					@project.clients(0).companyName
-				            				}
-				            			}
-				            		}
-			            		}">
+			            	value="@if(project != null){@if(project.clients != null){@if(project.clients != null){@if(project.clients.size > 0){@project.clients(0).companyName}}}}">
 			         </div>
 		      	</div>
 		      	
@@ -967,7 +958,8 @@
 			            <label for="pro-title">@messages.at("company_name")</label>
 			         </div>
 			         <div class="form-input full-width">
-			            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")">
+			            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")"
+			            	value="@if(project != null){@if(project.clients != null){@if(project.builders != null){@if(project.builders.size > 0){@project.builders(0).companyName}}}}">
 			         </div>
 		      	</div>
 		      	

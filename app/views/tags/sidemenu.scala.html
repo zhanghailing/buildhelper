@@ -1,4 +1,4 @@
-@(portal: String, section: Integer)(content: Html)
+@(account: Account, section: Integer)(content: Html)
 
 @scripts = {
 	<script>
@@ -36,49 +36,51 @@
 		                <span class="sidebar-role">Master Admin</span>
 		            </a>
 		        </li>
-		        @if(portal == "superadmin"){
-		        	<li class="sub-menu dcjq-parent-li">
+
+				@if(account.accType == AccountType.SADMIN){
+					<li class="sub-menu dcjq-parent-li">
 			        	<a @if(section == 0){class="active"} href="@routes.CompanyController.companys(0)">
 			                <i class="fa fa-tachometer"></i>
 			                <span>Company Management</span>
 			            </a>
 			        </li>
-		        }
-		    	@if(portal == "admin"){
-				        <li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 1){class="active"} href="@routes.CompanyController.company()">
-				                <i class="fa fa-bank"></i>
-				                <span>QP Company Info</span>
-				            </a>
-				        </li>
+				}
+				
+				@if(account.accType == AccountType.ADMIN){
+					<li class="sub-menu dcjq-parent-li">
+						<a @if(section == 1){class="active"} href="@routes.CompanyController.company()">
+			                <i class="fa fa-bank"></i>
+			                <span>QP Company Info</span>
+			            </a>
+			        </li>
 				        
-				        <li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 2){class="active"} href="@routes.CompanyController.qpList(0)">
-				                <i class="fa fa-user"></i>
-				                <span>Manage QP</span>
-				            </a>
-				        </li>
+			        <li class="sub-menu dcjq-parent-li">
+			            <a @if(section == 2){class="active"} href="@routes.CompanyController.qpList(0)">
+			                <i class="fa fa-user"></i>
+			                <span>Manage QP</span>
+			            </a>
+			        </li>
+			
+			        <li class="sub-menu dcjq-parent-li">
+			            <a @if(section == 3){class="active"} href="@routes.CompanyController.inspectors(0)">
+			                <i class="fa fa-user"></i>
+			                <span>Manage Inspector</span>
+			            </a>
+			        </li>
 				
-				        <li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 3){class="active"} href="@routes.CompanyController.inspectors(0)">
-				                <i class="fa fa-user"></i>
-				                <span>Manage Inspector</span>
-				            </a>
-				        </li>
-				
-				        <li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 4){class="active"} href="@routes.ProjectController.projectOfCompany(0)">
-				                <i class="fa fa-user"></i>
-				                <span>Project Engineer</span>
-				            </a>
-				        </li>
-				        <li class="sub-menu dcjq-parent-li">
-				            <a @if(section == 6){class="active"} href="@routes.CompanyController.documentFormat()">
-				                <i class="fa fa-sticky-note"></i>
-				                <span>Document Format</span>
-				            </a>
-				        </li>
-		    	}
+			        <li class="sub-menu dcjq-parent-li">
+			            <a @if(section == 4){class="active"} href="@routes.ProjectController.projectOfCompany(0)">
+			                <i class="fa fa-user"></i>
+			                <span>Project Engineer</span>
+			            </a>
+			        </li>
+			        <li class="sub-menu dcjq-parent-li">
+			            <a @if(section == 6){class="active"} href="@routes.CompanyController.documentFormat()">
+			                <i class="fa fa-sticky-note"></i>
+			                <span>Document Format</span>
+			            </a>
+			        </li>
+				}
 		    	
 		    		<li class="sub-menu dcjq-parent-li">
 		            <a @if(section == 7){class="active"} href="@routes.NotificationController.notifications(0)">
@@ -87,21 +89,25 @@
 		            </a>
 		        </li>
 		        
-		        @if(portal == "engineer"){
-		        	<li class="sub-menu dcjq-parent-li">
-			            <a @if(section == 5){class="active"} href="@routes.ProjectController.projectOfEngineer(0)">
-			                <i class="fa fa-briefcase"></i>
-			                <span>Project Admin</span>
-			            </a>
-			        </li>
+		        @if(account.accType == AccountType.QP 
+		        		|| account.accType == AccountType.INSPECTOR 
+		        		|| account.accType == AccountType.CONTRACTOR 
+		        		|| account.accType == AccountType.CLIENT){
+		    			@if(account.engineer != null){
+			    			<li class="sub-menu dcjq-parent-li">
+				            <a @if(section == 5){class="active"} href="@routes.ProjectController.projectOfEngineer(0)">
+				                <i class="fa fa-briefcase"></i>
+				                <span>Project Admin</span>
+				            </a>
+				        </li>
+		    			}
 			        <li class="sub-menu dcjq-parent-li">
 			            <a @if(section == 8){class="active"} href="@routes.ProjectController.projectExecution(0)">
 			                <i class="fa fa-wrench"></i>
 			                <span>Project Execution</span>
 			            </a>
 			        </li>
-		        }
-		        
+		    		}
 		        
 		        <li class="sub-menu dcjq-parent-li">
 		            <a @if(section == 9){class="active"} href="@routes.AuthController.logout()">
