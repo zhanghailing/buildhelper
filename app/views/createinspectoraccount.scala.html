@@ -112,7 +112,16 @@
 				      		</td>
 				      	</tr>
 				      	<tr>
-				      		<td></td>
+				      		<td>
+				      			<div class="form-group">
+						           <div class="form-label">	
+						              <label for="designation">@messages.at("designation")</label>
+						           </div>
+						           <div class="form-input">
+						           	  <input id="designation" type="text" class="form-control" name="designation" placeholder="@messages.at("placeholder_designation")" value="@if(inspectorAccount != null){@inspectorAccount.user.designation}">
+						         	</div>
+						        </div>
+				      		</td>
 				      		<td>
 				      			<div class="form-group">
 						           <div class="form-label">	
@@ -172,19 +181,6 @@
 						         	</div>
 						        </div>
 				      		</td>
-				      	</tr>
-				      	<tr>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="designation">@messages.at("designation")</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="designation" type="text" class="form-control" name="designation" placeholder="@messages.at("placeholder_designation")" value="@if(inspectorAccount != null){@inspectorAccount.user.designation}">
-						         	</div>
-						        </div>
-				      		</td>
-				      		<td></td>
 				      	</tr>
 				      </table>
 				      
