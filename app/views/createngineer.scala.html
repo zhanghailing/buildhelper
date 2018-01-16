@@ -165,6 +165,7 @@
 		<p class="title">@messages.at("add_project_engineer")</p>
 	</div>
 	
+@if(accounts.size != 0 && accounts != null){	
 	<div class="dash-block">
 		<div class="dash-block-title">Select Project Engineer</div>
 		<div class="eng-content">
@@ -231,4 +232,14 @@
 			</div>
 		</div>
 	</div>	
+}else{
+	<div class="text-center">
+		<p class="empty-title">Your company doesn't have any project engineer~</p>
+		<p class="empty">To get started, create QP account and Inspector account and assign them as project engineer.</p>
+		<div style="margin-bottom: 10px;">
+			<a class="btn btn-success create-btn" href="@routes.CompanyController.createQPAccount()">Create QP Account</a>
+		</div>
+		<a class="btn btn-success create-btn" href="@routes.CompanyController.createInspectorAccount()">Create Inspector Account</a>
+	</div>
+}
 }

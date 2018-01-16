@@ -150,7 +150,7 @@
 		    			cosPrint += '<p>Yours truly,</p>';
 		    			cosPrint += '<div style="position:relative;">';
 		    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px; margin-left: 50px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
-		    			cosPrint += '<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:120px;height:60px;top: 37px;left: 65px;" src="/cos/show/signature?uuid='+signUUID+'&isLarge=true"/>';
+		    			cosPrint += '<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:120px;height:60px;top: 15px;left: 65px;" src="/cos/show/signature?uuid='+signUUID+'&isLarge=true"/>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex; text-align: center;">';
 		    			cosPrint += '<div style="float: left; width: 50%;">';
@@ -1098,7 +1098,7 @@
 							<td class="@coses(index).id">
 								<div class="link-wrapper">
 									<a class="action-btn h-print-action center-align"
-										data-ref="@coses(index).referenceNo"
+										data-ref="@coses(index).serialNo"
 										data-project-title="@coses(index).project.title"
 										data-client="@if(coses(index).project.clients.size() > 0){@coses(index).project.clients(0).companyName}"
 										data-builder="@if(coses(index).project.builders.size() > 0){@coses(index).project.builders(0).companyName}"
@@ -1130,7 +1130,7 @@
 								</div>
 								<div class="link-wrapper">
 									<a class="action-btn s-print-action center-align" 
-										data-ref="@coses(index).referenceNo"
+										data-ref="@coses(index).serialNo"
 										data-project-title="@coses(index).project.title"
 										data-client="@if(coses(index).project.clients.size() > 0){@coses(index).project.clients(0).companyName}"
 										data-builder="@if(coses(index).project.builders.size() > 0){@coses(index).project.builders(0).companyName}"

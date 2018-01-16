@@ -68,8 +68,11 @@
 				</td>
 				<td class="right-content"  width="40%">
 					<div class="link-group right-content">
+					
+					@if(inspectors != null && inspectors.size != 0){	
 						<a class="btn btn-success export-btn" href="@routes.ExportController.exportInspectorByCompany()">Export Inspector Summary</a>
 						<a class="btn btn-success create-btn" href="@routes.CompanyController.createInspectorAccount()">Create Inspector Account</a>
+					}
 					</div>
 				</td>
 			</tr>
@@ -77,7 +80,11 @@
 	</div>
 
 	@if(inspectors == null || inspectors.size == 0){
-		<p class="empty">Sorry, The company doesn't have any sesson～</p>
+		<div class="text-center">
+			<p class="empty-title">Your company doesn't have any inspector account～</p>
+			<p class="empty">To get started, click on the button below to create inspector account.</p>
+			<a class="btn btn-success create-btn" href="@routes.CompanyController.createInspectorAccount()">Create Inspector Account</a>
+		</div>
 	}else{
 		
 		<div class="dash-block">	

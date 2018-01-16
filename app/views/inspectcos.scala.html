@@ -298,24 +298,24 @@
 				<p class="cos-content">@cos.project.title</p>
 			</div>
 			<div class="cos-sec">
-				<p class="cos-subheader">Client</p>
+				<p class="cos-subheader">Developer/Client</p>
 				@if(cos.project.clients != null){
 					@for(index <- 0 until cos.project.clients.size){
-						<p>@cos.project.clients(index).name</p>
+						<p>@cos.project.clients(index).companyName</p>
 					}
 				}
 			</div>
 			<div class="cos-sec">
-				<p class="cos-subheader">Specialist Contractor</p>
+				<p class="cos-subheader">Builder/Specialist Contractor</p>
 				@if(cos.project.builders != null){
 					@for(index <- 0 until cos.project.builders.size){
-						<p>@cos.project.builders(index).name</p>
+						<p>@cos.project.builders(index).companyName</p>
 					}
 				}
 			</div>
 			
 			<div class="cos-sec">
-				<p class="cos-subheader">Serial No.</p>
+				<p class="cos-subheader">Our Ref No.</p>
 				<p>@cos.serialNo.toUpperCase()</p>
 			</div>
 			

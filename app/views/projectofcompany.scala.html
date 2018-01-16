@@ -37,7 +37,11 @@
 				</td>
 				<td class="right-content" width="40%">
 					<div class="link-group right-content">
+					
+					@if(projects != null && projects.size != 0){	
 						<a class="btn btn-success export-btn" href="@routes.ExportController.exportProjectSummary()">Export Summary</a>
+						
+					}
 						<a class="btn btn-success create-btn" href="@routes.CompanyController.addEngineerPage()">@messages.at("add_project_engineer")</a>
 					</div>
 				</td>
@@ -46,7 +50,9 @@
 	</div>
 	
 	@if(projects == null || projects.size == 0){
-		<p class="empty">Sorry, You don't have any company～</p>
+		<div class="text-center">
+			<p class="empty-title">Your project engineers haven't created any project yet～</p>
+		</div>
 	}else{
 		<div class="dash-block">		
 			<table class="table table-striped table-hover lesson-table">
