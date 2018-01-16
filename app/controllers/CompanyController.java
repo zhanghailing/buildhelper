@@ -49,7 +49,7 @@ public class CompanyController extends Controller {
 	@Inject
 	private JPAApi jpaApi;
 	@Inject
-	private Provider<Application> application;
+	private Provider<Application> appProvider;
 	@Inject
 	private MessagesApi messageApi;
 	
@@ -324,7 +324,7 @@ public class CompanyController extends Controller {
 				imageStream = letterHead.downloadThumbnail();
 			}
 		} catch (NoResultException e) {
-			imageStream = application.get().classloader().getResourceAsStream(LetterHead.PLACEHOLDER);
+			imageStream = appProvider.get().classloader().getResourceAsStream(LetterHead.PLACEHOLDER);
 		}
 		return ok(imageStream);
 	}
@@ -344,7 +344,7 @@ public class CompanyController extends Controller {
 				imageStream = logo.downloadThumbnail();
 			}
 		} catch (NoResultException e) {
-			imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+			imageStream = appProvider.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
 		}
 		return ok(imageStream);
 	}
@@ -360,10 +360,10 @@ public class CompanyController extends Controller {
 				if(account.company != null && account.company.logo != null) {
 					imageStream = account.company.logo.downloadThumbnail();
 				}else {
-					imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+					imageStream = appProvider.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
 				}
 			} catch (NoResultException e) {
-				imageStream = application.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
+				imageStream = appProvider.get().classloader().getResourceAsStream(Avatar.DEFAULT_AVATAR);
 			}
 			return ok(imageStream);
 		}
@@ -577,9 +577,9 @@ public class CompanyController extends Controller {
 					}
 				}
 
-				String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2)";
+				String sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.blocked=0 AND (ac.acc_type=3 OR ac.acc_type=2)";
 				if(!Utils.isBlank(companyIDCause)){
-					sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.blocked=0 AND ac.active=1 AND (ac.acc_type=3 OR ac.acc_type=2) AND " + companyIDCause;
+					sql = "SELECT * FROM account ac LEFT JOIN company cy ON ac.id=cy.acc_id WHERE ac.deleted=0 AND ac.blocked=0 AND (ac.acc_type=3 OR ac.acc_type=2) AND " + companyIDCause;
 				}
 
 				List<Account> accounts = jpaApi.em().createNativeQuery(sql, Account.class).getResultList();

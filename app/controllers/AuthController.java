@@ -20,6 +20,7 @@ import models.Company;
 import models.Document;
 import models.ResponseData;
 import models.User;
+import play.Application;
 import play.cache.CacheApi;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -472,8 +473,6 @@ public class AuthController extends Controller{
 		
 		long accountId = ((Account) ctx().args.get("account")).id;
 		Account account = jpaApi.em().find(Account.class, accountId);
-		
-		System.out.println("------------> " + account);
 		
 		if(account != null) {
 			UserVO userVO = new UserVO(account);

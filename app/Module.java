@@ -23,6 +23,7 @@ public class Module extends AbstractModule {
         bind(Counter.class).to(AtomicCounter.class);
         bind(StartingJobs.class).asEagerSingleton();
         bind(S3Plugin.class).asEagerSingleton();
+        bind(MailerService.class).asEagerSingleton();
     }
 
 }

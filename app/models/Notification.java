@@ -1,7 +1,9 @@
 package models;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +22,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import play.db.jpa.JPA;
+import services.MailerService;
 
 @Entity
 @Table(name = "notification")
@@ -55,6 +58,25 @@ public class Notification {
 		this.cos = cos;
 		this.title = title;
 		this.content = content;
+	}
+	
+	public static void notifyQPByCOS(COS cos) {
+		List<Account> qpList = JPA.em()
+				.createNativeQuery("SELECT * FROM account ac LEFT JOIN project_team pt ON pt.account_id=ac.id WHERE pt.project_id=:projectId AND ac.acc_type=:accountType", Account.class)
+				.setParameter("projectId", cos.project.id)
+				.setParameter("accountType", 3)
+				.getResultList();
+		for(Account qp : qpList) {
+			Notification notification = new Notification(cos, cos.project.title, "Pending to inspect");
+			JPA.em().persist(notification);
+			
+			AccountNotification accNfy = new AccountNotification(qp, notification);
+			JPA.em().persist(accNfy);
+			
+			String htmlBody = "";
+			CompletableFuture.supplyAsync(() 
+					-> MailerService.getInstance().send(qp.email, "Notification", htmlBody));
+		}
 	}
 	
 	public static void notifyInspectorByCOS(COS cos) {

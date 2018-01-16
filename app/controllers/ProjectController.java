@@ -3,8 +3,10 @@ package controllers;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -36,6 +38,7 @@ import play.mvc.Result;
 import play.mvc.With;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
+import services.MailerService;
 import tools.Constants;
 import tools.Utils;
 import views.html.*;
@@ -260,6 +263,7 @@ public class ProjectController extends Controller{
 		String mcwp = Utils.isBlank(requestData.get("mcwp")) ? "0" : requestData.get("mcwp");
 		String scaffold = Utils.isBlank(requestData.get("scaffold")) ? "0" : requestData.get("scaffold");
 		String formwork = Utils.isBlank(requestData.get("formwork")) ? "0" : requestData.get("formwork");
+		String others = Utils.isBlank(requestData.get("others")) ? "0" : requestData.get("others");
 		String useCompanyLetterHead = Utils.isBlank(requestData.get("useCompanyLetterHead")) ? "0" : requestData.get("useCompanyLetterHead");
 		String clientCompanyName = requestData.get("clientCompanyName");
 		String builderCompanyName = requestData.get("builderCompanyName");
@@ -271,9 +275,8 @@ public class ProjectController extends Controller{
 				responseData.code = 4000;
 				responseData.message = "You do not have permission.";
 			}else{
-				Project project = null;
 				if(!Utils.isBlank(projectId)) {
-					project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
+					Project project = jpaApi.em().find(Project.class, Long.parseLong(projectId));
 					if(project == null) {
 						responseData.code = 4000;
 						responseData.message = "The project doesn't exist.";
@@ -290,20 +293,96 @@ public class ProjectController extends Controller{
 						return redirect(routes.ProjectController.projectOfEngineer(0));
 					}
 				}else {
-					project = new Project(adminAccount.engineer, projectTitle);
-					project.startDate = Utils.parse("yyyy-MM-dd", startDate);
-					project.endDate = Utils.parse("yyyy-MM-dd", endDate);
-					project.isGondola = gondola.equals("1") ? true : false;
-					project.isMCWP = mcwp.equals("1") ? true : false;
-					project.isScaffold = scaffold.equals("1") ? true : false;
-					project.isFormwork = formwork.equals("1") ? true : false;
-					project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
-					jpaApi.em().persist(project);
+					List<Project> projects = new ArrayList<Project>();
+					if(gondola.equals("1")) {
+						Project project = new Project(adminAccount.engineer, projectTitle);
+						project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+						project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+						project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+						project.isGondola = true;
+						jpaApi.em().persist(project);
+						projects.add(project);
+						
+						Project.initQP(project, requestData.data());
+						Project.initInspector(project, requestData.data());
+					}
 					
-					Client.initClient(clientCompanyName, project, requestData.data());
-					Builder.initBuilder(builderCompanyName, project, requestData.data());
-					Project.initQP(project, requestData.data());
-					Project.initInspector(project, requestData.data());
+					if(mcwp.equals("1")) {
+						Project project = new Project(adminAccount.engineer, projectTitle);
+						project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+						project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+						project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+						project.isMCWP = true;
+						jpaApi.em().persist(project);
+						projects.add(project);
+						
+						Project.initQP(project, requestData.data());
+						Project.initInspector(project, requestData.data());
+					}
+					
+					if(scaffold.equals("1")) {
+						Project project = new Project(adminAccount.engineer, projectTitle);
+						project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+						project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+						project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+						project.isScaffold = true;
+						jpaApi.em().persist(project);
+						projects.add(project);
+						
+						Project.initQP(project, requestData.data());
+						Project.initInspector(project, requestData.data());
+					}
+					
+					if(formwork.equals("1")) {
+						Project project = new Project(adminAccount.engineer, projectTitle);
+						project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+						project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+						project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+						project.isFormwork = true;
+						jpaApi.em().persist(project);
+						projects.add(project);
+						
+						Project.initQP(project, requestData.data());
+						Project.initInspector(project, requestData.data());
+					}
+					
+					if(others.equals("1")) {
+						Project project = new Project(adminAccount.engineer, projectTitle);
+						project.startDate = Utils.parse("yyyy-MM-dd", startDate);
+						project.endDate = Utils.parse("yyyy-MM-dd", endDate);
+						project.useLetterHead = useCompanyLetterHead.equals("1") ? true : false;
+						project.isOthers = true;
+						jpaApi.em().persist(project);
+						projects.add(project);
+						
+						Project.initQP(project, requestData.data());
+						Project.initInspector(project, requestData.data());
+					}
+					
+					Client.initClient(clientCompanyName, projects, requestData.data());
+					Builder.initBuilder(builderCompanyName, projects, requestData.data());
+					
+					if(projects.size() > 0) {
+						Project project = projects.get(0);
+						if(project.clients != null && project.clients.size() > 0) {
+							for(Client client : project.clients) {
+								String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(client.account.token, "UTF-8");
+								String htmlBody = "Your account is: " + client.account.email + " and password is: " + client.account.password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
+								CompletableFuture.supplyAsync(() 
+										-> MailerService.getInstance().send(client.account.email, "Account Information", htmlBody));
+							}
+						}
+						
+						if(project.builders != null && project.builders.size() > 0) {
+							for(Builder builder : project.builders) {
+								String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(builder.account.token, "UTF-8");
+								String htmlBody = "Your account is: " + builder.account.email + " and password is: " + builder.account.password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
+								CompletableFuture.supplyAsync(() 
+										-> MailerService.getInstance().send(builder.account.email, "Account Information", htmlBody));
+							}
+						}
+					}
+					
 				}
 				return redirect(routes.ProjectController.projectOfEngineer(0));
 			}
@@ -344,25 +423,26 @@ public class ProjectController extends Controller{
 					responseData.code = 4000;
 					responseData.message = "Project doesn't exits.";
 				}else {
+					Client client = null;
 					if(!AuthController.notExists(clientEmail)){
-			    			responseData.message = "Account already exist.";
-			    			responseData.code = 4000;
+			    			client = jpaApi.em().find(Client.class, account.id);
 					}else {
 						Account clientAccount = new Account(clientEmail, clientPassword);
 				    		account.accType = AccountType.CLIENT;
 				    		JPA.em().persist(clientAccount);
 				    		
 				    		String useNotifyStr = Utils.isBlank(clientNotify) ? "0" : clientNotify;
-				    		Client client = new Client(clientAccount, project);
+				    		client = new Client(clientAccount);
 				    		client.companyName = clientCompanyName;
 				    		client.name = clientName;
 				    		client.designation = clientDesignation;
 				    		client.hpNo = clientHpNo;
 				    		client.isNotify = useNotifyStr.equals("1") ? true : false;
-				    		JPA.em().persist(client);
-				    		
-				    		responseData.data = client;
 					}
+					
+					client.projects.add(project);
+					JPA.em().persist(client);
+					responseData.data = client;
 				}
 			}
 		}
@@ -399,26 +479,25 @@ public class ProjectController extends Controller{
 					responseData.code = 4000;
 					responseData.message = "Project doesn't exits.";
 				}else {
+					Builder builder = null;
 					if(!AuthController.notExists(builderEmail)){
-			    			responseData.message = "Account already exist.";
-			    			responseData.code = 4000;
+						builder = jpaApi.em().find(Builder.class, account.id);
 					}else {
 						Account builderAccount = new Account(builderEmail, builderPassword);
 				    		account.accType = AccountType.CLIENT;
 				    		JPA.em().persist(builderAccount);
 				    		
 				    		String useNotifyStr = Utils.isBlank(builderNotify) ? "0" : builderNotify;
-				    		Builder builder = new Builder(builderAccount);
-				    		builder.projects.add(project);
+				    		builder = new Builder(builderAccount);
 				    		builder.companyName = builderCompanyName;
 				    		builder.name = builderName;
 				    		builder.designation = builderDesignation;
 				    		builder.hpNo = builderHpNo;
 				    		builder.isNotify = useNotifyStr.equals("1") ? true : false;
-				    		JPA.em().persist(builder);
-				    		
-				    		responseData.data = builder;
 					}
+					builder.projects.add(project);
+					JPA.em().persist(builder);
+					responseData.data = builder;
 				}
 			}
 		}

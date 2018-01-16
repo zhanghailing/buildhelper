@@ -1,7 +1,9 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -10,12 +12,17 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NoResultException;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,19 +58,22 @@ public class Client {
 	@Column(name="is_notify")
 	public boolean isNotify;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "project_client", joinColumns = @JoinColumn(name = "client_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	@JsonIgnore
-    public Project project;
+    public List<Project> projects;
 	
-	public Client() {}
-	
-	public Client(Account account, Project project) {
-		this.account = account;
-		this.project = project;
+	public Client() {
+		this.projects = new ArrayList<Project>();
 	}
 	
-	public static void initClient(String clientCompany, Project project, Map<String, String> data) throws Exception{
+	public Client(Account account) {
+		this();
+		this.account = account;
+	}
+	
+	public static void initClient(String clientCompany, List<Project> projects, Map<String, String> data) throws Exception, NoResultException{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> clientEmailMap = new HashMap<>();
 	    Map<Integer, String> clientPasswordMap = new HashMap<>();
@@ -119,20 +129,35 @@ public class Client {
 	    }
 	    
 	    for(int i = 0; i < clientEmailMap.size(); i++){
-	    		if(!AuthController.notExists(clientEmailMap.get(i))){
-	    			throw new Exception("Account already exist."); 
+	    		Account account;
+	    		Client client = null;
+		    	if(!AuthController.notExists(clientEmailMap.get(i))){
+		    		account = JPA.em()
+		    				.createQuery("from Account ac where ac.email=:email", Account.class)
+		    				.setParameter("email", clientEmailMap.get(i)).getSingleResult();
+		    		if(account.client == null) {
+		    			client = new Client(account);
+		    		}else {
+		    			client = account.client;
+		    		}
+	    		}else {
+	    			account = new Account(clientEmailMap.get(i), clientPasswordMap.get(i));
+		    		account.accType = AccountType.CONTRACTOR;
+		    		JPA.em().persist(account);
+		    		client = new Client(account);
 	    		}
-	    		Account account = new Account(clientEmailMap.get(i), clientPasswordMap.get(i));
-	    		account.accType = AccountType.CLIENT;
-	    		JPA.em().persist(account);
+		    
+		    	String useNotifyStr = Utils.isBlank(clientNotifyMap.get(i)) ? "0" : clientNotifyMap.get(i);
+		    	client.companyName = clientCompany;
+		    	client.name = clientNameMap.get(i);
+		    	client.hpNo = clientHpNoMap.get(i);
+		    	client.designation = clientDesignationMap.get(i);
+		    	client.isNotify = useNotifyStr.equals("1") ? true : false;
+		    	
+		    	for(Project project : projects) {
+		    		client.projects.add(project);
+		    	}
 	    		
-	    		String useNotifyStr = Utils.isBlank(clientNotifyMap.get(i)) ? "0" : clientNotifyMap.get(i);
-	    		Client client = new Client(account, project);
-	    		client.companyName = clientCompany;
-	    		client.name = clientNameMap.get(i);
-	    		client.hpNo = clientHpNoMap.get(i);
-	    		client.designation = clientDesignationMap.get(i);
-	    		client.isNotify = useNotifyStr.equals("1") ? true : false;
 	    		JPA.em().persist(client);
 	    }
 	}
