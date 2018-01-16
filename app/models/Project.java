@@ -69,7 +69,7 @@ public class Project {
 	@Column(name="use_lh", columnDefinition = "boolean default false")
 	public boolean useLetterHead;
 	
-	@OneToMany(mappedBy = "project")
+	@ManyToMany(mappedBy = "projects")
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<Client> clients;
 	

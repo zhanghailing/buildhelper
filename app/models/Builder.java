@@ -73,7 +73,7 @@ public class Builder {
 		this.account = account;
 	}
 	
-	public static void initBuilder(String companyName, Project project, Map<String, String> data) throws Exception, NoResultException{
+	public static void initBuilder(String companyName, List<Project> projects, Map<String, String> data) throws Exception, NoResultException{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> builderEmailMap = new HashMap<>();
 	    Map<Integer, String> builderPasswordMap = new HashMap<>();
@@ -153,10 +153,9 @@ public class Builder {
 	    		builder.hpNo = builderHpNoMap.get(i);
 	    		builder.designation = builderDesignationMap.get(i);
 	    		builder.isNotify = useNotifyStr.equals("1") ? true : false;
-	    		System.out.println("8------------> " + builder.projects);
-	    		builder.projects.add(project);
-	    		
-	    		System.out.println("9------------> " + builder.companyName);
+	    		for(Project project : projects) {
+	    			builder.projects.add(project);
+		    	}
 	    		
 	    		JPA.em().persist(builder);
 	    }

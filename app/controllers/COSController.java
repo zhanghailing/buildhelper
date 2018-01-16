@@ -33,7 +33,6 @@ import models.Remark;
 import models.ResponseData;
 import models.Signature;
 import models.Term;
-import models.TermType;
 import play.Application;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -243,6 +242,7 @@ public class COSController extends Controller{
 						jpaApi.em().persist(a);
 					}
 					
+					Notification.notifyQPByCOS(cos);
 					Notification.notifyInspectorByCOS(cos);
 				}catch (IOException e) {
 					responseData.code = 4001;
@@ -517,9 +517,12 @@ public class COSController extends Controller{
 					if(rejectType.equals("issue")) {
 						cos.issueRejectCOS(reason, rejectSignPart.getFile());
 						Notification.notifyBuilderByCOS(cos, "Issue Rejected By " + account.user.name);
+						Notification.notifyInspectorByCOS(cos);
 					}else {
 						cos.inspectorRejectCOS(reason, rejectSignPart.getFile());
 						Notification.notifyBuilderByCOS(cos, "Inspection Rejected By " + account.user.name);
+						Notification.notifyInspectorByCOS(cos);
+						Notification.notifyQPByCOS(cos);
 					}
 				}catch(Exception e) {
 					responseData.code = 4000;
@@ -560,9 +563,12 @@ public class COSController extends Controller{
 					if(approveType.equals("issue")) {
 						cos.issueApproveCOS(reason, comment, approveDate, approveSignPart.getFile());
 						Notification.notifyBuilderByCOS(cos, "Issue Accepted By " + account.user.name);
+						Notification.notifyInspectorByCOS(cos);
 					}else {
 						cos.inspectorApproveCOS(reason, comment, approveDate, approveSignPart.getFile());
 						Notification.notifyBuilderByCOS(cos, "Inspection Accepted By " + account.user.name);
+						Notification.notifyInspectorByCOS(cos);
+						Notification.notifyQPByCOS(cos);
 					}
 				}catch(Exception e) {
 					responseData.code = 4000;

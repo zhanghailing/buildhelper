@@ -23,11 +23,13 @@
 			});
 			
 			$('input[type="radio"]').on('click', function(){
-				$('.subject-lbl').removeClass('selected');
-				$('input[type="radio"]').val(0);
-				
-				$(this).parent().addClass('selected');
-				$(this).val("1");
+	       		if($(this).parent().hasClass("selected") && $(".subject-lbl.selected").length > 1){
+	       			$(this).parent().removeClass('selected');
+	       			$(this).val("0");
+	       		}else{
+	       			$(this).parent().addClass('selected');
+	       			$(this).val("1");
+	       		}
 	       	});
 			
 			$('#use-lh-chx').on('click', function(){
