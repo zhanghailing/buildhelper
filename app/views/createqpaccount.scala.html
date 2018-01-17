@@ -10,6 +10,11 @@
 				var fileInput = '<input type=\"file\" name=\"document\" multiple>';	
 				$('input[type=file]').last().after(fileInput);
 			});
+			    $("#remove-file-btn").on("click", function(){
+	
+			    if ($('input[type=file]').length > 1){
+				$('input[type=file]').last().remove();}
+			});
 			
 			$('input[type="radio"]').on('click', function(){
 	       		if($(this).parent().hasClass("selected") && $(".subject-lbl.selected").length > 1){
@@ -279,7 +284,8 @@
 					   </div>	
 			           <input type="file" name="document" multiple>
 			           <a id="add-file-btn" class="btn">Add</a>
-		         	</div>
+		         	   <a id="remove-file-btn" class="btn">remove</a>
+					</div>
 					
 				   </div>
 				</div>
