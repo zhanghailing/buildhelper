@@ -9,12 +9,12 @@ html, body {
 	position: relative;
 }
 
-iframe { 
+iframe {
 	margin: none;
     padding: none;
     border: none;
     line-height: 0;
-    float: left; 
+    float: left;
 }
 
 ul, ol, li, dl, dd {
@@ -120,6 +120,32 @@ p.bold{
 
 .form-group{
 	margin-bottom: 20px !important;
+}
+
+ul.directory {
+	margin-bottom: 10px;
+	padding-left: 10px;
+}
+
+ul.directory li.directory-link {
+	display: inline-block;
+}
+
+ul.directory li.directory-link a {
+	text-decoration: none;
+	color: inherit;
+}
+
+ul.directory li.slash {
+	display: inline-block;
+	padding-left: 5px;
+	padding-right: 5px;
+	color: #ccc;
+}
+
+ul.directory li.current {
+	display: inline-block;
+	font-weight: bold;
 }
 
 @-webkit-keyframes autofill {
@@ -381,7 +407,7 @@ input[type="submit"]{
 /** Create Lesson Dashboard Start **/
 
 #dash-content{
-	min-height: calc(100% - 30px);	
+	min-height: calc(100% - 30px);
 }
 
 .dash-bg{
@@ -408,7 +434,7 @@ input[type="submit"]{
 
 .dash-block > a{
 	width: 150px;
-	height: 80px; 	
+	height: 80px;
 	vertical-align: middle;
 }
 
@@ -420,7 +446,7 @@ input[type="submit"]{
 
 .dash-sidebar > a{
 	width: 150px;
-	height: 80px; 	
+	height: 80px;
 	vertical-align: middle;
 }
 
@@ -435,7 +461,7 @@ input[type="submit"]{
 	right: 15px;
 	-ms-transform: translate(0, -50%);
     -webkit-transform: translate(0, -50%);
-    transform: translate(0, -50%); 
+    transform: translate(0, -50%);
 }
 
 .btn-wrap > div{
@@ -456,7 +482,7 @@ input[type="submit"]{
     bottom: 0;
     top: 0;
     overflow-y: auto;
-    outline: none; 
+    outline: none;
     z-index: 100;
 }
 
@@ -470,7 +496,7 @@ input[type="submit"]{
 ul.sidebar-menu li {
 	position: relative;
     line-height: 15px;
-    
+
 }
 
 ul.sidebar-menu li a {
@@ -898,7 +924,7 @@ input.file-input{
 }
 
 #company-form label.error{
-	width: 100%;	
+	width: 100%;
 }
 
 .upload-wrap > label.error{
@@ -1173,7 +1199,7 @@ p.work-type{
 p.doc-title{
 	color: #676a6c;
 	font-size: 1.2em;
-} 
+}
 
 .doc-wrap{
 	padding: 10px 10px 10px 10px;
@@ -1294,7 +1320,7 @@ a.tab-link:hover{
 /** Create COS Start  **/
 
 .cos-bg{
-	background-color: #F1F1F1;	
+	background-color: #F1F1F1;
 	padding-bottom: 30px;
 }
 
@@ -1312,7 +1338,7 @@ p.cos-header{
 	color: #777;
 	padding: 30px 0;
 	font-weight: 600;
-	font-size: 1.2em;	
+	font-size: 1.2em;
 }
 
 p.cos-subheader{
@@ -1369,12 +1395,12 @@ p.cos-content{
 }
 
 .cos-uploader-wrapper{
-	width: 100%;	
+	width: 100%;
 	height:90px;
 }
 
 #canvas{
-	border:1px solid #ccc;	
+	border:1px solid #ccc;
 }
 
 #cos-form #submit{
@@ -1382,7 +1408,7 @@ p.cos-content{
 }
 
 #cos-form .form-input{
-	display: block;	
+	display: block;
 }
 
 .submit-wrapper{
@@ -1422,7 +1448,7 @@ i.draw-btn{
 #draw-model .modal-dialog{
 	width: 900px !important;
 }
-	
+
 .note-title{
 	padding: 10px;
 	color: #676a6c;
@@ -1444,12 +1470,12 @@ i.draw-btn{
 	left: 0;
 }
 
-@media only screen and (max-width: 980px) {	
+@media only screen and (max-width: 980px) {
     .a4 {
         width: 100%;
     }
 }
-	
+
 /** Create COS End  **/
 
 /** Inspect COS Start **/
@@ -1457,7 +1483,7 @@ i.draw-btn{
 .cos-sec{
 	margin: 10px 0;
 }
-	
+
 p.sec-header{
 	margin-top: 30px;
 	padding: 15px;
@@ -1943,7 +1969,7 @@ footer p.copy-right {
 	.landing-page .carousel-control {
 		display: none;
 	}
-}	
+}
 
 /** Landing page end **/
 
@@ -1959,7 +1985,7 @@ footer p.copy-right {
 }
 
 .notice-item p{
-	font-size: 16px;	
+	font-size: 16px;
 	color: black;
 }
 

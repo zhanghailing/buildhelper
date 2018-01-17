@@ -12,7 +12,7 @@
 			var pageParts = $(".paginate");
 		    var numPages = pageParts.length;
 		    var perPage = @Constants.COMPANY_PAGE_SIZE;
-		    
+
 		    pageParts.slice(perPage).hide();
 		    $("#page-nav").pagination({
 		        items: @totalAmount,
@@ -22,7 +22,7 @@
 		        onPageClick: function(pageNum) {
 		            var start = perPage * (pageNum - 1);
 		            var end = start + perPage;
-		            
+
 		            $('#page-offset').val(start);
 		            $('form#page-form').submit();
 		        }
@@ -34,6 +34,13 @@
 			<tr>
 				<td class="left-content" width="60%">
 					<div class="note-title">Registered MOM Project</div>
+					<ul class="directory">
+						<li class="directory-link">
+							<a href="@routes.NotificationController.notifications(0)">Home</a>
+						</li>
+						<li class="slash">/</li>
+						<li class="current">Project Execution</li>
+					</ul>
 				</td>
 				<td class="right-content" width="40%">
 					<div class="link-group right-content">
@@ -44,7 +51,7 @@
 			</tr>
 		</table>
 	</div>
-	
+
 	@if(projects == null || projects.size == 0){
 		<p class="empty">Sorry, You don't have any company～</p>
 	}else{
@@ -94,6 +101,6 @@
 					<input id="page-offset" type="hidden" name="offset" value="0"/>
 				</form>
 			</div>
-		</div>	
+		</div>
 	}
 }

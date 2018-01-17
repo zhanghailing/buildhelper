@@ -13,7 +13,7 @@
 			var pageParts = $(".paginate");
 		    var numPages = pageParts.length;
 		    var perPage = @Constants.COMPANY_PAGE_SIZE;
-		    
+
 		    pageParts.slice(perPage).hide();
 		    $("#page-nav").pagination({
 		        items: @totalAmount,
@@ -23,7 +23,7 @@
 		        onPageClick: function(pageNum) {
 		            var start = perPage * (pageNum - 1);
 		            var end = start + perPage;
-		            
+
 		            $('#page-offset').val(start);
 		            $('form#page-form').submit();
 		        }
@@ -33,11 +33,11 @@
 	<div class="dash-detail-header">
 		<p class="title">Notifications</p>
 	</div>
-	
+
 	@if(notifications == null || notifications.size == 0){
 		<p class="empty-title text-center">You don't have any notification～</p>
 	}else{
-		<div class="dash-block">	
+		<div class="dash-block">
 			<ul class="notice-list">
 				@for(index <- 0 until notifications.size){
 					<li class="notice-item">
