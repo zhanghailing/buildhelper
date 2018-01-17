@@ -1,39 +1,81 @@
 @import tags._
+@import tools.Constants
 
-@(account: Account, inspectorAccount: Account)
+@(account: Account, project: Project, qpList: List[Account], inspectors: List[Account])
 
-@sidemenu(account, 3){
+@sidemenu(account, 5){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/simplePagination.css")">
+	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets//bootstrap-datetimepicker.min.css")">
+	
+	<script src="@routes.Assets.versioned("javascripts/jquery.simplePagination.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/moment.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/jquery.ui.widget.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(function(){
-			$("#add-file-btn").on("click", function(){
-				var fileInput = '<input type=\"file\" name=\"document\" multiple>';	
-				$('input[type=file]').last().after(fileInput);
+			$(document).on('focus',".startdatepicker", function(){
+			    $(this).datetimepicker();
 			});
 			
-			$("#remove-file-btn").on("click", function(){
-	
-			    if ($('input[type=file]').length > 1){
-				$('input[type=file]').last().remove();}
+			$(document).on('focus',".enddatepicker", function(){
+			    $(this).datetimepicker();
 			});
 			
-			$("#inspector-form").validate({
+			$('input[type="radio"]').on('click', function(){
+	       		if($(this).parent().hasClass("selected") && $(".subject-lbl.selected").length > 1){
+	       			$(this).parent().removeClass('selected');
+	       			$(this).val("0");
+	       		}else{
+	       			$(this).parent().addClass('selected');
+	       			$(this).val("1");
+	       		}
+	       	});
+			
+			$('#use-lh-chx').on('click', function(){
+				if($(this).is('checked=true')){
+					$('#use-lh-chx').val("1");
+				}else{
+					$('#use-lh-chx').val("0");
+				}
+			});
+			
+			$('#client-notify-chx').on('click', function(){
+				if($(this).is(':checked')){
+					$(this).val("1");
+				}else{
+					$(this).val("0");
+				}
+			});
+			
+			$('#builder-notify-chx').on('click', function(){
+				if($(this).is(':checked')){
+					$(this).val("1");
+				}else{
+					$(this).val("0");
+				}
+			});
+			
+			$("#client-form").validate({
 				ignore: [],
 		        rules: {
-		        	name:{
+		        	clientName:{
 		            	minlength: 2,
 		                maxlength: 50,
-		            	    required:true
+		            	required:true
 		            },
-		            email:{
-		            		email: true,
-		            		required:true
+		            clientPassword:{
+		            	required:true
 		            },
-		            password:{
-		            		required:true
+		            clientEmail:{
+		            	email:true,
+		            	required:true
 		            },
-		            mobile:{
-		            		required: true
+		            clientHpNo:{
+		            	required:true
+		            },
+		            clientDesignation:{
+		            	required:true
 		            }
 		        },
 		        highlight: function (element) {
@@ -43,170 +85,1213 @@
 		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		        },
 		        submitHandler: function(form) {
-		        		$('input[type=submit]').attr("disabled", true);
-		        		form.submit();
+			        	var projectInput = $('#client-model').find('input[name="projectId"]');
+			        	if(projectInput.length == 1){
+			        		var projectId = projectInput.val();
+			        		$.ajax({
+		            			url: "@routes.ProjectController.addClient()",
+			                type: "POST",
+			                data: $(form).serialize(),
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				            	    			clientBlk += '<input class=\"client-id\" type=\"hidden\" name=\"clientId\" value="' + data.data.accountId + '">';
+				            	    			clientBlk += '<div class="acc-info">';
+							        		clientBlk += '<p class="acc-name bold">' + data.data.name + '</p>';
+							        		clientBlk += '<p class="acc-designation">' + data.data.designation + '</p>';
+							        		clientBlk += '<p class="acc-email">' + data.data.account.email + '</p>';
+							        		clientBlk += '<p class="acc-hp">' + data.data.hpNo + '</p>';
+							        		clientBlk += '<p class="acc-notify">Notify? <span class="green">' + (data.data.notify ? 'Yes' : 'No') + '</span></p>';
+							        		clientBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+							        		clientBlk += '</div>';
+							        		
+							        		clientBlk += '<div class="client-inputs">';
+							        		clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
+							        		clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
+							        		clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
+								        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
+								        	clientBlk += '</div>';
+								        	clientBlk += '</div>';
+							        		
+							        		$('#add-client-btn-wrapper').before(clientBlk);
+								        	$('#client-model').modal('hide');
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+			        	}else{
+			        		var clientEmail = $('input[name=clientEmail]').val();
+				        	var clientPassword = $('input[name=clientPassword]').val();
+				        	var clientName = $('input[name=clientName]').val();
+				        	var clientHpNo = $('input[name=clientHpNo]').val();
+				        	var clientDesignation =  $('input[clientDesignation]').val();
+				        	var notify = ($('#client-notify-chx').is(':checked') ? '1' : '0');
+				        	
+				        	var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				        	clientBlk += '<div class="acc-info">';
+				        	clientBlk += '<p class="acc-name bold">' + clientName + '</p>';
+				        	clientBlk += '<p class="acc-designation">' + clientDesignation + '</p>';
+				        	clientBlk += '<p class="acc-email">' + clientEmail + '</p>';
+				        	clientBlk += '<p class="acc-hp">' + clientHpNo + '</p>';
+				        	clientBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
+				        	clientBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+				        	clientBlk += '</div>';
+				        		
+				        	clientBlk += '<div class="client-inputs">';
+				        	clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
+				        	clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
+				        	clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
+				        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
+				        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
+				        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
+				        	clientBlk += '</div>';
+				        	clientBlk += '</div>';
+					        	
+			        		$('#add-client-btn-wrapper').before(clientBlk);
+				        	$('#client-model').modal('hide');
+			        	}
+			        	return false;
 		        }
 		    });
 			
-	   	});
-		
-		function GetFileSize(fileid) {
-			 try {
-				 var fileSize = 0;
-				 if(checkIE()) {
-					 var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
-					 var objFile = objFSO.getFile(filePath);
-					 var fileSize = objFile.size; //size in kb
-					 fileSize = fileSize / 1048576; //size in mb 
-				 }else {
-					 fileSize = $("#" + fileid)[0].files[0].size //size in kb
-					 fileSize = fileSize / 1048576; //size in mb 
-				 }
-				 
-				 if(fileSize <= 2){
-					 return true; 
-				 }
-			 }catch (e) {
-			 	console.log("Error is :" + e);
+			
+			$("#builder-form").validate({
+				ignore: [],
+		        rules: {
+		        	builderName:{
+		            	minlength: 2,
+		                maxlength: 50,
+		            	required:true
+		            },
+		            builderPassword:{
+		            	required:true
+		            },
+		            builderEmail:{
+		            	email:true,
+		            	required:true
+		            },
+		            builderHpNo:{
+		            	required:true
+		            },
+		            builderDesignation:{
+		            	required:true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+			        	var projectInput = $('#builder-model').find('input[name="projectId"]');
+			        	if(projectInput.length == 1){
+			        		var projectId = projectInput.val();
+			        		$.ajax({
+		            			url: "@routes.ProjectController.addBuilder()",
+			                type: "POST",
+			                data: $(form).serialize(),
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				            	    			builderBlk += '<input class=\"builder-id\" type=\"hidden\" name=\"builderId\" value="' + data.data.accountId + '">';
+				            	    			builderBlk += '<div class="acc-info">';
+							        		builderBlk += '<p class="acc-name bold">' + data.data.name + '</p>';
+							        		builderBlk += '<p class="acc-designation">' + data.data.designation + '</p>';
+							        		builderBlk += '<p class="acc-email">' + data.data.account.email + '</p>';
+							        		builderBlk += '<p class="acc-hp">' + data.data.hpNo + '</p>';
+							        		builderBlk += '<p class="acc-notify">Notify? <span class="green">' + (data.data.notify ? 'Yes' : 'No') + '</span></p>';
+							        		builderBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+							        		builderBlk += '</div>';
+							        		
+							        		builderBlk += '<div class="builder-inputs">';
+							        		builderBlk += '<input type="hidden" name="builderEmail[]" value="' + builderEmail + '"/>';
+							        		builderBlk += '<input type="hidden" name="builderPassword[]" value="' + builderPassword + '"/>';
+							        		builderBlk += '<input type="hidden" name="builderName[]" value="' + builderName + '"/>';
+								        	builderBlk += '<input type="hidden" name="builderHpNo[]" value="' + builderHpNo + '"/>';
+								        	builderBlk += '<input type="hidden" name="builderDesignation[]" value="' + builderDesignation + '"/>';
+								        	builderBlk += '<input type="hidden" name="builderNotify[]" value="' + notify + '"/>';
+								        	builderBlk += '</div>';
+								        	builderBlk += '</div>';
+							        		
+							        		$('#add-builder-btn-wrapper').before(builderBlk);
+								        	$('#builder-model').modal('hide');
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+			        	}else{
+			        		var builderEmail = $('input[name=builderEmail]').val();
+				        	var builderPassword = $('input[name=builderPassword]').val();
+				        	var builderName = $('input[name=builderName]').val();
+				        	var builderHpNo = $('input[name=builderHpNo]').val();
+				        	var builderDesignation =  $('input[builderDesignation]').val();
+				        	var notify = ($('#builder-notify-chx').is(':checked') ? '1' : '0');
+				        	
+				        	var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
+				        	builderBlk += '<div class="acc-info">';
+				        	builderBlk += '<p class="acc-name bold">' + builderName + '</p>';
+				        	builderBlk += '<p class="acc-designation">' + builderDesignation + '</p>';
+				        	builderBlk += '<p class="acc-email">' + builderEmail + '</p>';
+				        	builderBlk += '<p class="acc-hp">' + builderHpNo + '</p>';
+				        	builderBlk += '<p class="acc-notify">Notify? <span class="green">' + (notify ? 'Yes' : 'No') + '</span></p>';
+				        	builderBlk += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
+				        	builderBlk += '</div>';
+				        		
+				        	builderBlk += '<div class="builder-inputs">';
+				        	builderBlk += '<input type="hidden" name="builderEmail[]" value="' + builderEmail + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderPassword[]" value="' + builderPassword + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderName[]" value="' + builderName + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderHpNo[]" value="' + builderHpNo + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderDesignation[]" value="' + builderDesignation + '"/>';
+				        	builderBlk += '<input type="hidden" name="builderNotify[]" value="' + notify + '"/>';
+				        	builderBlk += '</div>';
+				        	builderBlk += '</div>';
+					        	
+			        		$('#add-builder-btn-wrapper').before(builderBlk);
+				        	$('#builder-model').modal('hide');
+			        	}
+			        	return false;
+		        }
+		    });
+			
+			$('#client-model').on('hidden.bs.modal', function () {
+			    $('.modal input[type="text"]').val('');
+			    $('.modal input[type="password"]').val('');
+			})
+			
+			$('#builder-model').on('hidden.bs.modal', function () {
+				$('.modal input[type="text"]').val('');
+			    $('.modal input[type="password"]').val('');
+			})
+			
+			$.validator.addMethod("logoRequired", function(value, element) {
+	            return $("#logo-link").css('background-image') !== 'none';
+	        }, "Logo Required");
+			
+			$.validator.addMethod("letterHeadRequired", function(value, element) {
+	            return $("#lh-link").css('background-image') !== 'none';
+	        }, "LetterHead Required");
+			
+			var allQPItemlayout = $('ul.qp-list.eng-list').children();
+			var allInspectorItemlayout = $('ul.inspector-list.eng-list').children();
+			$('.qp-body input[name="name"]').on('input',function(e){
+			    var text = $(this).val();
+			    if(text === ''){
+				    	$('.qp-body.left-body').find('ul.eng-list').children().remove();
+				    	allQPItemlayout.each(function() {
+				    		var id = $(this).data('id');
+				    		var ele = $('.qp-body.right-body').find("li[data-id='" + id + "']");
+				    		if (ele.length == 0) {
+				    			$('.qp-body.left-body').find('ul.eng-list').append($(this));
+				    		}
+				    	});
+			    }
+			});
+			
+			$('.inspector-body input[name="name"]').on('input',function(e){
+			    var text = $(this).val();
+			    if(text === ''){
+				    	$('.inspector-body.left-body').find('ul.eng-list').children().remove();
+				    	allInspectorItemlayout.each(function() {
+				    		var id = $(this).data('id');
+				    		var ele = $('.inspector-body.right-body').find("li[data-id='" + id + "']");
+				    		if (ele.length == 0) {
+				    			$('.inspector-body.left-body').find('ul.eng-list').append($(this));
+				    		}
+				    	});
+			    }
+			});
+			
+			$('#qp-search').on('click', function(e){
+				e.preventDefault();
+				var name = $('.qp-body').find('input[name="name"]').val();
+			    	var accountId = $(this).data('id');
+			    	var url = $(this).data('url');
+		    		$.ajax({
+	                		url: "@routes.ProjectController.searchQP()",
+		                type: "POST",
+		                data: {
+			                	name: name,
+			                	type: 3
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+			            	    	if(data.code == 0){
+			            	    		if(data.data.length > 0){
+			            	    			$('.qp-body.left-body').find('ul.eng-list').children().remove();
+			            	    			$.each(data.data, function(index, data){
+			                	    			var item = "<li data-id='" + data.accountId + "'>";
+			                	    			item += "<div class=\"eng-info\">";
+			                	    			item += "<p class=\"name bold\">" + data.name + "</p>";
+			                	    			item += "<p>";
+			                	    			if(data.accType == 3){
+			                	    				item += "PE No.:" + data.peNo;
+			                	    			}else{
+			                	    				item += data.designation;
+			                	    			}
+			                	    			item += "</p>";
+			                	    			item += "</div>";
+			                	    			item += "<button id=\"qp-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+			                	    			item += "</li>";
+			                	    			
+			                	    			$('.qp-body.left-body').find('ul.eng-list').append(item);
+			                	    		});
+			            	    		}
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+			            }
+		            });
+				});
+			
+			$('#inspector-search').on('click', function(e){
+				e.preventDefault();
+				var name = $('.inspector-body').find('input[name="name"]').val();
+			    	var accountId = $(this).data('id');
+			    	var url = $(this).data('url');
+		    		$.ajax({
+	                		url: "@routes.ProjectController.searchInspector()",
+		                type: "POST",
+		                data: {
+			                	name: name,
+			                	type: 2
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+			            	    	if(data.code == 0){
+			            	    		if(data.data.length > 0){
+			            	    			$('.inspector-body.left-body').find('ul.eng-list').children().remove();
+			            	    			$.each(data.data, function(index, data){
+			                	    			var item = "<li data-id='" + data.accountId + "'>";
+			                	    			item += "<div class=\"eng-info\">";
+			                	    			item += "<p class=\"name bold\">" + data.name + "</p>";
+			                	    			item += "<p>";
+			                	    			item += data.designation;
+			                	    			item += "</p>";
+			                	    			item += "</div>";
+			                	    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+			                	    			item += "</li>";
+			                	    			
+			                	    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+			                	    		});
+			            	    		}
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+			            }
+		            });
+				});
+			
+			$(document).on("click","#qp-add-btn",function() {
+				var id = $(this).parents('li').data('id');
+			        	
+				if(!("@project" == "")){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.addTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@if(project != null){@project.id}",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var leftLiLayout = $('.qp-body.left-body').find('li[data-id="'+id+'"]');
+		            					leftLiLayout.remove();
+		            					
+		            					var name = leftLiLayout.find('p.name').text();
+		            	    				var peNo = leftLiLayout.find('p.name').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += "PE No.:" + peNo;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"qp-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+		            			    			item += "</li>";
+		            			    			
+		            			    			$('.qp-body > .right-detail').find('ul.eng-list').append(item);
+		            			    			$('.qp-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+		            });
+				}else{
+					var leftLiLayout = $('.qp-body.left-body').find('li[data-id="'+id+'"]');
+					leftLiLayout.remove();
+					
+					var name = leftLiLayout.find('p.name').text();
+	    				var peNo = leftLiLayout.find('p.name').next().text();
+					var item = "<li data-id='" +id + "'>";
+			    			item += "<div class=\"eng-info\">";
+			    			item += "<p class=\"name bold\">" + name + "</p>";
+			    			item += "<p>";
+			    			item += "PE No.:" + peNo;
+			    			item += "</p>";
+			    			item += "</div>";
+			    			item += "<button id=\"qp-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+			    			item += "</li>";
+			    			
+			    			$('.qp-body > .right-detail').find('ul.eng-list').append(item);
+			    			$('.qp-body > .right-detail').find('ul.eng-list').removeClass('hidden');					
+				}
+	        	
+		    });
+			
+			
+			$(document).on("click","#inspector-add-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				if(!("@project" == "")){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.addTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@if(project != null){@project.id}",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var leftLiLayout = $('.inspector-body.left-body').find('li[data-id="'+id+'"]');
+		            					leftLiLayout.remove();
+		            					
+		            					var name = leftLiLayout.find('p.name').text();
+		            	    				var peNo = leftLiLayout.find('p.name').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += "PE No.:" + peNo;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"inspector-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+		            			    			item += "</li>";
+		            			    			
+		            			    			$('.inspector-body > .right-detail').find('ul.eng-list').append(item);
+		            			    			$('.inspector-body > .right-detail').find('ul.eng-list').removeClass('hidden');
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+		            });
+				}else{
+					var leftLiLayout = $('.inspector-body.left-body').find('li[data-id="'+id+'"]');
+					leftLiLayout.remove();
+					
+					var name = leftLiLayout.find('p.name').text();
+	    				var peNo = leftLiLayout.find('p.name').next().text();
+					var item = "<li data-id='" +id + "'>";
+			    			item += "<div class=\"eng-info\">";
+			    			item += "<p class=\"name bold\">" + name + "</p>";
+			    			item += "<p>";
+			    			item += peNo;
+			    			item += "</p>";
+			    			item += "</div>";
+			    			item += "<button id=\"inspector-remove-btn\" class=\"btn btn-primary remove-btn\">Remove</button>";
+			    			item += "</li>";
+		    			
+		    			$('.inspector-body > .right-detail').find('ul.eng-list').append(item);
+		    			$('.inspector-body > .right-detail').find('ul.eng-list').removeClass('hidden');	
+				}
+		    });
+			
+			$(document).on("click",".qp-body .remove-btn",function() {
+				alert
+				var id = $(this).parents('li').data('id');
+				
+				if(!("@project" == "")){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.removeTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@if(project != null){@project.id}",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var rightLiLayout = $('.qp-body.right-body').find('li[data-id="'+id+'"]');
+		            	    				rightLiLayout.remove();
+		            					
+		            					var name = rightLiLayout.find('p.name').text();
+		            	    				var peNo = rightLiLayout.find('p.name').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += "PE No.:" + peNo;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"qp-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		            			    			item += "</li>";
+		            			    			$('.qp-body.left-body').find('ul.eng-list').append(item);
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+			        	});
+				}else{
+					var rightLiLayout = $('.qp-body.right-body').find('li[data-id="'+id+'"]');
+					rightLiLayout.remove();
+				
+					var name = rightLiLayout.find('p.name').text();
+	    				var peNo = rightLiLayout.find('p.name').next().text();
+	    				
+					var item = "<li data-id='" + id + "'>";
+		    			item += "<div class=\"eng-info\">";
+		    			item += "<p class=\"name bold\">" + name + "</p>";
+		    			item += "<p>";
+		    			item += "PE No.:" + peNo;
+		    			item += "</p>";
+		    			item += "</div>";
+		    			item += "<button id=\"qp-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		    			item += "</li>";
+		    			
+		    			$('.qp-body.left-body').find('ul.eng-list').append(item);
+		    			if($('.qp-body.right-body').find('ul.eng-list').children().length == 0){
+		    				$('.qp-body.right-body').find('ul.eng-list').addClass('hidden');
+		    			}
+				}
+		    });
+			
+			$(document).on("click",".inspector-body .remove-btn",function() {
+				var id = $(this).parents('li').data('id');
+				
+				if(!("@project" == "")){
+					var btn = $(this);
+					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						btn.after(spinner);
+				        	btn.css('color', '#337ab7');
+				        	btn.attr("disabled", true);
+			        	$.ajax({
+		                url: "@routes.ProjectController.removeTeam()",
+		                type: "POST",
+		                data: {
+			                	projectId: "@if(project != null){@project.id}",
+			                	teamAccountId: id
+		                },
+		                success: function(response, status) {
+			                var data = $.parseJSON(JSON.stringify(response));
+		            	    		if(data.code == 0){
+		            	    			var rightLiLayout = $('.inspector-body.right-body').find('li[data-id="'+id+'"]');
+		            	    				rightLiLayout.remove();
+		            					
+		            					var name = rightLiLayout.find('p.name').text();
+		            	    				var designation = rightLiLayout.find('p.designation').next().text();
+		            					var item = "<li data-id='" +id + "'>";
+		            			    			item += "<div class=\"eng-info\">";
+		            			    			item += "<p class=\"name bold\">" + name + "</p>";
+		            			    			item += "<p>";
+		            			    			item += designation;
+		            			    			item += "</p>";
+		            			    			item += "</div>";
+		            			    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+		            			    			item += "</li>";
+		            			    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+			                	}else{
+			                		showAlertToast(data.message, "alert-warning");
+			                	}
+		            	    	
+			            	    	spinner.remove();
+			            	    	btn.css('color', 'white');
+			            	    	btn.attr("disabled", false);
+			            }
+			        	});
+				}else{
+					var rightLiLayout = $('.inspector-body.right-body').find('li[data-id="'+id+'"]');
+					rightLiLayout.remove();
+				
+					var name = rightLiLayout.find('p.name').text();
+	    				var peNo = rightLiLayout.find('p.name').next().text();
+	    				
+					var item = "<li data-id='" + id + "'>";
+			    			item += "<div class=\"eng-info\">";
+			    			item += "<p class=\"name bold\">" + name + "</p>";
+			    			item += "<p>";
+			    			item += peNo;
+			    			item += "</p>";
+			    			item += "</div>";
+			    			item += "<button id=\"inspector-add-btn\" class=\"btn btn-primary add-btn\">Add</button>";
+			    			item += "</li>";
+			    			
+			    			$('.inspector-body.left-body').find('ul.eng-list').append(item);
+			    			
+			    			if($('.inspector-body.right-body').find('ul.eng-list').children().length == 0){
+			    				$('.inspector-body.right-body').find('ul.eng-list').addClass('hidden');
+			    			}
+				}
+		    });
+			
+			$("#project-form").validate({
+				ignore: [],
+		        rules: {
+		        		title:{
+		            		minlength: 2,
+		                	maxlength: 50,
+		            		required:true
+		            },
+		            startDate:{
+		            		required:true
+		            },
+		            endDate:{
+		            		required:true
+		            }
+		        },
+		        highlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		        },
+		        unhighlight: function (element) {
+		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		        },
+		        submitHandler: function(form) {
+		        		
+		        		var liQPItems = $('.qp-body.right-body').find('ul.eng-list').children();
+		        		if(liQPItems.length > 0){
+		        			var qpBuilderBlk = '<div class="qp-inputs">';
+			        		
+		        			liQPItems.each(function() {
+					    		var id = $(this).data('id');
+					    		qpBuilderBlk += '<input type="hidden" name="qpAccounts[]" value="' + id + '"/>';
+					    		
+					    	});
+			        		
+		        			qpBuilderBlk += '</div>';
+				        	
+				        	$('#team-detail').append(qpBuilderBlk);
+		        		}
+		        		
+		        		var liInspectorItems = $('.inspector-body.right-body').find('ul.eng-list').children();
+		        		if(liInspectorItems.length > 0){
+		        			var inspectorBuilderBlk = '<div class="inspector-inputs">';
+			        		
+		        			liInspectorItems.each(function() {
+					    		var id = $(this).data('id');
+					    		inspectorBuilderBlk += '<input type="hidden" name="inspectorAccounts[]" value="' + id + '"/>';
+					    		
+					    	});
+			        		
+		        			inspectorBuilderBlk += '</div>';
+				        	
+				        	$('#team-detail').append(inspectorBuilderBlk);
+		        		}
+		        		
+		        		$('input[type=submit]').attr("disabled", true);
+		        		form.submit();
+		        		
+		        		return false;
+		        }
+		    });
+			
+			$(document).on("click","#client .minus-btn",function() {	
+				 var c=confirm("delete?");
+				 if(c==true){
+				var btn = $(this);
+				var parentElement = $(this).parents('.acc-group');
+				if(parentElement.find('.client-id').length == 1){
+					if(!btn.hasClass('disabled')){
+						btn.addClass('disabled');
+						var clientId = parentElement.find('.client-id').val();
+						
+						var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						parentElement.append(spinner);
+						parentElement.find('.acc-info > p').css('color', 'white');
+						parentElement.find('.acc-info  span').css('color', 'white');
+						$.ajax({
+		            			url: "@routes.ProjectController.removeClient()",
+			                type: "POST",
+			                data: {
+				                	clientId: clientId
+			                },
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		parentElement.remove();
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+					}
+				}else{
+					parentElement.remove();
+				}
+			  }
+			});
+			
+			$(document).on("click","#builder .minus-btn",function() {
+				
+			 var a=confirm("delete?");
+			 if(a==true){
+				var btn = $(this);
+				var parentElement = $(this).parents('.acc-group');
+				if(parentElement.find('.builder-id').length == 1){
+					if(!btn.hasClass('disabled')){
+						btn.addClass('disabled');
+						var builderId = parentElement.find('.builder-id').val();
+						
+						var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
+						parentElement.append(spinner);
+						parentElement.find('.acc-info > p').css('color', 'white');
+						parentElement.find('.acc-info  span').css('color', 'white');
+						$.ajax({
+		            			url: "@routes.ProjectController.removeBuilder()",
+			                type: "POST",
+			                data: {
+			                		builderId: builderId
+			                },
+			                success: function(response, status) {
+				                var data = $.parseJSON(JSON.stringify(response));
+				            	    	if(data.code == 0){
+				            	    		parentElement.remove();
+				                	}else{
+				                		showAlertToast(data.message, "alert-warning");
+				                	}
+				            }
+			            });
+					}
+				}else{
+					parentElement.remove();
+				}
 			 }
-			 return false;
-		}
-		
-		function checkIE() {
-		    var ua = window.navigator.userAgent;
-		    var msie = ua.indexOf("MSIE");
-		    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){  
-				return true;
-		    } else{
-		 		return false;
-		    }	
-		}
+			});
+			
+			var qpListElement = $('.qp-body.right-body').find('ul.eng-list');
+			if(qpListElement.children().length == 0){
+				qpListElement.addClass('hidden');
+			}else{
+				qpListElement.removeClass('hidden');
+			}
+			
+			var inspectorListElement = $('.inspector-body.right-body').find('ul.eng-list');
+			if(inspectorListElement.children().length == 0){
+				inspectorListElement.addClass('hidden');
+			}else{
+				inspectorListElement.removeClass('hidden');
+			}
+			
+			$('.qp-body.left-body').find('ul.eng-list').children().remove();
+		    	allQPItemlayout.each(function() {
+		    		var id = $(this).data('id');
+		    		var ele = $('.qp-body.right-body').find("li[data-id='" + id + "']");
+		    		if (ele.length == 0) {
+		    			$('.qp-body.left-body').find('ul.eng-list').append($(this));
+		    		}
+		    	});
+		    	
+		    	$('.inspector-body.left-body').find('ul.eng-list').children().remove();
+		    	allInspectorItemlayout.each(function() {
+		    		var id = $(this).data('id');
+		    		var ele = $('.inspector-body.right-body').find("li[data-id='" + id + "']");
+		    		if (ele.length == 0) {
+		    			$('.inspector-body.left-body').find('ul.eng-list').append($(this));
+		    		}
+		    	});
+	   	});
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">@messages.at("create_inspector_acc")</p>
-	</div>
+		<p class="title">Add MOM Project </p>
+	</div>	
 	
 	<div class="dash-block">
-		<div class="wrap-step wrap-step-2" style="display: block;">
-			@helper.form(action = routes.AuthController.saveInspectorAccount(), 'id-> "inspector-form", 'method -> "POST", 'enctype -> "multipart/form-data") {
-				<div class="mod-form__block">
-				   <div class="mod-form__block-content">
-					  <input type="hidden" name="inpectorAccountId" value="@if(inspectorAccount != null){@inspectorAccount.id}"/>
-				      
-				      <p class="tb-header">@messages.at("account_info")</p>
-				      <table class="tb-form">
-				      	<tr>
-				      		<td>
-				      			<div class="form-group">
-							         <div class="form-label">
-							            <label for="qp-name">@messages.at("name")</label>
-							         </div>
-							         <div class="form-input">
-							            <input id="qp-name" type="text" class="form-control" name="name" placeholder="@messages.at("placeholder_name")" value="@if(inspectorAccount != null){@inspectorAccount.user.name}">
-							         </div>
-							    </div>
-				      		</td>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="primary-email">@messages.at("primary_email_address"):</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="primary-email" type="text" class="form-control" name="email" placeholder="@messages.at("placeholder_email")" value="@if(inspectorAccount != null){@inspectorAccount.email}">
-						         	</div>
-						        </div>
-				      		</td>
-				      	</tr>
-				      	<tr>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="designation">@messages.at("designation")</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="designation" type="text" class="form-control" name="designation" placeholder="@messages.at("placeholder_designation")" value="@if(inspectorAccount != null){@inspectorAccount.user.designation}">
-						         	</div>
-						        </div>
-				      		</td>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="password">@messages.at("password"):</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="password" type="text" class="form-control" name="password" placeholder="@messages.at("placeholder_password")" value="@if(inspectorAccount != null){@inspectorAccount.password}" autocomplete="off">
-						         	</div>
-						        </div>
-				      		</td>
-				      	</tr>
-				      </table>
-				      
-				      
-				      <p class="tb-header">@messages.at("personal_info")</p>
-				      <table class="tb-form">
-				      	<tr>
-				      		<td>
-				      			<div class="form-group">
-							         <div class="form-label">
-							            <label for="aler-email-1">@messages.at("alter_emaill_1")</label>
-							         </div>
-							         <div class="form-input">
-							            <input id="aler-email-1" type="text" class="form-control" name="alerEmail1" placeholder="@messages.at("alter_emaill_1")" value="@if(inspectorAccount != null){@inspectorAccount.user.alterEmail1}">
-							         </div>
-							    </div>
-				      		</td>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="aler-email-2">@messages.at("alter_emaill_2")</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="aler-email-2" type="text" class="form-control" name="alerEmail2" placeholder="@messages.at("alter_emaill_2")" value="@if(inspectorAccount != null){@inspectorAccount.user.alterEmail2}">
-						         	</div>
-						        </div>
-				      		</td>
-				      	</tr>
-				      	<tr>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="office_phone">@messages.at("office_phone")</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="office_phone" type="text" class="form-control" name="officePhone" placeholder="@messages.at("placeholder_office_phone")" value="@if(inspectorAccount != null){@inspectorAccount.user.officePhone}">
-						         	</div>
-						        </div>
-				      		</td>
-				      		<td>
-				      			<div class="form-group">
-						           <div class="form-label">	
-						              <label for="mobile">@messages.at("mobile_no")</label>
-						           </div>
-						           <div class="form-input">
-						           	  <input id="mobile" type="text" class="form-control" name="mobile" placeholder="@messages.at("placeholder_mobile")" value="@if(inspectorAccount != null){@inspectorAccount.user.mobile}">
-						         	</div>
-						        </div>
-				      		</td>
-				      	</tr>
-				      </table>
-				      
-				      
-				      <p class="tb-header">@messages.at("qualified_person_particular")</p>
-					  <div class="form-group">
-			          	<div class="form-label">	
-			              	<label>@messages.at("attach_cert")</label>
-					   	</div>	
-			           	<input type="file" name="document" multiple>
-			           	<a id="add-file-btn" class="btn">Add</a>
-						<a id="remove-file-btn" class="btn">remove</a>
-		         	  </div>
-					
-				   </div>
-				</div>
-				<div class="form-group txt-center form-submit">
-				   <input class="btn btn-success" type="submit" value="Submit"/>
-				</div>
+		<form id="project-form" action="@routes.ProjectController.saveProject()" method="POST">
+			@if(project != null){
+				<input type="hidden" name="projectId" value="@project.id"/>
 			}
+			<section id="pro-detail">
+				<p class="tb-header">@messages.at("project_detail")</p>
+				<div class="sec-body">
+					<div class="form-group">
+						<div class="form-label">
+				            <label for="pro-title">@messages.at("project_title")</label>
+				         </div>
+				         <div class="form-input full-width">
+				            <input id="pro-title" type="text" class="form-control" name="title" placeholder="@messages.at("placeholder_project_title")" value="@if(project != null){@project.title}">
+				         </div>
+			      	</div>
+			      	
+			      	<div class="form-group date-group">
+						<label>Starting Date</label>
+						<input type="text" class="form-control startdatepicker" name="startDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.startDate}">
+					</div>
+					
+					<div class="form-group date-group right-align">
+						<label>Ending Date</label>
+						<input type="text" class="form-control enddatepicker" name="endDate" data-date-format="YYYY-MM-DD" value="@if(project != null){@project.endDate}">
+					</div>
+					
+					<div class="form-group">
+						<div class="form-label branch-lbl">
+							<label>@messages.at("select_type_of_work")</label>
+						</div>
+								
+						<div class="form-input">
+							<label class="subject-lbl @if(project != null){@if(project.isGondola){selected}}else{selected}">
+							   	<input type="radio" name="gondola" class="form-control" value="@if(project != null){@if(project.isGondola){1}else{0}}else{1}" @if(project != null){@if(project.isGondola){checked}}else{checked}>
+								<a class="radio-box">Gondola
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isMCWP){selected}}">
+							   	<input type="radio" name="mcwp" class="form-control" value="@if(project != null){@if(project.isMCWP){1}else{0}}else{0}" @if(project != null){@if(project.isMCWP){checked}}>
+								<a class="radio-box">MCWP
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isScaffold){selected}}">
+							   	<input type="radio" name="scaffold" class="form-control" value="@if(project != null){@if(project.isScaffold){1}else{0}}else{0}" @if(project != null){@if(project.isScaffold){checked}}>
+								<a class="radio-box">Scaffold
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isFormwork){selected}}">
+							   	<input type="radio" name="formwork" class="form-control" value="@if(project != null){@if(project.isFormwork){1}else{0}}else{0}" @if(project != null){@if(project.isFormwork){checked}}>
+								<a class="radio-box">Formwork
+									<i class="icon-check"></i>
+								</a>
+							</label>
+							<label class="subject-lbl @if(project != null){@if(project.isOthers){selected}}">
+							   	<input type="radio" name="others" class="form-control" value="@if(project != null){@if(project.isOthers){1}else{0}}else{0}" @if(project != null){@if(project.isOthers){checked}}>
+								<a class="radio-box">Others
+									<i class="icon-check"></i>
+								</a>
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-label">
+							<label class="chx-container">Use Company Letterhead
+			                <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" checked=@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}>   		 
+			                
+						
+							  <span class="checkmark"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</section>
+		
+		<section id="client">
+			<p class="tb-header">@messages.at("developer_client")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input full-width">
+			        
+			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")"
+			            	value="@if(project != null){@if(project.clients != null){@if(project.clients != null){@if(project.clients.size > 0){@project.clients(0).companyName}}}}">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("person_in_charge")</label>
+			         </div>
+			         <div class="form-input full-width row">
+			         
+			         	@if(project != null){
+			         		@if(project.clients != null){
+			         			@for(index <- 0 until project.clients.size){
+					         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+					         			<input class="client-id" type="hidden" name="clientId" value="@project.clients(index).accountId">
+							         	<div class="acc-info">
+							         		<p class="acc-name bold">@project.clients(index).name</p>
+							         		<p class="acc-designation">@project.clients(index).designation</p>
+							         		<p class="acc-email">@project.clients(index).account.email</p>
+							         		<p class="acc-hp">@project.clients(index).hpNo</p>
+							         		<p class="acc-notify">Notify? <span class="green">@if(project.clients(index).isNotify){Yes}else{No}</span></p>
+							         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+							         	</div>
+							         	<div class="client-inputs">
+							         		<input type="hidden" name="clientEmail[]" value="@project.clients(index).account.email">
+							         		<input type="hidden" name="clientPassword[]" value="@project.clients(index).account.password">
+							         		<input type="hidden" name="clientName[]" value="@project.clients(index).name">
+							         		<input type="hidden" name="clientHpNo[]" value="@project.clients(index).hpNo">
+							         		<input type="hidden" name="clientDesignation[]" value="@project.clients(index).designation">
+							         		<input type="hidden" name="clientNotify[]" value="@if("@project.clients(index).isNotify"){1}else{0}">
+							         	</div>
+							        </div>
+					         	}
+			         		}
+			         	}
+			         
+			            <div id="add-client-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+				            	<div class="acc-info">
+				            		<a class="add-btn" data-toggle="modal" data-target="#client-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+				            	</div>
+			            </div>
+			         </div>
+		      	</div>
+			</div>
+		</section>
+		
+		<section id="builder">
+			<p class="tb-header">@messages.at("builder_contractor")</p>
+			<div class="sec-body">
+				<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("company_name")</label>
+			         </div>
+			         <div class="form-input full-width">
+			            <input id="builder-cy-name" type="text" class="form-control" name="builderCompanyName" placeholder="@messages.at("placeholder_company_name")"
+			            	value="@if(project != null){@if(project.clients != null){@if(project.builders != null){@if(project.builders.size > 0){@project.builders(0).companyName}}}}">
+			         </div>
+		      	</div>
+		      	
+		      	<div class="form-group">
+					<div class="form-label">
+			            <label for="pro-title">@messages.at("person_in_charge")</label>
+			         </div>
+			         <div class="form-input full-width row">
+			         
+			         	@if(project != null){
+			         		@if(project.clients != null){
+			         			@for(index <- 0 until project.builders.size){
+					         		<div class="acc-group col col-xs-6 col-md-3 col-sm-3">
+					         			<input class="builder-id" type="hidden" name="builderId" value="@project.builders(index).accountId">
+							         	<div class="acc-info">
+							         		<p class="acc-name bold">@project.builders(index).name</p>
+							         		<p class="acc-designation">@project.builders(index).designation</p>
+							         		<p class="acc-email">@project.builders(index).account.email</p>
+							         		<p class="acc-hp">@project.builders(index).hpNo</p>
+							         		<p class="acc-notify">Notify? <span class="green">@if(project.builders(index).isNotify){Yes}else{No}</span></p>
+							         		<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+							         	</div>
+							         	<div class="builder-inputs">
+							         		<input type="hidden" name="builderEmail[]" value="@project.builders(index).account.email">
+							         		<input type="hidden" name="builderPassword[]" value="@project.builders(index).account.password">
+							         		<input type="hidden" name="builderName[]" value="@project.builders(index).name">
+							         		<input type="hidden" name="builderHpNo[]" value="@project.builders(index).hpNo">
+							         		<input type="hidden" name="builderDesignation[]" value="@project.builders(index).designation">
+							         		<input type="hidden" name="builderNotify[]" value="@if(project.builders(index).isNotify){1}else{0}">
+							         	</div>
+							        </div>
+					         	}
+			         		}
+			         	}
+			         
+			            <div id="add-builder-btn-wrapper" class="acc-group col col-xs-6 col-md-3 col-sm-3">
+				            	<div class="acc-info">
+				            		<a class="add-btn" data-toggle="modal" data-target="#builder-model" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+				            	</div>
+			            </div>
+			         </div>
+		      	</div>
+			</div>
+		</section>
+		
+		
+		<section id="team-detail">
+			<p class="tb-header">@messages.at("qp_team")</p>
+			<div class="sec-body">
+				<div class="eng-content">
+					<div class="qp-body left-body">
+						<div class="search-wrapper">
+							<p class="search-bar-title">Select QP</p>
+							<div class="line-form">
+					      		<input class="eng-search" type="text" name="name" placeholder="Enter QP's name">
+							</div>
+							<button id="qp-search" class="btn btn-success search-btn">Search</button>
+							</div>
+							<ul class="qp-list eng-list">
+							@if(qpList != null){
+								@for(index <- 0 until qpList.size){
+									<li data-id="@qpList(index).id" 
+										data-name="@if(qpList(index).user != null){@qpList(index).user.name}"
+										data-pe="">
+										<div class="eng-info">
+											<p class="name bold">@if(qpList(index).user != null){@qpList(index).user.name}</p>
+											<p>
+												@if(qpList(index).user != null){
+													PE No.: @qpList(index).user.peNo
+												}else{
+													Not Set
+												}
+											</p>
+										</div>
+										<button id="qp-add-btn" class="btn btn-primary add-btn">Add</button>
+									</li>
+								}						
+							}
+							</ul>
+						</div>
+						
+						<div class="qp-body right-body">
+							<div class="right-detail">
+								<ul class="eng-list">
+									@if(project != null){
+										@if(project.teamAccounts != null){
+											@for(index <- 0 until project.teamAccounts.size){
+												@if(project.teamAccounts(index).accType == AccountType.QP){
+													<li data-id="@project.teamAccounts(index).id" 
+														data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
+														data-pe="">
+														<div class="eng-info">
+															<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
+															<p>
+																@if(project.teamAccounts(index).user != null){
+																	PE No.: @project.teamAccounts(index).user.peNo
+																}else{
+																	Not Set
+																}
+															</p>
+														</div>
+														<button id="qp-remove-btn" class="btn btn-primary remove-btn">Remove</button>
+													</li>
+												}
+											}
+										}
+									}
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="eng-content">
+						<div class="inspector-body left-body">
+							<div class="search-wrapper">
+								<p class="search-bar-title">Select Inspector</p>
+								<div class="line-form">
+						      		<input class="eng-search" type="text" name="name" placeholder="Enter Inspector's name">
+								</div>
+								<button id="inspector-search" class="btn btn-success search-btn">Search</button>
+							</div>
+							<ul class="inspector-list eng-list">
+								@if(inspectors != null){
+									@for(index <- 0 until inspectors.size){
+										<li data-id="@inspectors(index).id">
+											<div class="eng-info">
+												<p class="name bold">@if(inspectors(index).user != null){@inspectors(index).user.name}</p>
+												<p class="designation">
+													@if(inspectors(index).user != null){
+														@if(inspectors(index).user.designation != null){
+															@inspectors(index).user.designation
+														}else{
+															Not Set
+														}
+													}
+												</p>
+											</div>
+											<button id="inspector- " class="btn btn-primary add-btn">Add</button>
+										</li>
+									}
+								}
+							</ul>
+						</div>
+						
+						<div class="inspector-body right-body">
+							<div class="right-detail">
+								<ul class="eng-list">
+									@if(project != null){
+										@if(project.teamAccounts != null){
+											@for(index <- 0 until project.teamAccounts.size){
+												@if(project.teamAccounts(index).accType == AccountType.INSPECTOR){
+													<li data-id="@project.teamAccounts(index).id" 
+														data-name="@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}"
+														data-pe="">
+														<div class="eng-info">
+															<p class="name bold">@if(project.teamAccounts(index).user != null){@project.teamAccounts(index).user.name}</p>
+															<p class="designation">
+																@project.teamAccounts(index).user.designation
+															</p>
+														</div>
+														<button id="inspector-remove-btn" class="btn btn-primary remove-btn">Remove</button>
+													</li>
+												}
+											}
+										}
+									}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			<div class="form-group form-submit">
+			   <input class="btn btn-success" type="submit" value="Submit"/>
+			   <div style="clear: both;"></div>
+			</div>
+		</form>
+		
+		
+		<div class="modal fade" id="client-model" role="dialog">
+			<div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">@messages.at("add_client_developer")</h4>
+			      	</div>
+			      	<form id="client-form">
+			      		@if(project != null){
+			      			<input type="hidden" name="projectId" value="@project.id"/>
+			      		}
+				      	<div class="modal-body">
+					    	<div class="form-group">
+				    			<label>@messages.at("email")</label>
+				      			<input class="form-control" type="text" name="clientEmail" placeholder="@messages.at("placeholder_email")"/>
+				      		</div>
+					      	<div class="form-group">
+					      		<label>Password</label>	
+					      		<input class="form-control" type="password" name="clientPassword" placeholder="@messages.at("placeholder_password")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>Name</label>	
+					      		<input class="form-control" type="text" name="clientName" placeholder="@messages.at("placeholder_name")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>HP NO.</label>	
+					      		<input class="form-control" type="text" name="clientHpNo" placeholder="@messages.at("placeholder_hp")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>@messages.at("designation")</label>	
+					      		<input class="form-control" type="text" name="clientDesignation" placeholder="@messages.at("placeholder_designation")"/>
+					      	</div>
+					      	<div class="form-group">
+								<div class="form-label">
+									<label class="chx-container">@messages.at("notify")
+									  <input id="client-notify-chx" name="clientNotify" type="checkbox" value="0">
+									  <span class="checkmark"></span>
+									</label>
+								</div>
+							</div>
+				      	</div>
+				      	<div class="modal-footer">
+					      	<div class="form-group">
+					        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+					        </div>
+				      	</div>
+			      	</form>
+		    	</div>
+			</div>
+		</div>
+		
+		<div class="modal fade" id="builder-model" role="dialog">
+			<div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title">@messages.at("add_builder_contractor")</h4>
+			      	</div>
+			      	<form id="builder-form">
+			      		@if(project != null){
+			      			<input type="hidden" name="projectId" value="@project.id"/>
+			      		}
+				      	<div class="modal-body">
+					    	<div class="form-group">
+				    			<label>@messages.at("email")</label>
+				      			<input class="form-control" type="text" name="builderEmail" placeholder="@messages.at("placeholder_email")"/>
+				      		</div>
+					      	<div class="form-group">
+					      		<label>Password</label>	
+					      		<input class="form-control" type="password" name="builderPassword" placeholder="@messages.at("placeholder_password")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>Name</label>	
+					      		<input class="form-control" type="text" name="builderName" placeholder="@messages.at("placeholder_name")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>HP NO.</label>	
+					      		<input class="form-control" type="text" name="builderHpNo" placeholder="@messages.at("placeholder_hp")"/>
+					      	</div>
+					      	<div class="form-group">
+					      		<label>@messages.at("designation")</label>	
+					      		<input class="form-control" type="text" name="builderDesignation" placeholder="@messages.at("placeholder_designation")"/>
+					      	</div>
+					      	<div class="form-group">
+								<div class="form-label">
+									<label class="chx-container">@messages.at("notify")
+									  <input id="builder-notify-chx" name="builderNotify" type="checkbox" value="0">
+									  <span class="checkmark"></span>
+									</label>
+								</div>
+							</div>
+				      	</div>
+				      	<div class="modal-footer">
+					      	<div class="form-group">
+					        	<input type="submit" class="btn btn-success" value="@messages.at("submit")">
+					        </div>
+				      	</div>
+			      	</form>
+		    		</div>
+			</div>
 		</div>
 	</div>	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
