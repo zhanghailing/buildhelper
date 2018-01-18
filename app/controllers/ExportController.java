@@ -267,7 +267,7 @@ public class ExportController extends Controller{
 					sheet.addMergedRegion(new CellRangeAddress(1, 5, 1, 8));
 					
 			        for(COS cos : project.coses) {
-			        		Object[] cosData = new Object[project.coses.size()];
+			        		Object[] cosData = new Object[7];
 			        		cosData[0] = rowNum+"";
 			        		cosData[1] = cos.location;
 			        		cosData[2] = cos.referenceNo;

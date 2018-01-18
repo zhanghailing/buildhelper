@@ -60,41 +60,43 @@ public class Notification {
 		this.content = content;
 	}
 	
-	public static void notifyQPByCOS(COS cos) {
+	public static void notifyQPByCOS(COS cos, String message, String emailBody) {
 		List<Account> qpList = JPA.em()
 				.createNativeQuery("SELECT * FROM account ac LEFT JOIN project_team pt ON pt.account_id=ac.id WHERE pt.project_id=:projectId AND ac.acc_type=:accountType", Account.class)
 				.setParameter("projectId", cos.project.id)
 				.setParameter("accountType", 3)
 				.getResultList();
 		for(Account qp : qpList) {
-			Notification notification = new Notification(cos, cos.project.title, "Pending to inspect");
+			Notification notification = new Notification(cos, cos.project.title, message);
 			JPA.em().persist(notification);
 			
 			AccountNotification accNfy = new AccountNotification(qp, notification);
 			JPA.em().persist(accNfy);
 			
-			String htmlBody = "";
 			CompletableFuture.supplyAsync(() 
-					-> MailerService.getInstance().send(qp.email, "Notification", htmlBody));
+					-> MailerService.getInstance().send(qp.email, "Notification", emailBody));
 		}
 	}
 	
-	public static void notifyInspectorByCOS(COS cos) {
+	public static void notifyInspectorByCOS(COS cos, String message, String emailBody) {
 		List<Account> inspectors = JPA.em()
 				.createNativeQuery("SELECT * FROM account ac LEFT JOIN project_team pt ON pt.account_id=ac.id WHERE pt.project_id=:projectId AND ac.acc_type=:accountType", Account.class)
 				.setParameter("projectId", cos.project.id)
 				.setParameter("accountType", 2)
 				.getResultList();
 		for(Account inspector : inspectors) {
-			Notification notification = new Notification(cos, cos.project.title, "Pending to inspect");
+			Notification notification = new Notification(cos, cos.project.title, message);
 			JPA.em().persist(notification);
 			
 			AccountNotification accNfy = new AccountNotification(inspector, notification);
 			JPA.em().persist(accNfy);
+			
+			CompletableFuture.supplyAsync(() 
+					-> MailerService.getInstance().send(inspector.email, "Notification", emailBody));
 		}
 	}
 	
-	public static void notifyBuilderByCOS(COS cos, String message) {
+	public static void notifyBuilderByCOS(COS cos, String message, String emailBody) {
 		List<Builder> builders = JPA.em()
 				.createNativeQuery("SELECT * FROM builder bl WHERE bl.project_id=:projectId", Builder.class)
 				.setParameter("projectId", cos.project.id)
@@ -105,6 +107,9 @@ public class Notification {
 			
 			AccountNotification accNfy = new AccountNotification(builder.account, notification);
 			JPA.em().persist(accNfy);
+			
+			CompletableFuture.supplyAsync(() 
+					-> MailerService.getInstance().send(builder.account.email, "Notification", emailBody));
 		}
 	}
 	

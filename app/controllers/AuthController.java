@@ -217,21 +217,24 @@ public class AuthController extends Controller{
 							
 							MultipartFormData<File> body = request().body().asMultipartFormData();
 							List<FilePart<File>> fileParts = body.getFiles();
-	
-							List<Document> documentWillDelete = user.documents;
-							if(documentWillDelete != null && documentWillDelete.size() > 0){
-								for (Document d : documentWillDelete) {
-									d.delete();
-									jpaApi.em().remove(d);
+							
+							if(fileParts != null && fileParts.size() > 0) {
+								List<Document> documentWillDelete = user.documents;
+								if(documentWillDelete != null && documentWillDelete.size() > 0){
+									for (Document d : documentWillDelete) {
+										d.user = null;
+										d.delete();
+										jpaApi.em().remove(d);
+									}
+								}
+									
+								for (FilePart<File> filePart : fileParts) {
+									Document doc = new Document(user, filePart.getFile());
+									doc.name = filePart.getFilename();
+									jpaApi.em().persist(doc);
 								}
 							}
-								
-							for (FilePart<File> filePart : fileParts) {
-								Document doc = new Document(user, filePart.getFile());
-								doc.name = filePart.getFilename();
-								jpaApi.em().persist(doc);
-							}
-							
+	
 							String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(qpAccount.token, "UTF-8");
 							String htmlBody = "Your account is: " + email + " and password is: " + password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
 							CompletableFuture.supplyAsync(() 
@@ -325,18 +328,21 @@ public class AuthController extends Controller{
 							MultipartFormData<File> body = request().body().asMultipartFormData();
 							List<FilePart<File>> fileParts = body.getFiles();
 							
-							List<Document> documentWillDelete = user.documents;
-							if(documentWillDelete != null && documentWillDelete.size() > 0){
-								for (Document d : documentWillDelete) {
-									d.delete();
-									jpaApi.em().remove(d);
+							if(fileParts != null && fileParts.size() > 0) {
+								List<Document> documentWillDelete = user.documents;
+								if(documentWillDelete != null && documentWillDelete.size() > 0){
+									for (Document d : documentWillDelete) {
+										d.user = null;
+										d.delete();
+										jpaApi.em().remove(d);
+									}
 								}
-							}
-								
-							for (FilePart<File> filePart : fileParts) {
-								Document doc = new Document(user, filePart.getFile());
-								doc.name = filePart.getFilename();
-								jpaApi.em().persist(doc);
+									
+								for (FilePart<File> filePart : fileParts) {
+									Document doc = new Document(user, filePart.getFile());
+									doc.name = filePart.getFilename();
+									jpaApi.em().persist(doc);
+								}
 							}
 							
 							String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(inspectorAccount.token, "UTF-8");

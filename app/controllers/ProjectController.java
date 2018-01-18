@@ -61,42 +61,16 @@ public class ProjectController extends Controller{
 			responseData.message = "Account doesn't exist.";
 		}else{
 			int totalAmount = ((BigInteger) jpaApi.em()
-					.createNativeQuery("SELECT COUNT(*) FROM (SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
-							" UNION " + 
-							"SELECT  pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
-							"ORDER BY id) as t")
+					.createNativeQuery("SELECT COUNT(*) FROM project pro WHERE pro.engineer_id=:engineerId AND pro.is_archived=:isArchived")
 					.setParameter("engineerId", account.id)
-					.setParameter("accountId", account.id)
+					.setParameter("isArchived", false)
 					.getSingleResult()).intValue();
 			
 			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
-			
-			List<String> results = jpaApi.em().createNativeQuery("SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
-					" UNION " + 
-					"SELECT pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
-					"ORDER BY id")
-					.setParameter("engineerId", account.id)
-					.setParameter("accountId", account.id)
-					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
-			
-			String projectIDCause = "";
-			for (int i = 0; i < results.size(); i++) {
-				if (i == results.size() - 1) {
-					projectIDCause += "pro.id='" + ((BigInteger) ((Object)results.get(i))).intValue() + "'";
-				} else {
-					projectIDCause += "pro.id='" + ((BigInteger) ((Object)results.get(i))).intValue() + "' OR ";
-				}
-			}
-			
-			String projectCause = "";
-			if(Utils.isBlank(projectIDCause)) {
-				projectCause = "pro.engineer_id=" + account.id; 
-			}else {
-				projectCause = projectIDCause;
-			}
 
 			List<Project> projects = jpaApi.em()
-					.createNativeQuery("SELECT * FROM project pro WHERE " + projectCause + " AND pro.is_archived = :isArchived", Project.class)
+					.createNativeQuery("SELECT * FROM project pro WHERE pro.engineer_id=:engineerId AND pro.is_archived=:isArchived", Project.class)
+					.setParameter("engineerId", account.id)
 					.setParameter("isArchived", false)
 					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 			return ok(projectofengineer.render(account, projects, pageIndex,totalAmount));
