@@ -268,17 +268,13 @@
 						}
 					}
 
-					for (var pair of formDataToUpload.entries()) {
-					    console.log(pair[0]+ ', ' + pair[1] + ", " + pair[1].size);
-					}
-
 					var btn = $('#submit');
 					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
 						btn.after(spinner);
 				        	btn.css('color', '#1ab394');
 				        	btn.attr("disabled", true);
 
-					/* $.ajax({
+					$.ajax({
 		                url: "@routes.COSController.saveCOS()",
 		                type: "POST",
 		                data: formDataToUpload,
@@ -296,7 +292,7 @@
 				            	btn.css('color', 'white');
 		            	    		btn.attr("disabled", false);
 			            }
-		            }); */
+		            });
 		        }
 		    });
 
@@ -894,9 +890,6 @@
 					 			}
 						 	}
 						</div>
-					</div>
-					<div style="margin-bottom: -380px; text-align: center;">
-						<img style="width: 360px; height: 360px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">
 					</div>
 					<canvas id="canvas" width="" height="400"></canvas>
 					<div class="drawing-wrapper center-align">

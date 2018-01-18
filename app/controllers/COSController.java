@@ -38,6 +38,8 @@ import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.db.jpa.JPAApi;
 import play.db.jpa.Transactional;
+import play.i18n.Messages;
+import play.i18n.MessagesApi;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -53,6 +55,7 @@ public class COSController extends Controller{
 	@Inject private FormFactory formFactory;
 	@Inject private JPAApi jpaApi;
 	@Inject private Provider<Application> application;
+	@Inject private MessagesApi messagesApi;
 	
 	@With(AuthAction.class)
 	@Transactional
@@ -189,7 +192,7 @@ public class COSController extends Controller{
 							cosTerm.value = Integer.parseInt(optVal);
 							jpaApi.em().persist(cosTerm);
 							
-							List<FilePart<File>> filePartList = fileMap.get(cosTerm.id+"");
+							List<FilePart<File>> filePartList = fileMap.get(cosTerm.term.id+"");
 							if(!Utils.isBlank(remark) || filePartList != null) {
 								Remark remarkObj = new Remark(account, cosTerm);
 								remarkObj.remark = remark;
@@ -242,8 +245,10 @@ public class COSController extends Controller{
 						jpaApi.em().persist(a);
 					}
 					
-					Notification.notifyQPByCOS(cos);
-					Notification.notifyInspectorByCOS(cos);
+					Messages messages = messagesApi.preferred(request());
+					
+					Notification.notifyQPByCOS(cos, messages.at("noti_request_cos_inspector"), messages.at("email_request_cos_inspector"));
+					Notification.notifyInspectorByCOS(cos, messages.at("noti_request_cos_qp"), messages.at("email_request_cos_qp"));
 				}catch (IOException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();
@@ -514,15 +519,16 @@ public class COSController extends Controller{
 				MultipartFormData<File> body = request().body().asMultipartFormData();
 				FilePart<File> rejectSignPart = body.getFile("rejectSign");
 				try {
+					Messages messages = messagesApi.preferred(request());
 					if(rejectType.equals("issue")) {
 						cos.issueRejectCOS(reason, rejectSignPart.getFile());
-						Notification.notifyBuilderByCOS(cos, "Issue Rejected By " + account.user.name);
-						Notification.notifyInspectorByCOS(cos);
+						Notification.notifyBuilderByCOS(cos, messages.at("noti_issue_reject_builder", account.user.name), messages.at("email_issue_reject_builder", account.user.name));
+						Notification.notifyInspectorByCOS(cos, messages.at("noti_issue_reject_inspector", account.user.name), messages.at("email_issue_reject_inspector", account.user.name));
 					}else {
 						cos.inspectorRejectCOS(reason, rejectSignPart.getFile());
-						Notification.notifyBuilderByCOS(cos, "Inspection Rejected By " + account.user.name);
-						Notification.notifyInspectorByCOS(cos);
-						Notification.notifyQPByCOS(cos);
+						Notification.notifyBuilderByCOS(cos, messages.at("noti_inspect_reject_builder", account.user.name), messages.at("email_inspect_reject_builder", account.user.name));
+						Notification.notifyInspectorByCOS(cos, messages.at("noti_inspect_reject_inspector", account.user.name), messages.at("email_inspect_reject_inspector", account.user.name));
+						Notification.notifyQPByCOS(cos, messages.at("noti_inspect_reject_qp", account.user.name), messages.at("email_inspect_reject_qp", account.user.name));
 					}
 				}catch(Exception e) {
 					responseData.code = 4000;
@@ -560,15 +566,17 @@ public class COSController extends Controller{
 				MultipartFormData<File> body = request().body().asMultipartFormData();
 				FilePart<File> approveSignPart = body.getFile("approveSign");
 				try {
+					Messages messages = messagesApi.preferred(request());
+					
 					if(approveType.equals("issue")) {
 						cos.issueApproveCOS(reason, comment, approveDate, approveSignPart.getFile());
-						Notification.notifyBuilderByCOS(cos, "Issue Accepted By " + account.user.name);
-						Notification.notifyInspectorByCOS(cos);
+						Notification.notifyBuilderByCOS(cos, messages.at("noti_issue_approve_builder", account.user.name), messages.at("email_issue_approve_builder", account.user.name));
+						Notification.notifyInspectorByCOS(cos, messages.at("noti_issue_approve_inspector", account.user.name), messages.at("email_issue_approve_inspector", account.user.name));
 					}else {
 						cos.inspectorApproveCOS(reason, comment, approveDate, approveSignPart.getFile());
-						Notification.notifyBuilderByCOS(cos, "Inspection Accepted By " + account.user.name);
-						Notification.notifyInspectorByCOS(cos);
-						Notification.notifyQPByCOS(cos);
+						Notification.notifyBuilderByCOS(cos, messages.at("noti_inspect_approve_builder", account.user.name), messages.at("email_inspect_approve_builder", account.user.name));
+						Notification.notifyInspectorByCOS(cos, messages.at("noti_inspect_approve_inspector", account.user.name), messages.at("email_inspect_approve_inspector", account.user.name));
+						Notification.notifyQPByCOS(cos, messages.at("noti_inspect_approve_qp", account.user.name), messages.at("email_inspect_approve_qp", account.user.name));
 					}
 				}catch(Exception e) {
 					responseData.code = 4000;

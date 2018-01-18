@@ -80,6 +80,40 @@ location=Location
 placeholder_location=Fill in locations
 save_add_other=Save & add another file
 
+noti_request_cos_inspector=You have an new COS
+noti_request_cos_qp=You have an new COS
+
+noti_inspect_approve_builder=Inspection Accepted By {0}
+noti_inspect_approve_inspector=Inspection Accepted By {0}
+noti_inspect_approve_qp=Inspection Accepted By {0}
+
+noti_inspect_reject_builder=Inspection Rejected By {0}
+noti_inspect_reject_inspector=Inspection Rejected By {0}
+noti_inspect_reject_qp=Inspection Rejected By {0}
+
+noti_issue_approve_builder=Inspection Accepted By {0}
+noti_issue_approve_inspector=Inspection Accepted By {0}
+
+noti_issue_reject_builder=Issue Rejected By {0}
+noti_issue_reject_inspector=Issue Rejected By {0}
+
+email_request_cos_inspector=You have an new COS
+email_request_cos_qp=You have an new COS
+
+email_inspect_approve_builder=Inspection Accepted By {0}
+email_inspect_approve_inspector=Inspection Accepted By {0}
+email_inspect_approve_qp=Inspection Accepted By {0}
+
+email_inspect_reject_builder=Inspection Rejected By {0}
+email_inspect_reject_inspector=Inspection Rejected By {0}
+email_inspect_reject_qp=Inspection Rejected By {0}
+
+email_issue_approve_builder=Inspection Accepted By {0}
+email_issue_approve_inspector=Inspection Accepted By {0}
+
+email_issue_reject_builder=Issue Rejected By {0}
+email_issue_reject_inspector=Issue Rejected By {0}
+
 
 error.file_size=File size cannot be more than 2MB!
 
