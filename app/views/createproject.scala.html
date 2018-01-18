@@ -33,7 +33,7 @@
 	       	});
 
 			$('#use-lh-chx').on('click', function(){
-				if($(this).is(':checked')){
+				if($(this).is('checked=true')){
 					$('#use-lh-chx').val("1");
 				}else{
 					$('#use-lh-chx').val("0");
@@ -97,7 +97,7 @@
 				            	    	if(data.code == 0){
 				            	    		var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
 				            	    			clientBlk += '<input class=\"client-id\" type=\"hidden\" name=\"clientId\" value="' + data.data.accountId + '">';
-							        		clientBlk += '<div class="acc-info">';
+				            	    			clientBlk += '<div class="acc-info">';
 							        		clientBlk += '<p class="acc-name bold">' + data.data.name + '</p>';
 							        		clientBlk += '<p class="acc-designation">' + data.data.designation + '</p>';
 							        		clientBlk += '<p class="acc-email">' + data.data.account.email + '</p>';
@@ -109,7 +109,7 @@
 							        		clientBlk += '<div class="client-inputs">';
 							        		clientBlk += '<input type="hidden" name="clientEmail[]" value="' + clientEmail + '"/>';
 							        		clientBlk += '<input type="hidden" name="clientPassword[]" value="' + clientPassword + '"/>';
-								        	clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
+							        		clientBlk += '<input type="hidden" name="clientName[]" value="' + clientName + '"/>';
 								        	clientBlk += '<input type="hidden" name="clientHpNo[]" value="' + clientHpNo + '"/>';
 								        	clientBlk += '<input type="hidden" name="clientDesignation[]" value="' + clientDesignation + '"/>';
 								        	clientBlk += '<input type="hidden" name="clientNotify[]" value="' + notify + '"/>';
@@ -128,7 +128,7 @@
 				        	var clientPassword = $('input[name=clientPassword]').val();
 				        	var clientName = $('input[name=clientName]').val();
 				        	var clientHpNo = $('input[name=clientHpNo]').val();
-				        	var clientDesignation =  $('input[name=clientDesignation]').val();
+				        	var clientDesignation =  $('input[clientDesignation]').val();
 				        	var notify = ($('#client-notify-chx').is(':checked') ? '1' : '0');
 
 				        	var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
@@ -524,6 +524,7 @@
 		    });
 
 			$(document).on("click",".qp-body .remove-btn",function() {
+				alert
 				var id = $(this).parents('li').data('id');
 
 				if(!("@project" == "")){
@@ -719,6 +720,8 @@
 		    });
 
 			$(document).on("click","#client .minus-btn",function() {
+				 var c=confirm("delete?");
+				 if(c==true){
 				var btn = $(this);
 				var parentElement = $(this).parents('.acc-group');
 				if(parentElement.find('.client-id').length == 1){
@@ -749,9 +752,13 @@
 				}else{
 					parentElement.remove();
 				}
+			  }
 			});
 
 			$(document).on("click","#builder .minus-btn",function() {
+
+			 var a=confirm("delete?");
+			 if(a==true){
 				var btn = $(this);
 				var parentElement = $(this).parents('.acc-group');
 				if(parentElement.find('.builder-id').length == 1){
@@ -782,6 +789,7 @@
 				}else{
 					parentElement.remove();
 				}
+			 }
 			});
 
 			var qpListElement = $('.qp-body.right-body').find('ul.eng-list');
@@ -900,7 +908,9 @@
 					<div class="form-group">
 						<div class="form-label">
 							<label class="chx-container">Use Company Letterhead
-							  <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}">
+			                <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" checked=@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}>
+
+
 							  <span class="checkmark"></span>
 							</label>
 						</div>
@@ -916,6 +926,7 @@
 			            <label for="pro-title">@messages.at("company_name")</label>
 			         </div>
 			         <div class="form-input full-width">
+
 			            <input id="client-cy-name" type="text" class="form-control" name="clientCompanyName" placeholder="@messages.at("placeholder_company_name")"
 			            	value="@if(project != null){@if(project.clients != null){@if(project.clients != null){@if(project.clients.size > 0){@project.clients(0).companyName}}}}">
 			         </div>
@@ -946,7 +957,7 @@
 							         		<input type="hidden" name="clientName[]" value="@project.clients(index).name">
 							         		<input type="hidden" name="clientHpNo[]" value="@project.clients(index).hpNo">
 							         		<input type="hidden" name="clientDesignation[]" value="@project.clients(index).designation">
-							         		<input type="hidden" name="clientNotify[]" value="@if(project.clients(index).isNotify){1}else{0}">
+							         		<input type="hidden" name="clientNotify[]" value="@if("@project.clients(index).isNotify"){1}else{0}">
 							         	</div>
 							        </div>
 					         	}
@@ -1111,7 +1122,7 @@
 													}
 												</p>
 											</div>
-											<button id="inspector-add-btn" class="btn btn-primary add-btn">Add</button>
+											<button id="inspector- " class="btn btn-primary add-btn">Add</button>
 										</li>
 									}
 								}
