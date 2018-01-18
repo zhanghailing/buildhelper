@@ -11,7 +11,7 @@
 	            		$('.label-primary').text(data.data);
 	            }
             });
-			
+
 			$.ajax({
                 url: "@routes.AuthController.showMyInfo()",
                 type: "POST",
@@ -26,7 +26,7 @@
 }
 
 @main(scripts, "Build-Helper"){
-	<div id="dash-content" class="dash-bg">		
+	<div id="dash-content" class="dash-bg">
 		<div id="sidebar" class="dash-sidebar">
 		    <ul class="sidebar-menu" id="nav-accordion">
 		    	<li class="sub-menu dcjq-parent-li">
@@ -45,7 +45,7 @@
 			            </a>
 			        </li>
 				}
-				
+
 				@if(account.accType == AccountType.ADMIN){
 					<li class="sub-menu dcjq-parent-li">
 						<a @if(section == 1){class="active"} href="@routes.CompanyController.company()">
@@ -53,21 +53,21 @@
 			                <span>QP Company Info</span>
 			            </a>
 			        </li>
-				        
+
 			        <li class="sub-menu dcjq-parent-li">
 			            <a @if(section == 2){class="active"} href="@routes.CompanyController.qpList(0)">
 			                <i class="fa fa-user"></i>
 			                <span>Manage QP</span>
 			            </a>
 			        </li>
-			
+
 			        <li class="sub-menu dcjq-parent-li">
 			            <a @if(section == 3){class="active"} href="@routes.CompanyController.inspectors(0)">
 			                <i class="fa fa-user"></i>
 			                <span>Manage Inspector</span>
 			            </a>
 			        </li>
-				
+
 			        <li class="sub-menu dcjq-parent-li">
 			            <a @if(section == 4){class="active"} href="@routes.ProjectController.projectOfCompany(0)">
 			                <i class="fa fa-user"></i>
@@ -81,17 +81,17 @@
 			            </a>
 			        </li>
 				}
-		    	
+
 		    		<li class="sub-menu dcjq-parent-li">
 		            <a @if(section == 7){class="active"} href="@routes.NotificationController.notifications(0)">
 		                <i class="fa fa-comments"></i>
 		                <span>Notices</span>
 		            </a>
 		        </li>
-		        
-		        @if(account.accType == AccountType.QP 
-		        		|| account.accType == AccountType.INSPECTOR 
-		        		|| account.accType == AccountType.CONTRACTOR 
+
+		        @if(account.accType == AccountType.QP
+		        		|| account.accType == AccountType.INSPECTOR
+		        		|| account.accType == AccountType.CONTRACTOR
 		        		|| account.accType == AccountType.CLIENT){
 		    			@if(account.engineer != null){
 			    			<li class="sub-menu dcjq-parent-li">
@@ -108,7 +108,7 @@
 			            </a>
 			        </li>
 		    		}
-		        
+
 		        <li class="sub-menu dcjq-parent-li">
 		            <a @if(section == 9){class="active"} href="@routes.AuthController.logout()">
 		                <i class="fa fa-sign-out"></i>
@@ -117,7 +117,7 @@
 		        </li>
 		    </ul>
 		</div>
-		
+
 		<div class="topbar">
 			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0; width: 100%;">
 				<div class="navbar-header" style="height: 100%;">
