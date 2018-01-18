@@ -192,7 +192,7 @@ public class AuthController extends Controller{
 					} else {
 						qpAccount.company = company;
 						jpaApi.em().persist(qpAccount);
-	
+						
 						User user = null;
 						if (qpAccount.user != null) {
 							user = qpAccount.user;
@@ -200,7 +200,7 @@ public class AuthController extends Controller{
 							user = new User(qpAccount);
 						}
 						
-						if(AuthController.mobileNotExists(mobile)){
+						if(AuthController.mobileNotExists(mobile) || !Utils.isBlank(qpAccountId)){
 							user.name = name;
 							user.alterEmail1 = alerEmail1;
 							user.alterEmail2 = alerEmail2;
@@ -242,7 +242,9 @@ public class AuthController extends Controller{
 						}else{
 							responseData.code = 4000;
 							responseData.message = "The mobile already exists.";
-							jpaApi.em().remove(qpAccount);
+							if (Utils.isBlank(qpAccountId)) {
+								jpaApi.em().remove(qpAccount);
+							}
 						}
 					}
 				}catch(UnsupportedEncodingException e){
@@ -316,7 +318,7 @@ public class AuthController extends Controller{
 							user = new User(inspectorAccount);
 						}
 						
-						if(AuthController.mobileNotExists(mobile)){
+						if(AuthController.mobileNotExists(mobile) || !Utils.isBlank(inspectorAccountId)){
 							user.name = name;
 							user.alterEmail1 = alerEmail1;
 							user.alterEmail2 = alerEmail2;
@@ -352,7 +354,9 @@ public class AuthController extends Controller{
 						}else{
 							responseData.code = 4000;
 							responseData.message = "The mobile already exists.";
-							jpaApi.em().remove(inspectorAccount);
+							if (Utils.isBlank(inspectorAccountId)) {
+								jpaApi.em().remove(inspectorAccount);
+							}
 						}
 					}
 				} catch (UnsupportedEncodingException e) {
