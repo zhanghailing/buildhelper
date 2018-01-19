@@ -11,6 +11,11 @@
 				$('input[type=file]').last().after(fileInput);
 			});
 			
+			 $("#remove-file-btn").on("click", function(){
+					
+				    if ($('input[type=file]').length > 1){
+					$('input[type=file]').last().remove();}
+				});
 			$("#inspector-form").validate({
 				ignore: [],
 		        rules: {
@@ -192,6 +197,7 @@
 					   	</div>	
 			           	<input type="file" name="document" multiple>
 			           	<a id="add-file-btn" class="btn">Add</a>
+			           	<a id="remove-file-btn" class="btn">remove</a>
 		         	  </div>
 					
 				   </div>

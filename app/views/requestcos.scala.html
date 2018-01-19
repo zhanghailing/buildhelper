@@ -297,6 +297,7 @@
 		            	    		btn.attr("disabled", false);
 			            }
 		            }); */
+		            
 		        }
 		    });
 			
@@ -419,6 +420,7 @@
 			
 			uploader.append(uploaderItem);
 		}
+	
 	</script>
 	<div class="dash-detail-header">
 		<p class="title">Request for COS</p>
@@ -893,7 +895,8 @@
 						<a class="sign-clear-btn btn btn-default">Clear</a>
 					</div>
 					<div class="submit-wrapper">
-						<input id="submit" class="btn btn-success" type="submit" value="Submit"/>
+						<input id="submit" class="btn btn-success"  type="submit" value="Submit"  href="@routes.COSController.viewCOS(project.id)"/>
+						
 					</div>
 					<div style="clear: both; margin-bottom: 30px"></div>
 				</section>

@@ -1,7 +1,7 @@
 @import tags._
 @import tools.Constants
 
-@(account: Account, coses: List[COS], pageIndex: Integer, totalAmount: Integer)
+@(account: Account, project: Project, coses: List[COS], pageIndex: Integer, totalAmount: Integer)
 
 @sidemenu(account, 8) {
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -1051,7 +1051,7 @@
 		<table class="header-tb">
 			<tr>
 				<td class="left-content" width="70%">
-					<div class="note-title">Additional & Alterations Works For Two Storey Semi-detached House and Erection of Two New Staircase at No.9 Lyndhurst Road, Singapore 438092 [Gondola]</div>
+					<div class="note-title">@project.title</div>
 				</td>
 				<td class="right-content"  width="30%">
 					<div class="link-group">
@@ -1065,7 +1065,7 @@
 	</div>
 	
 	@if(coses == null || coses.size == 0){
-		<p class="empty">Sorry, The project doesn't have any COS～</p>
+		<p class="empty">Sorry, The project doesn't have any COS</p>
 	}else{
 		
 		<div class="dash-block">	
