@@ -328,8 +328,8 @@
 					</div>
 					
 					<div class="cos-sec">
-						<p class="cos-subheader">Location/Grid Line</p>
-						<p>@cos.subGrids(index).gridLine</p>
+						<p class="cos-subheader">Location</p>
+						<p>@cos.location</p>
 					</div>
 					</div>
 				}
@@ -391,6 +391,7 @@
 				@if(cos.project.drawings != null){
 					@for(index <- 0 until cos.project.drawings.size){
 						<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/>
+			
 					}
 				}
 			</div>

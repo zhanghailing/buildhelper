@@ -283,7 +283,7 @@ public class COSController extends Controller{
 							   .createNativeQuery("SELECT * FROM cos cs WHERE cs.project_id = :projectId", COS.class)
 							   .setParameter("projectId", project.id).getResultList();
 					
-				return ok(viewcos.render(account, coses, pageIndex, totalAmount));
+				return ok(viewcos.render(account, project, coses, pageIndex, totalAmount));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";
