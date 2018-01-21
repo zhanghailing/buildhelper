@@ -148,9 +148,11 @@
 		    			cosPrint += '<p style="text-align: justify;"><b>I</b>, <span>' + username + '</span>, <b>PE No.</b> <span>' + peNo + '</span>, hereby certify that the structural supporting the lifting equipment and tension of safety wire described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns and parapet walls) are safe for the taking of gondola loads to carrying out the building works.</p>';
 		    			cosPrint += '<br>';
 		    			cosPrint += '<p>Yours truly,</p>';
-		    			cosPrint += '<div style="position:relative;">';
-		    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px; margin-left: 50px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
-		    			cosPrint += '<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:120px;height:60px;top: 15px;left: 65px;" src="/cos/show/signature?uuid='+signUUID+'&isLarge=true"/>';
+		    			cosPrint += '<div style="position:relative; display: inline-block; margin-left: 50px;">';
+		    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
+		    			cosPrint += '<div style="position: absolute; top: 39px; width: 100%;"><p style="font-family:MyriadPro-Regular, Myriad Pro; font-size: 18px; color: #2b3990; width: 100%; text-align: center; text-transform: uppercase;">' + username + '</p></div>';
+		    			cosPrint += '<div style="position: absolute; top: 63px; width: 100%;"><p style="font-family:MyriadPro-Regular, Myriad Pro; font-size: 18px; color: #2b3990; width: 100%; text-align: center;">' + peNo + '</p></div>';
+		    			cosPrint += '<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:150px;height:75px;top: -10px;left: 0;" src="/cos/show/signature?uuid='+signUUID+'&isLarge=true"/>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex; text-align: center;">';
 		    			cosPrint += '<div style="float: left; width: 50%;">';
