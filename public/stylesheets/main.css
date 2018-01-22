@@ -1969,6 +1969,10 @@ footer p.copy-right {
 	vertical-align: top;
 }
 
+.remark-body .form-input{
+	display: inherit !important;
+}
+
 
 
 

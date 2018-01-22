@@ -571,7 +571,7 @@
 				}
 				
 				<section id="cos-compliance">
-					<p class="tb-header">Compliance Criteria</p>
+					<p class="tb-header">COMPLIANCE CRITERIA</p>
 					
 						@if(project.isScaffold){
 							<div class="compliance-sec">
@@ -586,9 +586,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -635,9 +635,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -686,9 +686,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -737,9 +737,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -788,9 +788,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
