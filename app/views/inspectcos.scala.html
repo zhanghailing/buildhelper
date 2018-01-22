@@ -15,11 +15,10 @@
 			var width = $('.cos-sec').width();
 			var height = width * 3 / 4;
 			$('.draw-preview').width(width).height(height);
-			$('.remark-body .link-img').width(width).height(height);
 			
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
-				var remarkBlk = $(this).parents('.value-box').find('.remark-body');
+				var remarkBlk = $(this).parents('.opt-wrapper').find('.remark-body');
 				if(remarkBlk.hasClass('hidden')){
 					remarkBlk.removeClass('hidden');
 				}else{
@@ -322,15 +321,15 @@
 			@if(cos.project.isScaffold || cos.project.isFormwork){
 				@for(index <- 0 until cos.subGrids.size){
 					<div class="multi-subject-block">
-					<div class="cos-sec">
-						<p class="cos-subheader">Subject</p>
-						<p>@cos.subGrids(index).subject</p>
-					</div>
-					
-					<div class="cos-sec">
-						<p class="cos-subheader">Location</p>
-						<p>@cos.location</p>
-					</div>
+						<div class="cos-sec">
+							<p class="cos-subheader">Subject</p>
+							<p>@cos.subGrids(index).subject</p>
+						</div>
+						
+						<div class="cos-sec">
+							<p class="cos-subheader">Location/Grid Line</p>
+							<p>@cos.subGrids(index).gridLine</p>
+						</div>
 					</div>
 				}
 			}else{
@@ -395,6 +394,7 @@
 					}
 				}
 			</div>
+			
 			<p class="sec-header center-align">COMPLIANCE CRITERIA</p>
 			<div class="cos-sec">
 				<div class="opt-wrapper">
@@ -420,28 +420,90 @@
 						}
 						
 						@for(index <- 0 until cos.cosTerms.size){
-							<p class="ques">
-								<span class="num">@(index+1). </span>
-								<span>@cos.cosTerms(index).term.subject</span>
-							</p>
-							<div class="value-box">
-								<ul class="opt-list">
-									<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
-									<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
-									<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
-								</ul>
-								<button class="remark-btn">Remark</button>
+							<div id="@cos.cosTerms(index).term.id" class="opt-wrapper">
+								<p class="ques">
+									<span class="num">@(index+1). </span>
+									<span>@cos.cosTerms(index).term.subject</span>
+								</p>
+								<div class="value-box">
+									<ul class="opt-list">
+										<li class="opt-item @if(cos.cosTerms(index).term.value == 1){selected}">YES</li>
+										<li class="opt-item @if(cos.cosTerms(index).term.value == 0){selected}">NO</li>
+										<li class="opt-item @if(cos.cosTerms(index).term.value == -1){selected}">N/A</li>
+									</ul>
+									<input class="opt-value" type="hidden" name="@cos.cosTerms(index).term.id-value" value="1"/>
+									<button class="remark-btn">Remark</button>
+								</div>
+								
 								<div class="remark-body">
-							        	@if(cos.cosTerms(index).remarks.size > 0){
-										@for(j <- 0 until cos.cosTerms(index).remarks.size){
-											@if(cos.cosTerms(index).remarks(j).cosImages.size > 0){
-												@for(n <- 0 until cos.cosTerms(index).remarks(j).cosImages.size){
-													<a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).remarks(j).cosImages(n).uuid))"></a>
+									@if(cos.cosTerms(index).remarks != null){
+										@for(jdex <- 0 until cos.cosTerms(index).remarks.size){	
+											<div class="form-group">
+									           <div class="form-label">	
+									              <label>Remark By @cos.cosTerms(index).remarks(jdex).author.user.name</label>
+									           </div>
+									           <div class="form-input">
+									           	  <input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value="@if(cos.cosTerms(index).remarks(jdex).remark){@cos.cosTerms(index).remarks(jdex).remark}" @if(cos.cosTerms(index).remarks(jdex).author.id != account.id){disabled}/>
+									         	</div>
+									        </div>
+									        <div class="uploader-group form-group row">
+									        		@if(cos.cosTerms(index).remarks(jdex).cosImages.size > 0){
+													@for(n <- 0 until cos.cosTerms(index).remarks(jdex).cosImages.size){
+														<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+												         	 <div class="cos-uploader-wrapper uploader">
+												         	 	<a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n).uuid))"></a>
+													         </div>
+												         </div>
+													}
 												}
-											}
-											<p>@cos.cosTerms(index).remarks(j).author.user.name <span>: </span>@cos.cosTerms(index).remarks(j).remark</p>
-								     	}
-						        		}
+										    </div>
+									    }
+									    <div class="form-group">
+								           <div class="form-label">	
+								              <label>Remark</label>
+								           </div>
+								           <div class="form-input">
+								           	  <input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value=""/>
+								         	</div>
+								        </div>
+								        <div class="uploader-group form-group row">
+									         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+									         	 <div class="cos-uploader-wrapper uploader">
+										            <a class="link-img cos-link"></a>
+										            <div class="upload-wrap">
+										               <i class="fa fa-picture-o" aria-hidden="true"></i>
+										               <div class="upload-text">
+										                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+										               </div>
+										               <input id="general-uploader-@cos.cosTerms(index).term.id" class="file-input" type="file" name="@cos.cosTerms(index).term.id-generalImage[]" accept="image/*" capture="camera" multiple/>
+										            </div>
+										         </div>
+									         </div>
+									    </div>
+									}else{
+										<div class="form-group">
+								           <div class="form-label">	
+								              <label>Remark</label>
+								           </div>
+								           <div class="form-input">
+								           	  <input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value=""/>
+								         	</div>
+								        </div>
+								        <div class="uploader-group form-group row">
+									         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+									         	 <div class="cos-uploader-wrapper uploader">
+										            <a class="link-img cos-link"></a>
+										            <div class="upload-wrap">
+										               <i class="fa fa-picture-o" aria-hidden="true"></i>
+										               <div class="upload-text">
+										                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+										               </div>
+										               <input id="general-uploader-@cos.cosTerms(index).term.id" class="file-input" type="file" name="@cos.cosTerms(index).term.id-generalImage[]" accept="image/*" capture="camera" multiple/>
+										            </div>
+										         </div>
+									         </div>
+									    </div>
+									}
 								</div>
 							</div>
 						}

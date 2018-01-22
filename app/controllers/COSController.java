@@ -233,7 +233,7 @@ public class COSController extends Controller{
 				    
 				    String routeWhereCause = "";
 				    for(String qpAcc : routeAccounts){
-				    		routeWhereCause	 += "ac.id=" + qpAcc + " or ";
+				    		routeWhereCause	+= "ac.id=" + qpAcc + " or ";
 				    }
 					if(routeWhereCause.length() > 4) {
 						routeWhereCause = routeWhereCause.substring(0, routeWhereCause.length() - 4);

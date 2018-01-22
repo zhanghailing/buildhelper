@@ -30,6 +30,8 @@ public class Term {
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	public List<COSTerm> cosTerms;
 	
+	public int value;
+	
 	public Term() {
 		this.cosTerms = new ArrayList<>();
 	}

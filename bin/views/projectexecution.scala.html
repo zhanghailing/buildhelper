@@ -86,9 +86,11 @@
 							</td>
 							<td>
 								@if(account.engineer != null){
-									<a class="upload-action action-btn" href="@routes.ProjectController.drawingFile(projects(index).id)">Upload Drawing/Calculations</a>
+									@if(account.id == projects(index).engineer.accountId){
+										<a class="upload-action action-btn" href="@routes.ProjectController.drawingFile(projects(index).id)">Upload Drawing/Calculations</a>
+										<a class="request-action action-btn" href="@routes.COSController.createCOS(projects(index).id)">Request for COS</a>
+									}
 								}
-								<a class="request-action action-btn" href="@routes.COSController.createCOS(projects(index).id)">Request for COS</a>
 								<a class="view-action action-btn" href="@routes.COSController.viewCOS(projects(index).id, 0)">View COS</a>
 							</td>
 				        </tr>
