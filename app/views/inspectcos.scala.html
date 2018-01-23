@@ -389,7 +389,7 @@
 				<p class="cos-subheader">Drawing/Calculations</p>
 				@if(cos.project.drawings != null){
 					@for(index <- 0 until cos.project.drawings.size){
-						<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/>
+						<p >@cos.location<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/></p>
 			
 					}
 				}

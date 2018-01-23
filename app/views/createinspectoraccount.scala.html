@@ -83,7 +83,7 @@
 		}
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">@messages.at("create_inspector_acc")</p>
+		<p class="title">@if(inspectorAccount != null){Edit Inspector Account}else{Create Inspector Account}</p>
 		<ul class="directory">
 			<li class="directory-link">
 				<a href="@routes.CompanyController.company()">Home</a>
@@ -93,7 +93,7 @@
 				<a href="@routes.CompanyController.inspectors(0)">Manage Inspector</a>
 			</li>
 			<li class="slash">/</li>
-			<li class="current">Create Inspector Account</li>
+			<li class="current">@if(inspectorAccount != null){Edit Inspector Account}else{Create Inspector Account}</li>
 		</ul>
 	</div>
 
