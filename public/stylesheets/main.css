@@ -485,6 +485,7 @@ input[type="submit"]{
     overflow-y: auto;
     outline: none;
     z-index: 100;
+  transition: all 0.3s;
 }
 
 .dash-block > p{
@@ -579,6 +580,7 @@ ul.sidebar-menu li a.active > span{
   height: 55px;
   display: flex;
   border-bottom: 1px solid #e7eaec;
+  transition: all 0.3s;
 }
 
 #dash-detail-wrap{
@@ -592,6 +594,7 @@ ul.sidebar-menu li a.active > span{
 #dash-detail{
 	margin-left: 220px;
 	min-height: calc(100% - 85px);
+  transition: all 0.3s;
 }
 
 #dash-detail .form-label, #dash-detail .form-input{
@@ -2015,16 +2018,17 @@ footer p.copy-right {
 
 
 #sidebar.active {
-  margin-left: -250px;
+  margin-left: -220px;
 }
 
 .topbar.active {
   margin-left: 0px;
+
 }
 
 #dash-detail.active {
   margin-left: 0px;
-} 
+}
 
 
 
