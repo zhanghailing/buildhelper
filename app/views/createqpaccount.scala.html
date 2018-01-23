@@ -114,7 +114,7 @@
 		}
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">@messages.at("create_qp")</p>
+		<p class="title">@if(qpAccount != null){Edit QP Account}else{Create QP Account}</p>
 		<ul class="directory">
 			<li class="directory-link">
 				<a href="@routes.CompanyController.company()">Home</a>
@@ -124,7 +124,7 @@
 				<a href="@routes.CompanyController.qpList(0)">Manage QP</a>
 			</li>
 			<li class="slash">/</li>
-			<li class="current">Create QP Account</li>
+			<li class="current">@if(qpAccount != null){Edit QP Account}else{Create QP Account}</li>
 		</ul>
 	</div>
 
