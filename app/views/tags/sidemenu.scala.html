@@ -22,12 +22,22 @@
 	            }
             });
 		});
+    $(document).ready(function () {
+
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        $('#topbar').toggleClass('active');
+        $('#dash-detail').toggleClass('active');
+
+      });
+
+    });
 	</script>
 }
 
 @main(scripts, "Build-Helper"){
-	<div id="dash-content" class="dash-bg">
-		<div id="sidebar" class="dash-sidebar">
+	<div id="dash-content" class="dash-bg wrapper">
+		<div id="sidebar" class="dash-sidebar col-lg-2">
 		    <ul class="sidebar-menu" id="nav-accordion">
 		    	<li class="sub-menu dcjq-parent-li">
 		            <a class="sidebar-header">
@@ -118,10 +128,10 @@
 		    </ul>
 		</div>
 
-		<div class="topbar">
-			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0; width: 100%;">
+		<div id="topbar" class="col-lg-12 topbar">
+			<nav class="navbar" role="navigation" style="margin-bottom: 0; width: 100%;">
 				<div class="navbar-header" style="height: 100%;">
-					<a class="btn btn-success" style="margin-left: 10px; margin-top: 15px; padding: 2px 12px;">
+					<a id="sidebarCollapse" class="btn btn-success" style="margin-left: 10px; margin-top: 15px; padding: 2px 12px;">
 						<i class="fa fa-bars"></i>
 					</a>
 				</div>
@@ -138,7 +148,7 @@
 				</div>
 			</nav>
 		</div>
-		<div id="dash-detail-wrap" class="lesson-dash">
+		<div id="dash-detail-wrap" class="lesson-dash col-lg-12">
 			<div id="dash-detail">
 				@content
 			</div>

@@ -477,7 +477,8 @@ input[type="submit"]{
 
 #sidebar {
 	position: fixed;
-    width: 220px;
+  min-width: 220px;
+  max-width: 220px;
     left: 0;
     bottom: 0;
     top: 0;
@@ -574,10 +575,10 @@ ul.sidebar-menu li a.active > span{
 }
 
 .topbar {
-	margin-left: 220px;
-	height: 55px;
-	display: flex;
-	border-bottom: 1px solid #e7eaec;
+  margin-left: 220px;
+  height: 55px;
+  display: flex;
+  border-bottom: 1px solid #e7eaec;
 }
 
 #dash-detail-wrap{
@@ -2005,14 +2006,25 @@ footer p.copy-right {
 }
 
 
+.wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+}
 
 
 
+#sidebar.active {
+  margin-left: -250px;
+}
 
+.topbar.active {
+  margin-left: 0px;
+}
 
-
-
-
+#dash-detail.active {
+  margin-left: 0px;
+} 
 
 
 
