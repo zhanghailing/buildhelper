@@ -575,6 +575,10 @@ ul.sidebar-menu li a.active > span{
 	font-weight: 600;
 }
 
+ul.sidebar-menu li a.active > span{
+  font-weight: 600;
+}
+
 .topbar {
   margin-left: 220px;
   height: 55px;
