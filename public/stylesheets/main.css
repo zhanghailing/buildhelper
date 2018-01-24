@@ -2034,12 +2034,11 @@ footer p.copy-right {
   margin-left: 0px;
 }
 
-.arrow {
-  float: right;
+@media screen and (max-width: 768px) {
+  .hide-on-small {
+    display: none !important;
+  }
 }
-
-
-
 
 
 

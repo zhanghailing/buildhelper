@@ -17,8 +17,14 @@
                 type: "POST",
                 success: function(response, status) {
 	                var data = $.parseJSON(JSON.stringify(response));
-	            		$('.sidebar-name').text(data.data.company);
-	            		$('.sidebar-role').text(data.data.accType);
+	                if(data.data.accType==="SADMIN"){
+                    $('.sidebar-name').text("E-Spector");
+                    $('.sidebar-role').text("MASTER ADMIN");
+                  }else {
+                    $('.sidebar-name').text(data.data.company);
+                    $('.sidebar-role').text(data.data.accType);
+                    console.log(response);
+                  }
 	            }
             });
 		});
@@ -62,8 +68,8 @@
 		    	<li class="sub-menu dcjq-parent-li">
 		            <a class="sidebar-header">
 		                <img src="@routes.CompanyController.showLogoWithoutParam()">
-		                <span class="sidebar-name">G Top International Pte Ltd</span>
-		                <span class="sidebar-role">Master Admin</span>
+		                <span class="sidebar-name"></span>
+		                <span class="sidebar-role"></span>
 		            </a>
 		        </li>
 

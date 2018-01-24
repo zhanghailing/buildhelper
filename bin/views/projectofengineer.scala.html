@@ -12,7 +12,7 @@
 			var pageParts = $(".paginate");
 		    var numPages = pageParts.length;
 		    var perPage = @Constants.COMPANY_PAGE_SIZE;
-		    
+
 		    pageParts.slice(perPage).hide();
 		    $("#page-nav").pagination({
 		        items: @totalAmount,
@@ -22,16 +22,16 @@
 		        onPageClick: function(pageNum) {
 		            var start = perPage * (pageNum - 1);
 		            var end = start + perPage;
-		            
+
 		            $('#page-offset').val(start);
 		            $('form#page-form').submit();
 		        }
 		    });
-		    
+
 		    $('.archive-action').on('click', function(){
 		    		var projectId = $(this).data('id');
 		    		var url = $(this).data('url');
-		    		
+
 		    		if(!$(this).hasClass('disabled')){
 		    			$(this).addClass("disabled");
 		    			$.ajax({
@@ -49,14 +49,14 @@
 			                	}
 			                	$(this).removeClass("disabled");
 			            }
-		            });		    			
+		            });
 		    		}
 		    });
-		    
+
 		    $('.complete-action').on('click', function(){
 		    		var projectId = $(this).data('id');
 		    		var url = $(this).data('url');
-		    		
+
 		    		if(!$(this).hasClass('disabled')){
 		    			$(this).addClass("disabled");
 		    			$.ajax({
@@ -74,7 +74,7 @@
 			                	}
 			                	$(this).removeClass("disabled");
 			            }
-		            });		    			
+		            });
 		    		}
 		    });
 	   	});
@@ -94,7 +94,7 @@
 			</tr>
 		</table>
 	</div>
-	
+
 	@if(projects == null || projects.size == 0){
 		<p class="empty">Sorry, You don't have any company～</p>
 	}else{
@@ -150,7 +150,7 @@
 					<input id="page-offset" type="hidden" name="offset" value="0"/>
 				</form>
 			</div>
-		</div>	
+		</div>
 	}
 }
 
