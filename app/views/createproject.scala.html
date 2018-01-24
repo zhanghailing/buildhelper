@@ -33,7 +33,7 @@
 	       	});
 
 			$('#use-lh-chx').on('click', function(){
-				if($(this).is(':checked')){
+				if($(this).is('checked=true')){
 					$('#use-lh-chx').val("1");
 				}else{
 					$('#use-lh-chx').val("0");
@@ -696,9 +696,7 @@
 
 				        	$('#team-detail').append(qpBuilderBlk);
 		        		}
-		        		var isulh = $('#use-lh-chx').val();
-			        	var formData = $(form).serializeArray();
-			        	formData.push({name: "useLetterHead", value: isulh});
+		        		
 		        		
 		        		var liInspectorItems = $('.inspector-body.right-body').find('ul.eng-list').children();
 		        		if(liInspectorItems.length > 0){
@@ -830,7 +828,7 @@
 	   	});
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">@if(project != null){Edit MOM Project}else{Add MOM Project}</p>
+		<p class="title">Add MOM Project </p>
 		<ul class="directory">
 			<li class="directory-link">
 				<a href="@routes.NotificationController.notifications(0)">Home</a>
@@ -840,7 +838,7 @@
 				<a href="@routes.ProjectController.projectOfEngineer(0)">Project Admin</a>
 			</li>
 			<li class="slash">/</li>
-			<li class="current">@if(project != null){Edit Project}else{Create Project}</li>
+			<li class="current">Create Project</li>
 		</ul>
 	</div>
 
@@ -912,7 +910,7 @@
 					<div class="form-group">
 						<div class="form-label">
 							<label class="chx-container">Use Company Letterhead
-			                <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="@if(project.useLetterHead){1}else{0}" @if(project.useLetterHead){checked}>
+			                <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" checked=@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}>
                             
 							  <span class="checkmark"></span>
 							</label>
