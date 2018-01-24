@@ -1,0 +1,43 @@
+New log file opened at Mon Jan 22 10:48:23 SGT 2018 by 13428@Hailing-PC
+Taking next connection to: 51726
+New client attempting to connect on port: 51727-51726
+  Address = /192.168.1.229:51726
+This client on port 51727 has uuid 1e99f2b0-f20b-498f-af3f-9e97751dd66d configName activator humanReadableName Activator protocolVersion unknown featureTags Vector()
+Connected Clients: activator-1e99f2b0-f20b-498f-af3f-9e97751dd66d
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 51726
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 13428@Hailing-PC logs at Mon Jan 22 11:21:24 SGT 2018, goodbye.

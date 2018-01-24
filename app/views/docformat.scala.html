@@ -6,13 +6,20 @@
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<script type="text/javascript">
 		$(function(){
-			
+
 	   	});
 	</script>
 	<div class="dash-detail-header">
 		<p class="title">Document Format</p>
+		<ul class="directory">
+			<li class="directory-link">
+				<a href="@routes.CompanyController.company()">Home</a>
+			</li>
+			<li class="slash">/</li>
+			<li class="current">Document Format</li>
+		</ul>
 	</div>
-	<div class="dash-block">	
+	<div class="dash-block">
 		<div class="dash-tab-header">
 			<ul class="tab-bar">
 				<li>
@@ -39,34 +46,34 @@
 					@for(index <- 0 until docFormats.size){
 						@if(docFormats(index).docType == "checklist"){
 							<div class="col col-xs-6 col-md-3 col-sm-3">
-				            <div class="doc-wrap">	
+				            <div class="doc-wrap">
 				            	<a target="_blank" class="doc-preview link-img" href="@docFormats(index).partialUrl" style="background-image:url(@routes.CompanyController.downloadDocThumbnail(docFormats(index).uuid))"></a>
-			            		<span class="caption"><span>@docFormats(index).workType.capitalize</span><span> </span><span>@docFormats(index).docType.capitalize</span></span>
+			            		<span class="caption"><span>@docFormats(index).workType.capitalize</span></span>
 			            	</div>
 			            </div>
 						}
 		            }
 		        </div>
 			</div>
-	        
+
 	        <div class="doc-item">
 		        <p class="doc-title">Certificate of Supervision (COS)</p>
 				<div class="row">
 					@for(index <- 0 until docFormats.size){
 						@if(docFormats(index).docType == "cos"){
 							<div class="col col-xs-6 col-md-3 col-sm-3">
-				            <div class="doc-wrap">	
+				            <div class="doc-wrap">
 				            	<a target="_blank" class="doc-preview link-img" href="@docFormats(index).partialUrl" style="background-image:url(@routes.CompanyController.downloadDocThumbnail(docFormats(index).uuid))">
 			            		</a>
-			            		<span class="caption"><span>@docFormats(index).workType.capitalize</span><span> </span><span>@docFormats(index).docType.capitalize</span></span>
-			            	</div>	
+			            		<span class="caption"><span>@docFormats(index).workType.capitalize</span></span>
+			            	</div>
 			            </div>
 						}
 		            }
 		        </div>
 	        </div>
 		</div>
-	</div>	
-	
-	
+	</div>
+
+
 }
