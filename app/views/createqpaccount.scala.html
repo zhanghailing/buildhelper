@@ -288,6 +288,7 @@
 						</tr>
 					</table>
 
+
 					<div class="form-group">
 			           <div class="form-label">
 			              <label>@messages.at("attach_cert")</label>
@@ -296,6 +297,17 @@
 			           <a id="add-file-btn" class="btn">Add</a>
 		         	   <a id="remove-file-btn" class="btn">remove</a>
 					</div>
+
+				<!--  	<div class="cos-sec">
+				<p class="cos-subheader">Drawing/Calculations</p>
+				@if(qpAccount.user.documents != null){
+					@for(index <- 0 until qpAccount.user.documents.size){
+						<embed class="draw-preview" src="@routes.CompanyController.downloadDocThumbnail(qpAccount.user.documents(index).uuid)"/>
+						<a class="remove" src="@routes.CompanyController.downloadFile(qpAccount.user.documents(index).uuid)">remove</a>
+					}
+				}
+			</div>   -->	
+
 				   </div>
 				</div>
 				<div class="form-group txt-center form-submit">
