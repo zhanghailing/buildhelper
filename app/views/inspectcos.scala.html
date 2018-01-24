@@ -523,6 +523,15 @@
 				<div id="addition-sec" class="cos-sec">
 					<p class="cos-subheader">Additional Images</p>
 					<div class="uploader-group form-group row">
+					
+						@for(index <- 0 until cos.additionalImages.size){	
+							<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+								<div class="cos-uploader-wrapper uploader">
+									<a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.additionalImages(index).uuid))"></a>
+								</div>
+							</div>
+						}
+						
 						<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
 							<div class="cos-uploader-wrapper uploader">
 								<a class="link-img cos-link"></a>

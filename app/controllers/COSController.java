@@ -237,14 +237,14 @@ public class COSController extends Controller{
 				    }
 					if(routeWhereCause.length() > 4) {
 						routeWhereCause = routeWhereCause.substring(0, routeWhereCause.length() - 4);
+						
+						List<Account> accountList = jpaApi.em().createNativeQuery("SELECT * FROM account ac WHERE " + routeWhereCause, Account.class).getResultList();
+						for(Account a : accountList) {
+							a.cos = cos;
+							jpaApi.em().persist(a);
+						}
 					}
-					
-					List<Account> accountList = jpaApi.em().createNativeQuery("SELECT * FROM account ac WHERE " + routeWhereCause, Account.class).getResultList();
-					for(Account a : accountList) {
-						a.cos = cos;
-						jpaApi.em().persist(a);
-					}
-					
+				
 					Messages messages = messagesApi.preferred(request());
 					
 					Notification.notifyQPByCOS(cos, messages.at("noti_request_cos_inspector"), messages.at("email_request_cos_inspector"));
