@@ -989,6 +989,7 @@ input.file-input{
 	border-color: #e7eaec;
 	border-style: solid solid none;
 	border-width: 1px 0;
+  width: calc(100% - 20px);
 }
 
 .company-content #logo-uploader-wrapper{
@@ -1006,7 +1007,10 @@ input.file-input{
 }
 
 #company-bacic-form .form-group{
-	width: 632px;
+  width:100%;
+  max-width: 632px;
+  left-padding=
+
 }
 
 #company-bacic-form .form-input{
