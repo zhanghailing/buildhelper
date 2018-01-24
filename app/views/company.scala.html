@@ -15,12 +15,12 @@
 				$(this).prop("checked", true);
 				$(this).val("1");
 			});
-			
+
 			$('#save-btn').on('click', function(){
 				//$('form#company-form').submit();
 				$('form#company-bacic-form').submit();
 			});
-			
+
 			$("#company-bacic-form").validate({
 		        rules: {
 		        	name:{
@@ -51,8 +51,8 @@
 		        	var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner"></i>');
 		        	$('#save-btn').text('');
 		        	$('#save-btn').append(spinner);
-		        	$('#save-btn').attr("disabled", true); 
-		        	
+		        	$('#save-btn').attr("disabled", true);
+
 		        	var isCus = $('#cus-chx').val();
 		        	var formData = $(form).serializeArray();
 		        	formData.push({name: "useCustomizedLetterHead", value: isCus});
@@ -62,13 +62,13 @@
 		                data: formData,
 		                success: function(response, status) {
 		                	var data = $.parseJSON(JSON.stringify(response));
-		                	
+
 		                	if(data.code != 0){
 		                		showAlertToast(data.message, "alert-danger");
 		                	}else{
 		                		showAlertToast(data.message, "alert-success");
 		                	}
-		                	
+
 		                	spinner.remove();
 		                	$('#save-btn').attr("disabled", false);
 		                	$('#save-btn').text('@messages.at("save")');
@@ -82,7 +82,7 @@
 	                });
 		        }
 		    });
-			
+
 			$('#logo-uploader').fileupload({
 				dataType: 'json',
 				type: 'POST',
@@ -102,7 +102,7 @@
 		                	var avatarLink = uploaderEle.find('#logo-link');
 		                	var browserLink = uploaderEle.find('.browse-btn');
 		                	var spinner = $('<i class=\'glyphicon glyphicon-refresh glyphicon-spinner\'></i>');
-		                	
+
 		                	uploaderEle.removeClass('noborder');
 		                	avatarLink.hide();
 		                	uploadWrap.hide();
@@ -122,7 +122,7 @@
 		        	var avatarLink = uploaderEle.find('#logo-link');
 		        	var browserLink = uploaderEle.find('.browse-btn');
 		        	var spinner = uploaderEle.find('.glyphicon-spinner');
-		        	
+
 		        	uploaderEle.addClass('noborder');
 		        	avatarLink.css('background-image', 'url(\'/company/show/logo?uuid='+ data.result.data.uuid + "&isLarge=false" +'\')');
 		        	spinner.remove();
@@ -136,11 +136,11 @@
 		    });
 	   	});
 	</script>
-	
+
 	<div class="dash-detail-header">
 		<p class="title">@messages.at("qp_company_info")</p>
 	</div>
-	<div class="company-content">
+	<div class="company-content col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		<div class="form-group">
 			<div class="form-label">
 				<label class="chx-container">@messages.at("default_letterhead")
@@ -149,7 +149,7 @@
 				</label>
 			</div>
 			<div id="lh-uploader-wrapper" class="uploader">
-				<a id="lh-link" class="link-img" 
+				<a id="lh-link" class="link-img"
 					@if(company != null){
 				    	@if(company.letterHead != null){
 				        	style="background-image:url(/company/show/letterhead?uuid=@company.letterHead.uuid)"
@@ -158,7 +158,7 @@
 				</a>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<div class="form-label">
 				<label class="chx-container">@messages.at("customize_letterhead")
@@ -166,8 +166,8 @@
 				  <span class="checkmark"></span>
 				</label>
 			</div>
-			<div id="logo-uploader-wrapper" class="uploader">
-				<a id="logo-link" class="link-img" 
+			<div id="logo-uploader-wrapper" class="uploader col-lg-2 col-md-2 col-sm-2 col-xs-2">
+				<a id="logo-link" class="link-img"
 					@if(company != null){
 						@if(company.logo != null){
 							style="background-image:url(/company/show/logo?uuid=@company.logo.uuid)"
@@ -183,8 +183,8 @@
 					<input id="logo-uploader" class="file-input" type="file" name="logoImage" data-url="@routes.CompanyController.uploadLogo()"/>
 				</div>
 			</div>
-			
-			<form id="company-bacic-form">
+
+			<form id="company-bacic-form" class="col-lg-10 col-md-9 col-sm-7 col-xs-7">
 				<input type="hidden" name="companyId" value="@company.id"/>
 				<div class="form-group">
 			         <div class="form-label">
@@ -195,34 +195,34 @@
 			         </div>
 				</div>
 				<div class="form-group">
-					<div id="addr-wrap" class="form-label">	
+					<div id="addr-wrap" class="form-label">
 			            <label for="addr"><b>*</b>@messages.at("address"):</label>
 			         </div>
 			         <div class="form-input">
 			            <input id="addr" type="text" class="form-control" name="address" placeholder="@messages.at("placeholder_address")" value="@if(company != null){@company.address}">
 			         </div>
 				</div>
-				      
+
 			      <div class="form-group">
-			         <div id="uen-wrap" class="form-label">	
+			         <div id="uen-wrap" class="form-label">
 			            <label for="une-no"><b>*</b>@messages.at("uen_no"):</label>
 			         </div>
 			         <div class="form-input">
 			            <input id="une-no" type="text" class="form-control" name="uenNo" placeholder="@messages.at("placeholder_uen_no")" value="@if(company != null){@company.uenNo}">
 			         </div>
 			      </div>
-				      
+
 			      <div class="form-group">
-			         <div id="phone-wrap" class="form-label">	
+			         <div id="phone-wrap" class="form-label">
 			            <label for="phone-no"><b>*</b>@messages.at("phone_no"):</label>
 			         </div>
 			         <div class="form-input">
 		            <input id="phone-no" type="text" class="form-control" name="phone" placeholder="@messages.at("placeholder_phone_no")" value="@if(company != null){@company.phone}">
 			         </div>
 			      </div>
-				      
+
 			      <div class="form-group">
-			         <div id="email-wrap" class="form-label">	
+			         <div id="email-wrap" class="form-label">
 			            <label for="email"><b>*</b>@messages.at("email"):</label>
 			         </div>
 			         <div class="form-input">
