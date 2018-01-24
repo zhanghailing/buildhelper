@@ -11,7 +11,7 @@
 	            		$('.label-primary').text(data.data);
 	            }
             });
-			
+
 			$.ajax({
                 url: "@routes.AuthController.showMyInfo()",
                 type: "POST",
@@ -22,12 +22,42 @@
 	            }
             });
 		});
+    $(document).ready(function () {
+
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        $('#topbar').toggleClass('active');
+        $('#dash-detail').toggleClass('active');
+      });
+      if($(window).width() <= 768){
+        $('#sidebar').addClass('active');
+        $('#topbar').addClass('active');
+        $('#dash-detail').addClass('active');
+      }else{
+        $('#sidebar').removeClass('active');
+        $('#topbar').removeClass('active');
+        $('#dash-detail').removeClass('active');
+      }
+
+    });
+    $(window).on('resize', function(){
+      var win = $(this); //this = window
+      if (win.width() <= 768) {
+        $('#sidebar').addClass('active');
+        $('#topbar').addClass('active');
+        $('#dash-detail').addClass('active');
+      }else{
+        $('#sidebar').removeClass('active');
+        $('#topbar').removeClass('active');
+        $('#dash-detail').removeClass('active');
+      }
+    });
 	</script>
 }
 
 @main(scripts, "Build-Helper"){
-	<div id="dash-content" class="dash-bg">		
-		<div id="sidebar" class="dash-sidebar">
+	<div id="dash-content" class="dash-bg wrapper">
+		<div id="sidebar" class="dash-sidebar col-lg-2">
 		    <ul class="sidebar-menu" id="nav-accordion">
 		    	<li class="sub-menu dcjq-parent-li">
 		            <a class="sidebar-header">
@@ -45,7 +75,7 @@
 			            </a>
 			        </li>
 				}
-				
+
 				@if(account.accType == AccountType.ADMIN){
 					<li class="sub-menu dcjq-parent-li">
 						<a @if(section == 1){class="active"} href="@routes.CompanyController.company()">
@@ -53,27 +83,35 @@
 			                <span>QP Company Info</span>
 			            </a>
 			        </li>
-				        
-			        <li class="sub-menu dcjq-parent-li">
+          <li class="sub-menu dcjq-parent-li">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+              <i class="fa fa-user"></i>
+              <span>Manage User</span><span style="float:right"><i class="fa fa-caret-down"></i></span>
+            </a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+
+			        <li >
 			            <a @if(section == 2){class="active"} href="@routes.CompanyController.qpList(0)">
-			                <i class="fa fa-user"></i>
-			                <span>Manage QP</span>
+                    @*<i class="fa fa-user"></i>*@
+			                <span style="padding-left:20px" class="sidebar-user">Qualified Person</span>
 			            </a>
 			        </li>
-			
-			        <li class="sub-menu dcjq-parent-li">
+
+			        <li >
 			            <a @if(section == 3){class="active"} href="@routes.CompanyController.inspectors(0)">
-			                <i class="fa fa-user"></i>
-			                <span>Manage Inspector</span>
+			                @*<i class="fa fa-user"></i>*@
+			                <span style="padding-left:20px" class="sidebar-user">Inspector</span>
 			            </a>
 			        </li>
-				
-			        <li class="sub-menu dcjq-parent-li">
+
+			        <li >
 			            <a @if(section == 4){class="active"} href="@routes.ProjectController.projectOfCompany(0)">
-			                <i class="fa fa-user"></i>
-			                <span>Project Engineer</span>
+			                @*<i class="fa fa-user"></i>*@
+			                <span style="padding-left:20px" class="sidebar-user">Project Engineer</span>
 			            </a>
 			        </li>
+            </ul>
+          </li>
 			        <li class="sub-menu dcjq-parent-li">
 			            <a @if(section == 6){class="active"} href="@routes.CompanyController.documentFormat()">
 			                <i class="fa fa-sticky-note"></i>
@@ -81,17 +119,17 @@
 			            </a>
 			        </li>
 				}
-		    	
+
 		    		<li class="sub-menu dcjq-parent-li">
 		            <a @if(section == 7){class="active"} href="@routes.NotificationController.notifications(0)">
 		                <i class="fa fa-comments"></i>
 		                <span>Notices</span>
 		            </a>
 		        </li>
-		        
-		        @if(account.accType == AccountType.QP 
-		        		|| account.accType == AccountType.INSPECTOR 
-		        		|| account.accType == AccountType.CONTRACTOR 
+
+		        @if(account.accType == AccountType.QP
+		        		|| account.accType == AccountType.INSPECTOR
+		        		|| account.accType == AccountType.CONTRACTOR
 		        		|| account.accType == AccountType.CLIENT){
 		    			@if(account.engineer != null){
 			    			<li class="sub-menu dcjq-parent-li">
@@ -108,7 +146,7 @@
 			            </a>
 			        </li>
 		    		}
-		        
+
 		        <li class="sub-menu dcjq-parent-li">
 		            <a @if(section == 9){class="active"} href="@routes.AuthController.logout()">
 		                <i class="fa fa-sign-out"></i>
@@ -117,28 +155,28 @@
 		        </li>
 		    </ul>
 		</div>
-		
-		<div class="topbar">
-			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0; width: 100%;">
-				<div class="navbar-header" style="height: 100%;">
-					<a class="btn btn-success" style="margin-left: 10px; margin-top: 15px; padding: 2px 12px;">
+
+		<div id="topbar" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 topbar">
+			<nav class="navbar" role="navigation" style="margin-bottom: 0; width: 100%;">
+				<div class="navbar-header col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: 100%; width: 100%">
+					<a id="sidebarCollapse" class="btn btn-success" style="margin-left: 10px; margin-top: 15px; padding: 2px 12px;">
 						<i class="fa fa-bars"></i>
 					</a>
-				</div>
-				<a class="nav navbar-right" style="margin-right: 30px; height: 100%; padding-top: 20px;" href="@routes.AuthController.logout()">
-					<i class="fa fa-sign-out"></i>
-					<span>Log out</span>
-				</a>
-				<div class="nav navbar-right" style="margin-right: 30px; height: 100%; padding-top: 20px;">
-					<i class="fa fa-bell"></i>
-					<a class="label label-primary" href="@routes.NotificationController.notifications(0)">0</a>
-				</div>
-				<div class="nav navbar-right" style="margin-right: 30px; height: 100%; padding-top: 20px;">
-					<span>Welcome to E-SPECTOR.</span>
+			        <a style="float:right; margin-right: 30px; height: 100%; padding-top: 20px;" href="@routes.AuthController.logout()">
+			            <i class="fa fa-sign-out"></i>
+			            <span>Log out</span>
+			        </a>
+			        <div  style="float:right; margin-right: 30px; height: 100%; padding-top: 20px;">
+			            <i class="fa fa-bell"></i>
+			            <a class="label label-primary" href="@routes.NotificationController.notifications(0)">0</a>
+			          </div>
+			        <div  style="float:right; margin-right: 30px; height: 100%; padding-top: 20px;">
+			            <span>Welcome to E-SPECTOR.</span>
+			        </div>
 				</div>
 			</nav>
 		</div>
-		<div id="dash-detail-wrap" class="lesson-dash">
+		<div id="dash-detail-wrap" class="col-lg-12">
 			<div id="dash-detail">
 				@content
 			</div>

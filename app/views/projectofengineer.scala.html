@@ -12,7 +12,7 @@
 			var pageParts = $(".paginate");
 		    var numPages = pageParts.length;
 		    var perPage = @Constants.COMPANY_PAGE_SIZE;
-		    
+
 		    pageParts.slice(perPage).hide();
 		    $("#page-nav").pagination({
 		        items: @totalAmount,
@@ -22,16 +22,16 @@
 		        onPageClick: function(pageNum) {
 		            var start = perPage * (pageNum - 1);
 		            var end = start + perPage;
-		            
+
 		            $('#page-offset').val(start);
 		            $('form#page-form').submit();
 		        }
 		    });
-		    
+
 		    $('.archive-action').on('click', function(){
 		    		var projectId = $(this).data('id');
 		    		var url = $(this).data('url');
-		    		
+
 		    		if(!$(this).hasClass('disabled')){
 		    			$(this).addClass("disabled");
 		    			$.ajax({
@@ -49,14 +49,14 @@
 			                	}
 			                	$(this).removeClass("disabled");
 			            }
-		            });		    			
+		            });
 		    		}
 		    });
-		    
+
 		    $('.complete-action').on('click', function(){
 		    		var projectId = $(this).data('id');
 		    		var url = $(this).data('url');
-		    		
+
 		    		if(!$(this).hasClass('disabled')){
 		    			$(this).addClass("disabled");
 		    			$.ajax({
@@ -74,7 +74,7 @@
 			                	}
 			                	$(this).removeClass("disabled");
 			            }
-		            });		    			
+		            });
 		    		}
 		    });
 	   	});
@@ -84,19 +84,33 @@
 			<tr>
 				<td class="left-content" width="60%">
 					<div class="note-title">Registered MOM Project</div>
+					<ul class="directory">
+						<li class="directory-link">
+							<a href="@routes.NotificationController.notifications(0)">Home</a>
+						</li>
+						<li class="slash">/</li>
+						<li class="current">Project Admin</li>
+					</ul>
 				</td>
 				<td class="right-content" width="40%">
 					<div class="link-group right-content">
+						
+					@if(projects != null && projects.size != 0){	
 						<a class="btn btn-success export-btn" href="@routes.ExportController.exportProAdminSummary()">Export Summary</a>
 						<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>
+					}
 					</div>
 				</td>
 			</tr>
 		</table>
 	</div>
-	
+
 	@if(projects == null || projects.size == 0){
-		<p class="empty">Sorry, You don't have any company～</p>
+		<div class="text-center">
+			<p class="empty-title">You haven't created any project yet～</p>
+			<p class="empty">To get started, click on the button below to create a project.</p>
+			<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>
+		</div>
 	}else{
 		<div class="dash-block">
 			<table class="table table-striped table-hover lesson-table">
@@ -150,7 +164,7 @@
 					<input id="page-offset" type="hidden" name="offset" value="0"/>
 				</form>
 			</div>
-		</div>	
+		</div>
 	}
 }
 
