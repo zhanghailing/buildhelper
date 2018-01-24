@@ -20,10 +20,24 @@
 	                if(data.data.accType==="SADMIN"){
                     $('.sidebar-name').text("E-Spector");
                     $('.sidebar-role').text("MASTER ADMIN");
-                  }else {
+                  }else if(data.data.accType==="ADMIN"){
                     $('.sidebar-name').text(data.data.company);
-                    $('.sidebar-role').text(data.data.accType);
-                    console.log(response);
+                    $('.sidebar-role').text("ADMIN");
+                  }else{
+                    $('.sidebar-name').text(data.data.name);
+                    if (data.data.accType==="QP"){
+                      $('.sidebar-role').text("Qualified Person");
+                    }else if (data.data.accType==="INSPECTOR"){
+                        if(data.data.designation===null){
+                          $('.sidebar-role').text("INSPECTOR");
+                        }else{
+                          $('.sidebar-role').text(data.data.designation);
+                        }
+
+                    }else {
+                      $('.sidebar-role').text(data.data.accType);
+                    }
+                    
                   }
 	            }
             });
