@@ -590,6 +590,8 @@ ul.sidebar-menu li a.active > span{
 
 #dash-detail-wrap{
     width: 100%;
+    position: absolute;
+    top: 55px;
 }
 
 .header-tb{
@@ -599,7 +601,7 @@ ul.sidebar-menu li a.active > span{
 #dash-detail{
 	margin-left: 220px;
 	min-height: calc(100% - 85px);
-  transition: all 0.3s;
+    transition: all 0.3s;
 }
 
 #dash-detail .form-label, #dash-detail .form-input{
@@ -1853,7 +1855,7 @@ footer p.copy-right {
 }
 .landing-page .bubble {
 	position: relative;
-	height: 120px;
+	height: 160px;
 	padding:20px;
 	background: #ffffff;
 	-webkit-border-radius: 10px;
@@ -2015,6 +2017,10 @@ footer p.copy-right {
 
 #cos-form .form-label{
 	vertical-align: top;
+}
+
+.remark-body .form-input{
+	display: inherit !important;
 }
 
 

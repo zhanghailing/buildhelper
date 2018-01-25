@@ -583,8 +583,8 @@
 				}
 
 				<section id="cos-compliance">
-					<p class="tb-header">Compliance Criteria</p>
-
+					<p class="tb-header">COMPLIANCE CRITERIA</p>
+					
 						@if(project.isScaffold){
 							<div class="compliance-sec">
 								<p class="cos-subheader">General</p>
@@ -598,9 +598,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -647,9 +647,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -698,9 +698,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -749,9 +749,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -800,9 +800,9 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
@@ -898,7 +898,7 @@
 						<a class="sign-clear-btn btn btn-default">Clear</a>
 					</div>
 					<div class="submit-wrapper">
-						<input id="submit" class="btn btn-success"  type="submit" value="Submit"  href="@routes.COSController.viewCOS(project.id)"/>
+						<input id="submit" class="btn btn-success"  type="submit" value="Submit"  onclick="window.location.href='@routes.COSController.viewCOS(project.id)'" />
 						
 					</div>
 					<div style="clear: both; margin-bottom: 30px"></div>

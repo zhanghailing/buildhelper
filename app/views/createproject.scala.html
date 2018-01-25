@@ -696,7 +696,8 @@
 
 				        	$('#team-detail').append(qpBuilderBlk);
 		        		}
-
+		        		
+		        		
 		        		var liInspectorItems = $('.inspector-body.right-body').find('ul.eng-list').children();
 		        		if(liInspectorItems.length > 0){
 		        			var inspectorBuilderBlk = '<div class="inspector-inputs">';
@@ -910,7 +911,7 @@
 						<div class="form-label">
 							<label class="chx-container">Use Company Letterhead
 			                <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" checked=@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}>
-
+                            
 							  <span class="checkmark"></span>
 							</label>
 						</div>

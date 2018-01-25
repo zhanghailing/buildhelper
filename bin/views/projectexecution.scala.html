@@ -12,7 +12,7 @@
 			var pageParts = $(".paginate");
 		    var numPages = pageParts.length;
 		    var perPage = @Constants.COMPANY_PAGE_SIZE;
-		    
+
 		    pageParts.slice(perPage).hide();
 		    $("#page-nav").pagination({
 		        items: @totalAmount,
@@ -22,7 +22,7 @@
 		        onPageClick: function(pageNum) {
 		            var start = perPage * (pageNum - 1);
 		            var end = start + perPage;
-		            
+
 		            $('#page-offset').val(start);
 		            $('form#page-form').submit();
 		        }
@@ -34,17 +34,24 @@
 			<tr>
 				<td class="left-content" width="60%">
 					<div class="note-title">Registered MOM Project</div>
+					<ul class="directory">
+						<li class="directory-link">
+							<a href="@routes.NotificationController.notifications(0)">Home</a>
+						</li>
+						<li class="slash">/</li>
+						<li class="current">Project Execution</li>
+					</ul>
 				</td>
 				<td class="right-content" width="40%">
 					<div class="link-group right-content">
-						<a class="btn btn-success export-btn" href="@routes.ExportController.exportProjectSummary()">Export Summary</a>
-						<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>
+					<!--	<a class="btn btn-success export-btn" href="@routes.ExportController.exportProjectSummary()">Export Summary</a>   -->
+					<!--	<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>   -->
 					</div>
 				</td>
 			</tr>
 		</table>
 	</div>
-	
+
 	@if(projects == null || projects.size == 0){
 		<p class="empty">Sorry, You don't have any company～</p>
 	}else{
@@ -79,9 +86,11 @@
 							</td>
 							<td>
 								@if(account.engineer != null){
-									<a class="upload-action action-btn" href="@routes.ProjectController.drawingFile(projects(index).id)">Upload Drawing/Calculations</a>
+									@if(account.id == projects(index).engineer.accountId){
+										<a class="upload-action action-btn" href="@routes.ProjectController.drawingFile(projects(index).id)">Upload Drawing/Calculations</a>
+										<a class="request-action action-btn" href="@routes.COSController.createCOS(projects(index).id)">Request for COS</a>
+									}
 								}
-								<a class="request-action action-btn" href="@routes.COSController.createCOS(projects(index).id)">Request for COS</a>
 								<a class="view-action action-btn" href="@routes.COSController.viewCOS(projects(index).id, 0)">View COS</a>
 							</td>
 				        </tr>
@@ -94,6 +103,6 @@
 					<input id="page-offset" type="hidden" name="offset" value="0"/>
 				</form>
 			</div>
-		</div>	
+		</div>
 	}
 }

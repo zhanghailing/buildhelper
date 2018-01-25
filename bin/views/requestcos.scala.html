@@ -13,64 +13,64 @@
 			$(".nodefault").click(function(e) {
 		        e.preventDefault();
 		    });
-			
+
 			$('.num').each(function(index){
 				$(this).text(index+1 + ". ");
 			});
-			
+
 			$('.location-group .subject-lbl:first-child').addClass('selected');
 			$('.location-group .subject-lbl.selected').find('input[type="radio"]').attr('checked', true);
-			
+
 			$('.location-group input[name="location"]').on('click', function(){
 				$('.location-group .subject-lbl').removeClass('selected');
 				$('.location-group input[name="location"]').prop('checked', false);
-       			
-       			$(this).prop('checked', true);	
+
+       			$(this).prop('checked', true);
        			$(this).parent().addClass('selected');
 	       	});
-			
+
 			$('.qp-group input').on('click', function(){
 				var parentLbl = $(this).parents('.subject-lbl');
 				var idVal = parentLbl.attr('id');
-				
+
 				if(parentLbl.hasClass('selected')){
 					parentLbl.removeClass('selected');
 				}else{
 					parentLbl.addClass('selected');
 				}
-					
+
 				if($(this).hasClass('selected')){
        				$(this).addAttr('value', idVal);
        			}else{
        				$(this).removeAttr('value');
        			}
 	       	});
-			
+
 			$('.inspector-group input').on('click', function(){
 				var parentLbl = $(this).parents('.subject-lbl');
-				
+
 				if(parentLbl.hasClass('selected')){
 					parentLbl.removeClass('selected');
 				}else{
 					parentLbl.addClass('selected');
 				}
-					
+
 				if($(this).hasClass('selected')){
        				$(this).addAttr('value', idVal);
        			}else{
        				$(this).removeAttr('value');
        			}
 	       	});
-			
+
 			var serialNo = uuid();
 			$('input[name="serialNo"]').val(serialNo);
 			$('.serial-no').html(serialNo);
-			
+
 			$('.opt-item').on('click', function(){
 				var parentUL = $(this).parent();
 				parentUL.find('.opt-item').removeClass('selected');
 				$(this).addClass('selected');
-				
+
 				var txt = parentUL.find('.opt-item.selected').text();
 				if(txt === "YES"){
 					parentUL.siblings('input[type="hidden"]').val(1);
@@ -80,7 +80,7 @@
 					parentUL.siblings('input[type="hidden"]').val(-1);
 				}
 			});
-			
+
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
 				var remarkBlk = $(this).parents('.opt-wrapper').find('.remark-body');
@@ -90,11 +90,11 @@
 					remarkBlk.addClass('hidden');
 				}
 			});
-			
+
 			$(document).on("click",".draw-btn",function(e) {
 				$('#draw-model').modal('show', $(this));
 			});
-			
+
 			var currentDrawBtn;
 			var imgCanvas = new fabric.Canvas('draw-canvas', {
 				isDrawingMode: true
@@ -104,7 +104,7 @@
 				currentDrawBtn = drawBtn;
 				var fileInput = drawBtn.siblings('.upload-wrap').find('input[type="file"]');
 				var file = fileInput[0].files[0];
-				
+
 				var reader = new FileReader();
 				reader.onloadend = function() {
 					var image = new Image();
@@ -114,20 +114,20 @@
 			    		var aLinkWidth = linkEle.width();
 			    		var ratio = image.width/aLinkWidth;
 			    		var aLinkHeight = image.height / ratio;
-				    		
+
 			    		imgCanvas.setWidth(aLinkWidth);
 			    		imgCanvas.setHeight(aLinkHeight);
-			    		
+
 			    		$('.drawing-layer').width(aLinkWidth);
 			    		$('.drawing-layer').height(aLinkHeight);
-				    		
+
 			    		linkEle.height(aLinkHeight);
 						linkEle.css('background-image', 'url(\'' + reader.result + '\')');
 				    };
 	        		}
 				reader.readAsDataURL(file);
 			});
-			
+
 			$(document).on("change",".uploader",function(e) {
 				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
 				var inputId = $(srcTarget).attr('id');
@@ -141,12 +141,12 @@
 					        	var uploaderEle = inputEle.closest('.uploader');
 			                	var browserEle = uploaderEle.find('.browse-btn');
 			                	var linkEle = uploaderEle.find('.link-img');
-			                	
+
 			                	uploaderEle.addClass('noborder');
 			                	linkEle.removeClass('hidden');
 			                	browserEle.hide();
 			                	linkEle.css('background-image', 'url(\'' + reader.result + '\')');
-			                	
+
 			                	var drawIconBtn = '<i class="draw-btn glyphicon glyphicon-pencil"></i>';
 			                	$(uploaderEle).append(drawIconBtn);
 				        }
@@ -158,20 +158,20 @@
 					}
 		        }
 			});
-			
+
 			var canvas = new fabric.Canvas('canvas', {
 				isDrawingMode: true
 			});
 			canvas.setWidth($('#cos-basic').width());
-			
+
 			$('.sign-clear-btn').on('click', function(){
 				canvas.clear();
 			});
-			
+
 			$('#draw-clear-btn').on('click', function(){
 				imgCanvas.clear();
 			});
-			
+
 			blobMap = {};
 			$('#draw-sure-btn').on('click', function(){
 				var canvas = document.getElementById("draw-canvas");
@@ -180,32 +180,32 @@
 				var realData = block[1].split(",")[1];
 				var contentType = block[0].split(":")[1];
 				var blob = b64toBlob(realData, contentType);
-				
+
 				var reader  = new FileReader();
 				reader.onloadend = function() {
 					$('.drawing-layer').css('background-image', 'url(\'' + reader.result + '\')');
-					
+
 					html2canvas(document.getElementById("draw-container")).then(function(canvas) {
 						var data = canvas.toDataURL("image/png");
-						
+
 						var block = data.split(";");
 						var realData = block[1].split(",")[1];
 						var contentType = block[0].split(":")[1];
 						var blob = b64toBlob(realData, contentType);
-						
+
 						var shReader  = new FileReader();
 						shReader.onloadend = function() {
 							var uploaderEle = currentDrawBtn.parents('.uploader');
 			                	var linkEle = uploaderEle.find('.link-img');
 			                	var fileInput = uploaderEle.find('input[type="file"]');
-			                
+
 			                	var inputName = fileInput.attr('name');
 			                	var fileItems = $('input[name="'+inputName+'"]');
 			                	var currentFileItem = uploaderEle.find('.file-input');
 			                	var currentIndex = fileItems.index(currentFileItem);
 			                var key = currentIndex + "|" + inputName;
 			                	blobMap[key] = blob;
-			                	
+
 			                	linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
@@ -214,12 +214,12 @@
 		        }
 				reader.readAsDataURL(blob);
 			});
-			
+
 			$('#draw-model').on('hidden.bs.modal', function () {
 				imgCanvas.clear();
 				$('.drawing-layer').css('background-image', 'url()');
 			});
-			
+
 			$("#cos-form").validate({
 				ignore: [],
 		        rules: {
@@ -238,15 +238,15 @@
 		        submitHandler: function(form) {
 		        		var c=document.getElementById("canvas");
 					var data=c.toDataURL("image/png");
-					
+
 					var block = data.split(";");
 					var realData = block[1].split(",")[1];
 					var contentType = block[0].split(":")[1];
 					var blob = b64toBlob(realData, contentType);
-					
-					var formDataToUpload = new FormData(document.getElementById('cos-form'));	
+
+					var formDataToUpload = new FormData(document.getElementById('cos-form'));
 					formDataToUpload.append("signature", blob, 'signature.png');
-					
+
 					for (var key in blobMap) {
 						var splitArray = key.split('|');
 						var position = splitArray[0];
@@ -267,18 +267,18 @@
 							});
 						}
 					}
-					
+
 					var btn = $('#submit');
 					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
 						btn.after(spinner);
 				        	btn.css('color', '#1ab394');
 				        	btn.attr("disabled", true);
-					
+
 					$.ajax({
 		                url: "@routes.COSController.saveCOS()",
 		                type: "POST",
 		                data: formDataToUpload,
-		                contentType: false, 
+		                contentType: false,
 		                processData: false,
 		                success: function(response, status) {
 			                var data = $.parseJSON(JSON.stringify(response));
@@ -287,7 +287,7 @@
 			                }else{
 	                				showAlertToast(data.message, "alert-warning");
 			                }
-			            	
+
 				            	spinner.remove();
 				            	btn.css('color', 'white');
 		            	    		btn.attr("disabled", false);
@@ -295,7 +295,7 @@
 		            });
 		        }
 		    });
-			
+
 			$(document).on('click', "a.add-more-btn", function(){
 				var experRow = '<div class="multi-subject-row">';
 				experRow += '<div class="form-group">';
@@ -316,15 +316,15 @@
 				experRow += '</div>';
 				experRow += '<a href="javascript:;" class="del-btn">Remove</a>';
 				experRow += '</div>';
-				
+
 				$(this).before(experRow);
 			});
-			
+
 			$(document).on('click', "a.del-btn", function(){
 				$(this).closest('.multi-subject-row').remove();
 			});
-		});	
-		
+		});
+
 		function b64toBlob(b64Data, contentType, sliceSize) {
 	        contentType = contentType || '';
 	        sliceSize = sliceSize || 512;
@@ -342,7 +342,7 @@
 	      	var blob = new Blob(byteArrays, {type: contentType});
 	      	return blob;
 		}
-		
+
 		function uuid() {
 			  var u='',i=0;
 			  while(i++<18) {
@@ -351,7 +351,7 @@
 			  }
 			  return u;
 		}
-		
+
 		function GetFileSize(fileid) {
 			 try {
 				 var fileSize = 0;
@@ -359,31 +359,31 @@
 					 var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
 					 var objFile = objFSO.getFile(filePath);
 					 var fileSize = objFile.size; //size in kb
-					 fileSize = fileSize / 1048576; //size in mb 
+					 fileSize = fileSize / 1048576; //size in mb
 				 }else {
 					 fileSize = $("#" + fileid)[0].files[0].size //size in kb
-					 fileSize = fileSize / 1048576; //size in mb 
+					 fileSize = fileSize / 1048576; //size in mb
 				 }
-				 
+
 				 if(fileSize <= 2){
-					 return true; 
+					 return true;
 				 }
 			 }catch (e) {
 			 	console.log("Error is :" + e);
 			 }
 			 return false;
 		}
-		
+
 		function checkIE() {
 		    var ua = window.navigator.userAgent;
 		    var msie = ua.indexOf("MSIE");
-		    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){  
+		    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)){
 				return true;
 		    } else{
 		 		return false;
-		    }	
+		    }
 		}
-		
+
 		function createUploder(e, i){
 			var uploader = e.parents('.uploader-group');
 			var optWrapper = uploader.parents('.opt-wrapper');
@@ -395,7 +395,7 @@
 				id = $('.additional-sec .uploader').length;
 			}
 			var name = e.attr('name').split('-')[1];
-			
+
 			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
 			uploaderItem += '<a class="link-img cos-link"></a>';
@@ -412,21 +412,33 @@
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
-			
+
 			uploader.append(uploaderItem);
 		}
+	
 	</script>
 	<div class="dash-detail-header">
 		<p class="title">Request for COS</p>
+		<ul class="directory">
+			<li class="directory-link">
+				<a href="@routes.NotificationController.notifications(0)">Home</a>
+			</li>
+			<li class="slash">/</li>
+			<li class="directory-link">
+				<a href="@routes.ProjectController.projectExecution(0)">Project Execution</a>
+			</li>
+			<li class="slash">/</li>
+			<li class="current">Request for COS</li>
+		</ul>
 	</div>
-	<div class="cos-bg"> 
+	<div class="cos-bg">
 		<div class="a4">
 			<form id="cos-form" method="POST" enctype="multipart/form-data">
 				<input type="hidden" name="projectId" value="@project.id"/>
 				<section id="cos-basic">
 					<p class="cos-subheader">Project Title</p>
 					<p class="cos-content">@project.title</p>
-					
+
 					<div class="location-group form-group">
 						<p class="cos-subheader">Location</p>
 						<div class="form-input">
@@ -443,14 +455,14 @@
 			      			<input type="text" name="extraLocation" placeholder="None of the above, enter here..." />
 						</div>
 					</div>
-					
-					
-					
+
+
+
 					@if(project.isScaffold || project.isFormwork){
 						<div class="multi-subject-block">
 							<div class="multi-subject-row">
 								<div class="form-group">
-									<div class="form-label">	
+									<div class="form-label">
 										<label for="subject">Subject</label>
 									</div>
 									<div class="form-input">
@@ -458,7 +470,7 @@
 						         	</div>
 						        </div>
 								<div class="form-group">
-									<div class="form-label">	
+									<div class="form-label">
 										<label for="locgrid">Location/Grid Line</label>
 									</div>
 									<div class="form-input">
@@ -472,7 +484,7 @@
 						</div>
 					}else{
 						<div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="subject">Subject</label>
 				           </div>
 				           <div class="form-input">
@@ -480,55 +492,55 @@
 				         	</div>
 				        </div>
 					}
-					
+
 					<div class="serial-wrapper">
-						<p class="cos-subheader">Serial No.</p>
+						<p class="cos-subheader">Our Ref No.</p>
 						<p class="serial-no"></p>
 						<input type="hidden" name="serialNo" />
 					</div>
 				</section>
-				
+
 				@if(project.isGondola){
 					<section id="cos-gondola">
 						<p class="tb-header">Gondola Particulars</p>
 						<div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="gondola-no">Gondola No.</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="gondola-no" class="form-control" name="gondolaNo" placeholder="Fill in Gondola No." />
 				         	</div>
 				        </div>
-				        
+
 				        <div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="le-reg-no">L E Registration No.</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="le-reg-no" class="form-control" name="leRegisterNo" placeholder="Fill in L E Registration No." />
 				         	</div>
 				        </div>
-				        
+
 				        <div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="distinctive-no">Distinctive No.</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="distinctive-no" class="form-control" name="distinctiveNo" placeholder="Fill in Distinctive No." />
 				         	</div>
 				        </div>
-				        
+
 				        <div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="gondola-max-length">Max. Length</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="gondola-max-length" class="form-control" name="gondolaMaxLength" placeholder="Fill in Max. Length" />
 				         	</div>
 				        </div>
-				        
+
 				        <div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="gondola-max-swl">Max. S.W.L</label>
 				           </div>
 				           <div class="form-input">
@@ -537,30 +549,30 @@
 				        </div>
 					</section>
 				}
-				
+
 				@if(project.isMCWP){
 					<section id="cos-mcwp">
 						<p class="tb-header center">Working Platform Particulars</p>
 						<div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="mcwp-serial-no">Serial No.</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="mcwp-serial-no" class="form-control" name="cmwpSerialNo" placeholder="Fill in Serial No." />
 				         	</div>
 				        </div>
-				        
+
 				        <div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="mcwp-max-height">Max. Height</label>
 				           </div>
 				           <div class="form-input">
 				           	  <input id="mcwp-max-height" class="form-control" name="mcwpMaxHeight" placeholder="Fill in Max. Height" />
 				         	</div>
 				        </div>
-				        
+
 				        <div class="form-group">
-				           <div class="form-label">	
+				           <div class="form-label">
 				              <label for="mcwp-max-length">Max. Length</label>
 				           </div>
 				           <div class="form-input">
@@ -569,14 +581,14 @@
 				        </div>
 					</section>
 				}
-				
+
 				<section id="cos-compliance">
-					<p class="tb-header">Compliance Criteria</p>
+					<p class="tb-header">COMPLIANCE CRITERIA</p>
 					
 						@if(project.isScaffold){
 							<div class="compliance-sec">
 								<p class="cos-subheader">General</p>
-								
+
 								@for(index <- 0 until terms.size){
 									@if(terms(index).termType == TermType.GENTERAL){
 										<div id="@terms(index).id" class="opt-wrapper">
@@ -586,17 +598,17 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
 											</div>
-											
+
 											<div class="remark-body">
 												<div class="form-group">
-										           <div class="form-label">	
+										           <div class="form-label">
 										              <label>Remark</label>
 										           </div>
 										           <div class="form-input">
@@ -622,10 +634,10 @@
 									}
 								}
 							</div>
-							
+
 							<div class="compliance-sec">
 								<p class="cos-subheader">Scaffold</p>
-								
+
 								@for(index <- 0 until terms.size){
 									@if(terms(index).termType == TermType.SCAFFOLD){
 										<div id="@terms(index).id" class="opt-wrapper">
@@ -635,17 +647,17 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
 											</div>
-											
+
 											<div class="remark-body">
 												<div class="form-group">
-										           <div class="form-label">	
+										           <div class="form-label">
 										              <label>Remark</label>
 										           </div>
 										           <div class="form-input">
@@ -672,11 +684,11 @@
 								}
 							</div>
 						}
-						
+
 						@if(project.isGondola){
 							<div class="compliance-sec">
 								<p class="cos-subheader">Gondola</p>
-								
+
 								@for(index <- 0 until terms.size){
 									@if(terms(index).termType == TermType.GONDOLA){
 										<div id="@terms(index).id" class="opt-wrapper">
@@ -686,17 +698,17 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
 											</div>
-											
+
 											<div class="remark-body">
 												<div class="form-group">
-										           <div class="form-label">	
+										           <div class="form-label">
 										              <label>Remark</label>
 										           </div>
 										           <div class="form-input">
@@ -723,11 +735,11 @@
 								}
 							</div>
 						}
-						
+
 						@if(project.isMCWP){
 							<div class="compliance-sec">
 								<p class="cos-subheader">MCWP</p>
-								
+
 								@for(index <- 0 until terms.size){
 									@if(terms(index).termType == TermType.MCWP){
 										<div id="@terms(index).id" class="opt-wrapper">
@@ -737,17 +749,17 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
 											</div>
-											
+
 											<div class="remark-body">
 												<div class="form-group">
-										           <div class="form-label">	
+										           <div class="form-label">
 										              <label>Remark</label>
 										           </div>
 										           <div class="form-input">
@@ -774,11 +786,11 @@
 								}
 							</div>
 						}
-						
+
 						@if(project.isFormwork){
 							<div class="compliance-sec">
 								<p class="cos-subheader">Formwork</p>
-								
+
 								@for(index <- 0 until terms.size){
 									@if(terms(index).termType == TermType.FORMWORK){
 										<div id="@terms(index).id" class="opt-wrapper">
@@ -788,17 +800,17 @@
 											</p>
 											<div class="value-box">
 												<ul class="opt-list">
-													<li class="opt-item selected">YES</li>
-													<li class="opt-item">NO</li>
-													<li class="opt-item">N/A</li>
+													<li class="opt-item @if(terms(index).value == 1){selected}">YES</li>
+													<li class="opt-item @if(terms(index).value == 0){selected}">NO</li>
+													<li class="opt-item @if(terms(index).value == -1){selected}">N/A</li>
 												</ul>
 												<input class="opt-value" type="hidden" name="@terms(index).id-value" value="1"/>
 												<button class="remark-btn">Remark</button>
 											</div>
-											
+
 											<div class="remark-body">
 												<div class="form-group">
-										           <div class="form-label">	
+										           <div class="form-label">
 										              <label>Remark</label>
 										           </div>
 										           <div class="form-input">
@@ -825,7 +837,7 @@
 								}
 							</div>
 						}
-						
+
 					<div class="cos-sec additional-sec">
 						<p class="cos-subheader">Additional Images</p>
 						<div class="uploader-group form-group row">
@@ -835,7 +847,7 @@
 									<div class="upload-wrap">
 										<i class="fa fa-picture-o" aria-hidden="true"></i>
 										<div class="upload-text">
-											<p>@messages.at("drop_image")  
+											<p>@messages.at("drop_image")
 												<a class="browse-btn">@messages.at("browser_file")</a>
 											</p>
 										</div>
@@ -846,7 +858,7 @@
 						</div>
 					</div>
 				</section>
-				
+
 				<section id="cos-route">
 					<p class="tb-header">Route To</p>
 					<div class="qp-group form-group">
@@ -864,7 +876,7 @@
 						 	}
 						</div>
 					</div>
-					
+
 					<div class="inspector-group form-group">
 						<p class="cos-subheader">Inspector:</p>
 						<div class="form-input">
@@ -886,14 +898,15 @@
 						<a class="sign-clear-btn btn btn-default">Clear</a>
 					</div>
 					<div class="submit-wrapper">
-						<input id="submit" class="btn btn-success" type="submit" value="Submit"/>
+						<input id="submit" class="btn btn-success"  type="submit" value="Submit"  href="@routes.COSController.viewCOS(project.id)"/>
+						
 					</div>
 					<div style="clear: both; margin-bottom: 30px"></div>
 				</section>
 			</form>
 		</div>
 	</div>
-	
+
 	<div class="modal fade" id="draw-model" role="dialog">
 		<div class="modal-dialog" role="document">
 		    <div class="modal-content">
