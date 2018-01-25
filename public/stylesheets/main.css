@@ -2051,8 +2051,17 @@ footer p.copy-right {
   }
 }
 
+@media screen and (max-width: 992px) {
+  .hide-on-medium {
+    display: none !important;
+  }
+}
 
-
+@media screen and (max-width: 576px) {
+  .hide-on-xs {
+    display: none !important;
+  }
+}
 
 
 

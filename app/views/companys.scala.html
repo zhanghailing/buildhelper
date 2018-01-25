@@ -43,11 +43,11 @@
 			      <tr>
 			        <th>#</th>
 			        <th>Company Name</th>
-			        <th>UEN No.</th>
+			        <th class="hide-on-small">UEN No.</th>
 			        <th>Phone</th>
 			        <th>Email</th>
-			        <th>Admin ID</th>
-			        <th>Address</th>
+			        <th class="hide-on-xs">Admin ID</th>
+			        <th class="hide-on-medium">Address</th>
 			        <th>Action</th>
 			      </tr>
 			    </thead>
@@ -56,11 +56,11 @@
 					    <tr class="paginate">
 							<th>@((pageIndex-1) * Constants.COMPANY_PAGE_SIZE + index+1)</th>
 							<td>@companys(index).name</td>
-							<td>@companys(index).uenNo</td>
+							<td class="hide-on-small">@companys(index).uenNo</td>
 							<td>@companys(index).phone</td>
 							<td>@companys(index).email</td>
-							<td>@if(companys(index).account != null){@companys(index).account.email}else{none}</td>
-							<td>@companys(index).address</td>
+							<td class="hide-on-xs">@if(companys(index).account != null){@companys(index).account.email}else{none}</td>
+							<td class="hide-on-medium">@companys(index).address</td>
 							<td>
 								<a class="action-btn" href="@routes.CompanyController.createCompany(companys(index).id)">Edit</a>
 								<a class="action-btn" data-toggle="modal" data-target="#set-admin-model"
