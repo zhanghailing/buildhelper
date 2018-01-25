@@ -1054,14 +1054,18 @@ input.file-input{
 }
 
 .right-body{
-    width: 100%;
+    float: right;
+    width: 50%;
+    padding: 0 30px;
     min-height: 400px;
+    overflow: hidden;
+    outline: none;
+    z-index: 100;
 }
 
 .right-detail{
-	margin-left: 55%;
     min-height: 100%;
-    padding-top: 93px;
+    padding-top: 79px;
 }
 
 .search-wrapper{
