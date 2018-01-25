@@ -57,14 +57,6 @@
 			    	$("#del-acc-form").submit();
 		    });
 	   	});
-
-//    $(document).ready(function () {
-//      if ($(window).width() <= 768) {
-//        $('#hide-on-small').addStyle("display:none");
-//      } else {
-//
-//      }
-//    });
 	</script>
 	<div class="dash-detail-header">
 		<table class="header-tb">
@@ -83,8 +75,8 @@
 					<div class="link-group right-content">
 
 					@if(qpAccounts != null && qpAccounts.size != 0){
-						<a class="btn btn-success export-btn" style="width: 150px"  href="@routes.ExportController.exportQPByCompany()">Export QP Summary</a>
-						<a class="btn btn-success create-btn" style="width: 150px"  href="@routes.CompanyController.createQPAccount()">Create QP Account</a>
+						<a class="btn btn-success export-btn" style=""  href="@routes.ExportController.exportQPByCompany()">Export QP Summary</a>
+						<a class="btn btn-success create-btn" href="@routes.CompanyController.createQPAccount()">Create QP Account</a>
 					}
 					</div>
 				</td>

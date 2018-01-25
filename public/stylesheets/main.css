@@ -423,6 +423,7 @@ input[type="submit"]{
 	border-color: #e7eaec;
 	border-style: solid solid none;
 	border-width: 1px 0;
+  width: calc(100% - 20px);
 }
 
 .dash-block-title {
