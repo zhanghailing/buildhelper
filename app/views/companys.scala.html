@@ -12,7 +12,7 @@
 			var pageParts = $(".paginate");
 		    var numPages = pageParts.length;
 		    var perPage = @Constants.COMPANY_PAGE_SIZE;
-		    
+
 		    pageParts.slice(perPage).hide();
 		    $("#page-nav").pagination({
 		        items: @totalAmount,
@@ -22,32 +22,32 @@
 		        onPageClick: function(pageNum) {
 		            var start = perPage * (pageNum - 1);
 		            var end = start + perPage;
-		            
+
 		            $('#page-offset').val(start);
 		            $('form#page-form').submit();
 		        }
 		    });
 	   	});
-	</script>
+  </script>
 	<div class="dash-detail-header">
 		<p class="title">@messages.at("company_info")</p>
 		<a class="btn btn-success create-btn" href="@routes.CompanyController.createCompany()">@messages.at("create_company")</a>
 	</div>
-	
+
 	@if(companys == null || companys.size == 0){
 		<p class="empty">Sorry, You don't have any company～</p>
 	}else{
-		<div class="dash-block">	
+		<div class="dash-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<table class="table table-striped table-hover lesson-table">
 			    <thead>
 			      <tr>
 			        <th>#</th>
 			        <th>Company Name</th>
-			        <th>UEN No.</th>
+			        <th class="hide-on-small">UEN No.</th>
 			        <th>Phone</th>
 			        <th>Email</th>
-			        <th>Admin ID</th>
-			        <th>Address</th>
+			        <th class="hide-on-xs">Admin ID</th>
+			        <th class="hide-on-medium">Address</th>
 			        <th>Action</th>
 			      </tr>
 			    </thead>
@@ -56,18 +56,18 @@
 					    <tr class="paginate">
 							<th>@((pageIndex-1) * Constants.COMPANY_PAGE_SIZE + index+1)</th>
 							<td>@companys(index).name</td>
-							<td>@companys(index).uenNo</td>
+							<td class="hide-on-small">@companys(index).uenNo</td>
 							<td>@companys(index).phone</td>
 							<td>@companys(index).email</td>
-							<td>@if(companys(index).account != null){@companys(index).account.email}else{none}</td>
-							<td>@companys(index).address</td>
+							<td class="hide-on-xs">@if(companys(index).account != null){@companys(index).account.email}else{none}</td>
+							<td class="hide-on-medium">@companys(index).address</td>
 							<td>
 								<a class="action-btn" href="@routes.CompanyController.createCompany(companys(index).id)">Edit</a>
-								<a class="action-btn" data-toggle="modal" data-target="#set-admin-model" 
-									data-id="@companys(index).id" 
+								<a class="action-btn" data-toggle="modal" data-target="#set-admin-model"
+									data-id="@companys(index).id"
 									data-email="@if(companys(index).account != null){@companys(index).account.email}"
 									data-password="@if(companys(index).account != null){@companys(index).account.password}">Admin</a>
-							</td> 
+							</td>
 				        </tr>
 					}
 			    </tbody>
