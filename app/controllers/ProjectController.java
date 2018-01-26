@@ -333,30 +333,22 @@ public class ProjectController extends Controller{
 						Project.initInspector(project, requestData.data());
 					}
 					
-					Client.initClient(clientCompanyName, projects, requestData.data());
-					Builder.initBuilder(builderCompanyName, projects, requestData.data());
+					List<Client> clients = Client.initClient(clientCompanyName, projects, requestData.data());
+					List<Builder> builders = Builder.initBuilder(builderCompanyName, projects, requestData.data());
 					
-					if(projects.size() > 0) {
-						Project project = projects.get(0);
-						if(project.clients != null && project.clients.size() > 0) {
-							for(Client client : project.clients) {
-								String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(client.account.token, "UTF-8");
-								String htmlBody = "Your account is: " + client.account.email + " and password is: " + client.account.password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
-								CompletableFuture.supplyAsync(() 
-										-> MailerService.getInstance().send(client.account.email, "Account Information", htmlBody));
-							}
-						}
-						
-						if(project.builders != null && project.builders.size() > 0) {
-							for(Builder builder : project.builders) {
-								String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(builder.account.token, "UTF-8");
-								String htmlBody = "Your account is: " + builder.account.email + " and password is: " + builder.account.password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
-								CompletableFuture.supplyAsync(() 
-										-> MailerService.getInstance().send(builder.account.email, "Account Information", htmlBody));
-							}
-						}
+					for(Client client : clients) {
+						String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(client.account.token, "UTF-8");
+						String htmlBody = "Your account is: " + client.account.email + " and password is: " + client.account.password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
+						CompletableFuture.supplyAsync(() 
+								-> MailerService.getInstance().send(client.account.email, "Account Information", htmlBody));
 					}
 					
+					for(Builder builder : builders) {
+						String link = "http://" + request().host() + "/account/active?token=" + URLEncoder.encode(builder.account.token, "UTF-8");
+						String htmlBody = "Your account is: " + builder.account.email + " and password is: " + builder.account.password + " <p><a href='" + link + "'>Click here to active your account!</a></p>";
+						CompletableFuture.supplyAsync(() 
+								-> MailerService.getInstance().send(builder.account.email, "Account Information", htmlBody));
+					}
 				}
 				return redirect(routes.ProjectController.projectOfEngineer(0));
 			}
@@ -680,20 +672,31 @@ public class ProjectController extends Controller{
 			int totalAmount = ((BigInteger) jpaApi.em()
 					.createNativeQuery("SELECT COUNT(*) FROM (SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
 							" UNION " + 
-							"SELECT  pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
+							"SELECT  pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId" + 
+							" UNION " +
+							"SELECT pb.project_id as id FROM project_builder pb WHERE pb.builder_id=:builderId" +
+							" UNION " +
+							"SELECT pc.project_id as id FROM project_client pc WHERE pc.client_id=:clientId " + 
 							"ORDER BY id) as t")
 					.setParameter("engineerId", account.id)
 					.setParameter("accountId", account.id)
+					.setParameter("builderId", account.id)
+					.setParameter("clientId", account.id)
 					.getSingleResult()).intValue();
 			
 			int pageIndex = (int) Math.ceil(offset / Constants.COMPANY_PAGE_SIZE) + 1;
-			
 			List<String> results = jpaApi.em().createNativeQuery("SELECT pro.id FROM project pro WHERE pro.engineer_id=:engineerId" + 
 					" UNION " + 
 					"SELECT pt.project_id as id FROM project_team pt WHERE pt.account_id=:accountId " + 
+					" UNION " +
+					"SELECT pb.project_id as id FROM project_builder pb WHERE pb.builder_id=:builderId" +
+					" UNION " +
+					"SELECT pc.project_id as id FROM project_client pc WHERE pc.client_id=:clientId " + 
 					"ORDER BY id")
 					.setParameter("engineerId", account.id)
 					.setParameter("accountId", account.id)
+					.setParameter("builderId", account.id)
+					.setParameter("clientId", account.id)
 					.setFirstResult(offset).setMaxResults(Constants.COMPANY_PAGE_SIZE).getResultList();
 			
 			String projectIDCause = "";

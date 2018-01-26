@@ -353,6 +353,7 @@ public class COSController extends Controller{
 		}else{
 			COS cos = jpaApi.em().find(COS.class, Long.parseLong(cosId));
 			if(cos != null) {
+				//make sure the cos has only one inspection
 				if(cos.inspections.size() > 0) {
 					for(Inspection inspection : cos.inspections) {
 						for(COSImage image : inspection.additionalImages) {
@@ -364,23 +365,65 @@ public class COSController extends Controller{
 						jpaApi.em().remove(inspection);
 					}
 				}
+				
 				try {
 					Inspection inspection = new Inspection(cos, inspectedBy);
 					inspection.passType = passType;
 					inspection.inspectDate = Utils.parse("yyyy-MM-dd", inspectDate);
 					jpaApi.em().persist(inspection);
 					
+					Map<String, List<FilePart<File>>> fileMap = new HashMap<>();
 					MultipartFormData<File> body = request().body().asMultipartFormData();
 					List<FilePart<File>> generalPartFileParts = body.getFiles();
 					for (FilePart<File> generalFilePart : generalPartFileParts) {
 						if(generalFilePart.getFile() != null && generalFilePart.getFile().length() > 0) {
 							String key = generalFilePart.getKey();
-							if(key.equals("images[]")) {
+							if(key.contains("-")){
+								String termId = key.split("-")[0];
+								List<FilePart<File>> termFileList = null;
+								if(fileMap.containsKey(termId)) {
+									termFileList = fileMap.get(termId);
+								}else {
+									termFileList = new ArrayList<>();
+									fileMap.put(termId, termFileList);
+								}
+								termFileList.add(generalFilePart);
+							}else if(key.contains("additionImages")) {
 								COSImage cosImage = new COSImage(inspection, generalFilePart.getFile());
 								jpaApi.em().persist(cosImage);
 							}
 						}
 			        }
+					
+					List<Term> terms = jpaApi.em().createQuery("FROM Term", Term.class).getResultList();
+					for(Term term : terms) {
+						String remark = requestData.get(term.id + "-remark");
+						String optVal = requestData.get(term.id + "-value");
+						
+						if(!Utils.isBlank(optVal)) {
+							COSTerm cosTerm = new COSTerm(cos, term);
+							cosTerm.value = Integer.parseInt(optVal);
+							jpaApi.em().persist(cosTerm);
+							
+							List<FilePart<File>> filePartList = fileMap.get(cosTerm.term.id+"");
+							if(!Utils.isBlank(remark) || filePartList != null) {
+								Remark remarkObj = new Remark(account, cosTerm);
+								remarkObj.remark = remark;
+								jpaApi.em().persist(remarkObj);
+								if(filePartList != null) {
+									for(FilePart<File> filePart : filePartList) {
+										COSImage cosImage = new COSImage(remarkObj, filePart.getFile());
+										jpaApi.em().persist(cosImage);
+									}
+								}
+							}
+						}
+					}
+					
+					if(passType.equals("approve")) {
+						Messages messages = messagesApi.preferred(request());
+						Notification.notifyQPByCOS(cos, messages.at("noti_inspect_approve_qp", account.user.name), messages.at("email_inspect_approve_qp", account.user.name));
+					}
 				} catch (ParseException | IOException e) {
 					responseData.code = 4001;
 					responseData.message = e.getMessage();

@@ -73,7 +73,7 @@ public class Builder {
 		this.account = account;
 	}
 	
-	public static void initBuilder(String companyName, List<Project> projects, Map<String, String> data) throws Exception, NoResultException{
+	public static List<Builder> initBuilder(String companyName, List<Project> projects, Map<String, String> data) throws Exception, NoResultException{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> builderEmailMap = new HashMap<>();
 	    Map<Integer, String> builderPasswordMap = new HashMap<>();
@@ -128,6 +128,7 @@ public class Builder {
 		    	}
 	    }
 	    
+	    List<Builder> builders = new ArrayList<Builder>();
 	    for(int i = 0; i < builderEmailMap.size(); i++){
 	    		Account account;
 	    		Builder builder = null;
@@ -158,6 +159,8 @@ public class Builder {
 		    	}
 	    		
 	    		JPA.em().persist(builder);
+	    		builders.add(builder);
 	    }
+	    return builders;
 	}
 }

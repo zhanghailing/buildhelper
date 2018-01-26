@@ -1,10 +1,12 @@
 package models;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import controllers.AuthController;
 import play.db.jpa.JPA;
+import services.MailerService;
 import tools.Utils;
 
 @Entity
@@ -73,7 +76,7 @@ public class Client {
 		this.account = account;
 	}
 	
-	public static void initClient(String clientCompany, List<Project> projects, Map<String, String> data) throws Exception, NoResultException{
+	public static List<Client> initClient(String clientCompany, List<Project> projects, Map<String, String> data) throws Exception, NoResultException{
 		Iterator<String> iterator = data.keySet().iterator();
 		Map<Integer, String> clientEmailMap = new HashMap<>();
 	    Map<Integer, String> clientPasswordMap = new HashMap<>();
@@ -128,6 +131,7 @@ public class Client {
 		    	}
 	    }
 	    
+	    List<Client> clients = new ArrayList<Client>();
 	    for(int i = 0; i < clientEmailMap.size(); i++){
 	    		Account account;
 	    		Client client = null;
@@ -157,9 +161,12 @@ public class Client {
 		    	for(Project project : projects) {
 		    		client.projects.add(project);
 		    	}
-	    		
+		 
 	    		JPA.em().persist(client);
+	    		
+	    		clients.add(client);
 	    }
+	    return clients;
 	}
 	
 }

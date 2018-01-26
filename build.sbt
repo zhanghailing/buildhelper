@@ -1,6 +1,6 @@
 name := """BuildHelper"""
 
-version := "1.32"
+version := "1.34"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 

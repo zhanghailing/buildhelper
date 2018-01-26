@@ -283,7 +283,7 @@
 		                success: function(response, status) {
 			                var data = $.parseJSON(JSON.stringify(response));
 			            		if(data.code == 0){
-		           	    			showAlertToast(data.message, "alert-success");
+			            			location.assign("@routes.ProjectController.projectExecution(0)");
 			                }else{
 	                				showAlertToast(data.message, "alert-warning");
 			                }
@@ -898,7 +898,7 @@
 						<a class="sign-clear-btn btn btn-default">Clear</a>
 					</div>
 					<div class="submit-wrapper">
-						<input id="submit" class="btn btn-success"  type="submit" value="Submit"  href="@routes.COSController.viewCOS(project.id)"/>
+						<input id="submit" class="btn btn-success" type="submit" value="Submit" />
 						
 					</div>
 					<div style="clear: both; margin-bottom: 30px"></div>

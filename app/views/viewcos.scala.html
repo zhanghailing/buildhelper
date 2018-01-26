@@ -1176,7 +1176,11 @@
 												<a class="reject-action action-btn center-align" >Rejected</a>
 											}
 										}else{
-											<a class="upload-action action-btn center-align" href="@routes.COSController.issueCOS(coses(index).id)">Issue<br>COS</a>
+											@if(coses(index).inspections(0).passType == "reject"){
+												<a class="reject-action action-btn center-align" >Rejected</a>
+											}else{
+												<a class="upload-action action-btn center-align" href="@routes.COSController.issueCOS(coses(index).id)">Issue<br>COS</a>
+											}
 										}
 									}else{
 										<a class="upload-action action-btn center-align" href="@routes.COSController.inspectCOS(coses(index).id)">Inspect<br>COS</a>
