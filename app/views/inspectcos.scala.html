@@ -15,10 +15,11 @@
 			var width = $('.cos-sec').width();
 			var height = width * 3 / 4;
 			$('.draw-preview').width(width).height(height);
+			$('.remark-body .link-img').width(width).height(height);
 			
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
-				var remarkBlk = $(this).parents('.opt-wrapper').find('.remark-body');
+				var remarkBlk = $(this).parents('.value-box').find('.remark-body');
 				if(remarkBlk.hasClass('hidden')){
 					remarkBlk.removeClass('hidden');
 				}else{
@@ -349,15 +350,15 @@
 			@if(cos.project.isScaffold || cos.project.isFormwork){
 				@for(index <- 0 until cos.subGrids.size){
 					<div class="multi-subject-block">
-						<div class="cos-sec">
-							<p class="cos-subheader">Subject</p>
-							<p>@cos.subGrids(index).subject</p>
-						</div>
-						
-						<div class="cos-sec">
-							<p class="cos-subheader">Location/Grid Line</p>
-							<p>@cos.subGrids(index).gridLine</p>
-						</div>
+					<div class="cos-sec">
+						<p class="cos-subheader">Subject</p>
+						<p>@cos.subGrids(index).subject</p>
+					</div>
+					
+					<div class="cos-sec">
+						<p class="cos-subheader">Location</p>
+						<p>@cos.location</p>
+					</div>
 					</div>
 				}
 			}else{

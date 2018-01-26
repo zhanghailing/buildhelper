@@ -17,8 +17,28 @@
                 type: "POST",
                 success: function(response, status) {
 	                var data = $.parseJSON(JSON.stringify(response));
-	            		$('.sidebar-name').text(data.data.company);
-	            		$('.sidebar-role').text(data.data.accType);
+	                if(data.data.accType==="SADMIN"){
+                    $('.sidebar-name').text("E-Spector");
+                    $('.sidebar-role').text("MASTER ADMIN");
+                  }else if(data.data.accType==="ADMIN"){
+                    $('.sidebar-name').text(data.data.company);
+                    $('.sidebar-role').text("ADMIN");
+                  }else{
+                    $('.sidebar-name').text(data.data.name);
+                    if (data.data.accType==="QP"){
+                      $('.sidebar-role').text("Qualified Person");
+                    }else if (data.data.accType==="INSPECTOR"){
+                        if(data.data.designation===null){
+                          $('.sidebar-role').text("INSPECTOR");
+                        }else{
+                          $('.sidebar-role').text(data.data.designation);
+                        }
+
+                    }else {
+                      $('.sidebar-role').text(data.data.accType);
+                    }
+
+                  }
 	            }
             });
 		});
@@ -62,8 +82,8 @@
 		    	<li class="sub-menu dcjq-parent-li">
 		            <a class="sidebar-header">
 		                <img src="@routes.CompanyController.showLogoWithoutParam()">
-		                <span class="sidebar-name">G Top International Pte Ltd</span>
-		                <span class="sidebar-role">Master Admin</span>
+		                <span class="sidebar-name"></span>
+		                <span class="sidebar-role"></span>
 		            </a>
 		        </li>
 
@@ -84,30 +104,33 @@
 			            </a>
 			        </li>
           <li class="sub-menu dcjq-parent-li">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+            <a @if(section == 2 || section == 3 || section == 4){class="active"} href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
               <i class="fa fa-user"></i>
               <span>Manage User</span><span style="float:right"><i class="fa fa-caret-down"></i></span>
             </a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
+            <ul class="list-unstyled collapse in" id="homeSubmenu">
 
 			        <li >
 			            <a @if(section == 2){class="active"} href="@routes.CompanyController.qpList(0)">
                     @*<i class="fa fa-user"></i>*@
-			                <span style="padding-left:20px" class="sidebar-user">Qualified Person</span>
+			                <span style="margin-left:25px">Qualified Person</span>
+
 			            </a>
 			        </li>
 
 			        <li >
 			            <a @if(section == 3){class="active"} href="@routes.CompanyController.inspectors(0)">
 			                @*<i class="fa fa-user"></i>*@
-			                <span style="padding-left:20px" class="sidebar-user">Inspector</span>
+			                <span style="margin-left:25px">Inspector</span>
+
 			            </a>
 			        </li>
 
 			        <li >
 			            <a @if(section == 4){class="active"} href="@routes.ProjectController.projectOfCompany(0)">
 			                @*<i class="fa fa-user"></i>*@
-			                <span style="padding-left:20px" class="sidebar-user">Project Engineer</span>
+			                <span style="margin-left:25px">Project Engineer</span>
+
 			            </a>
 			        </li>
             </ul>

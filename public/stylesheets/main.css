@@ -423,6 +423,7 @@ input[type="submit"]{
 	border-color: #e7eaec;
 	border-style: solid solid none;
 	border-width: 1px 0;
+  width: calc(100% - 20px);
 }
 
 .dash-block-title {
@@ -575,9 +576,8 @@ ul.sidebar-menu li a.active > span{
 	font-weight: 600;
 }
 
-ul.sidebar-menu li a.active > span.sidebar-user{
-	margin-left: 0;
-	font-weight: 600;
+ul.sidebar-menu li a.active > span{
+  font-weight: 600;
 }
 
 .topbar {
@@ -1054,14 +1054,18 @@ input.file-input{
 }
 
 .right-body{
-    width: 100%;
+    float: right;
+    width: 50%;
+    padding: 0 30px;
     min-height: 400px;
+    overflow: hidden;
+    outline: none;
+    z-index: 100;
 }
 
 .right-detail{
-	margin-left: 55%;
     min-height: 100%;
-    padding-top: 93px;
+    padding-top: 79px;
 }
 
 .search-wrapper{
@@ -2045,15 +2049,23 @@ footer p.copy-right {
   margin-left: 0px;
 }
 
-.arrow {
-  float: right;
+@media screen and (max-width: 768px) {
+  .hide-on-small {
+    display: none !important;
+  }
 }
 
+@media screen and (max-width: 992px) {
+  .hide-on-medium {
+    display: none !important;
+  }
+}
 
-
-
-
-
+@media screen and (max-width: 576px) {
+  .hide-on-xs {
+    display: none !important;
+  }
+}
 
 
 

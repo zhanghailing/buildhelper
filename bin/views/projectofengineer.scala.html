@@ -94,8 +94,8 @@
 				</td>
 				<td class="right-content" width="40%">
 					<div class="link-group right-content">
-						
-					@if(projects != null && projects.size != 0){	
+
+					@if(projects != null && projects.size != 0){
 						<a class="btn btn-success export-btn" href="@routes.ExportController.exportProAdminSummary()">Export Summary</a>
 						<a class="btn btn-success create-btn" href="@routes.ProjectController.createProject()">@messages.at("create_project")</a>
 					}

@@ -33,7 +33,7 @@
 	       	});
 
 			$('#use-lh-chx').on('click', function(){
-				if($(this).is('checked=true')){
+				if($(this).is(':checked')){
 					$('#use-lh-chx').val("1");
 				}else{
 					$('#use-lh-chx').val("0");
@@ -129,7 +129,7 @@
 				        	var clientName = $('input[name=clientName]').val();
 				        	var clientHpNo = $('input[name=clientHpNo]').val();
 				        	var clientDesignation =  $('input[clientDesignation]').val();
-				        	var notify = ($('#client-notify-chx').is(':checked') ? '1' : '0');
+				        	var notify = ($('#client-notify-chx').is(':checked') ? true : false);
 
 				        	var clientBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
 				        		clientBlk += '<div class="acc-info">';
@@ -232,7 +232,7 @@
 				        	var builderName = $('input[name=builderName]').val();
 				        	var builderHpNo = $('input[name=builderHpNo]').val();
 				        	var builderDesignation =  $('input[builderDesignation]').val();
-				        	var notify = ($('#builder-notify-chx').is(':checked') ? '1' : '0');
+				        	var notify = ($('#builder-notify-chx').is(':checked') ? true : false);
 
 				        	var builderBlk = '<div class="acc-group col col-xs-6 col-md-3 col-sm-3">';
 				        	builderBlk += '<div class="acc-info">';
@@ -696,7 +696,10 @@
 
 				        	$('#team-detail').append(qpBuilderBlk);
 		        		}
-		        		
+
+		        		var isulh = $('#use-lh-chx').val();
+			        	var formData = $(form).serializeArray();
+			        	formData.push({name: "useLetterHead", value: isulh});
 		        		
 		        		var liInspectorItems = $('.inspector-body.right-body').find('ul.eng-list').children();
 		        		if(liInspectorItems.length > 0){
@@ -828,7 +831,7 @@
 	   	});
 	</script>
 	<div class="dash-detail-header">
-		<p class="title">Add MOM Project </p>
+		<p class="title">@if(project != null){Edit MOM Project}else{Add MOM Project}</p>
 		<ul class="directory">
 			<li class="directory-link">
 				<a href="@routes.NotificationController.notifications(0)">Home</a>
@@ -838,7 +841,7 @@
 				<a href="@routes.ProjectController.projectOfEngineer(0)">Project Admin</a>
 			</li>
 			<li class="slash">/</li>
-			<li class="current">Create Project</li>
+			<li class="current">@if(project != null){Edit Project}else{Create Project}</li>
 		</ul>
 	</div>
 
@@ -910,8 +913,9 @@
 					<div class="form-group">
 						<div class="form-label">
 							<label class="chx-container">Use Company Letterhead
-			                <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" checked=@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}>
-                            
+			               
+                           <input id="use-lh-chx" type="checkbox" name="useCompanyLetterHead" value="@if(project != null){@if(project.useLetterHead){1}else{0}}else{0}"  @if(project != null){@if(project.useLetterHead){checked}}>
+
 							  <span class="checkmark"></span>
 							</label>
 						</div>
@@ -1065,7 +1069,7 @@
 							</ul>
 						</div>
 
-						<div class="qp-body right-body">
+						<div class="qp-body right-body" style="padding-top:17px;">
 							<div class="right-detail">
 								<ul class="eng-list">
 									@if(project != null){
@@ -1122,14 +1126,14 @@
 													}
 												</p>
 											</div>
-											<button id="inspector- " class="btn btn-primary add-btn">Add</button>
+											<button id="inspector-add-btn" class="btn btn-primary add-btn">Add</button>
 										</li>
 									}
 								}
 							</ul>
 						</div>
 
-						<div class="inspector-body right-body">
+						<div class="inspector-body right-body" style="padding-top:17px;">
 							<div class="right-detail">
 								<ul class="eng-list">
 									@if(project != null){
