@@ -423,7 +423,6 @@ input[type="submit"]{
 	border-color: #e7eaec;
 	border-style: solid solid none;
 	border-width: 1px 0;
-  width: calc(100% - 20px);
 }
 
 .dash-block-title {
@@ -576,10 +575,6 @@ ul.sidebar-menu li a.active > span{
 	font-weight: 600;
 }
 
-ul.sidebar-menu li a.active > span{
-  font-weight: 600;
-}
-
 .topbar {
   margin-left: 220px;
   height: 55px;
@@ -590,8 +585,6 @@ ul.sidebar-menu li a.active > span{
 
 #dash-detail-wrap{
     width: 100%;
-    position: absolute;
-    top: 55px;
 }
 
 .header-tb{
@@ -601,7 +594,7 @@ ul.sidebar-menu li a.active > span{
 #dash-detail{
 	margin-left: 220px;
 	min-height: calc(100% - 85px);
-    transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 #dash-detail .form-label, #dash-detail .form-input{
@@ -1054,18 +1047,14 @@ input.file-input{
 }
 
 .right-body{
-    float: right;
-    width: 50%;
-    padding: 0 30px;
+    width: 100%;
     min-height: 400px;
-    overflow: hidden;
-    outline: none;
-    z-index: 100;
 }
 
 .right-detail{
+	margin-left: 55%;
     min-height: 100%;
-    padding-top: 79px;
+    padding-top: 93px;
 }
 
 .search-wrapper{
@@ -1859,7 +1848,7 @@ footer p.copy-right {
 }
 .landing-page .bubble {
 	position: relative;
-	height: 160px;
+	height: 120px;
 	padding:20px;
 	background: #ffffff;
 	-webkit-border-radius: 10px;
@@ -2023,10 +2012,6 @@ footer p.copy-right {
 	vertical-align: top;
 }
 
-.remark-body .form-input{
-	display: inherit !important;
-}
-
 
 .wrapper {
   display: flex;
@@ -2055,17 +2040,8 @@ footer p.copy-right {
   }
 }
 
-@media screen and (max-width: 992px) {
-  .hide-on-medium {
-    display: none !important;
-  }
-}
 
-@media screen and (max-width: 576px) {
-  .hide-on-xs {
-    display: none !important;
-  }
-}
+
 
 
 

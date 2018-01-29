@@ -1,9 +1,9 @@
 @import tags._
 @import models.TermType
 
-@(account: Account, cos: COS)
+@(account:Account, cos: COS)
 
-@sidemenu(account, 8) {
+@sidemenu(account:Account, 8) {
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets//bootstrap-datetimepicker.min.css")">
 	<script src="@routes.Assets.versioned("javascripts/fabric/fabric.min.js")" type="text/javascript"></script>
@@ -15,7 +15,6 @@
 			var width = $('.cos-sec').width();
 			var height = width * 3 / 4;
 			$('.draw-preview').width(width).height(height);
-			$('.remark-body .link-img').width(width).height(height);
 			
 			$('.remark-btn').on('click', function(e){
 				e.preventDefault();
@@ -57,7 +56,8 @@
 			                	blobMap[inputId] = reader.result;
 				        }
 				        reader.readAsDataURL(file);
-				        createUploder($(srcTarget));
+				        createUploder($(srcTarget), inputId);
+				        $(srcTarget).removeAttr('id');
 					}else{
 						showAlertToast('@messages.at("error.file_size")', "alert-danger");
 					}
@@ -126,8 +126,15 @@
 							var uploaderEle = currentDrawBtn.parents('.uploader');
 			                	var linkEle = uploaderEle.find('.link-img');
 			                	var fileInput = uploaderEle.find('input[type="file"]');
-			                	var inputId = fileInput.attr('id');
-			                	blobMap[inputId] = blob;
+			                	
+			                	var inputName = fileInput.attr('name');
+			                	var fileItems = $('input[name="'+inputName+'"]');
+			                	var currentFileItem = uploaderEle.find('.file-input');
+			                	var currentIndex = fileItems.index(currentFileItem);
+			                var key = currentIndex + "|" + inputName;
+			                
+			                	blobMap[key] = blob;
+			                	
 			                	linkEle.css('background-image', 'url(\'' + shReader.result + '\')');
 			                $('#draw-model').modal('hide');
 				        }
@@ -157,18 +164,28 @@
 		        },
 		        submitHandler: function(form) {
 			        	$('.submit-wrapper button').attr("disabled", true);
-			        	
-			        	var formDataToUpload = new FormData(document.getElementById('issue-form'));
-			        	formDataToUpload.delete('images[]');
-			        	for (var key in blobMap) {
-				       	formDataToUpload.append("images[]", blobMap[key]);
+
+					var formDataToUpload = new FormData(document.getElementById('issue-form'));
+					for (var key in blobMap) {
+						var splitArray = key.split('|');
+						var position = splitArray[0];
+						var name=splitArray[1]
+						var files = formDataToUpload.getAll('' + name + '');
+						if(files.length > 0){
+							formDataToUpload.delete('' + name + '');
+							$.each(files, function(index, value) {
+								if(index == position){
+									if(blobMap[key].size > 0){
+										formDataToUpload.append(name, blobMap[key]);
+									}
+								}else{
+									if(value.size > 0){
+										formDataToUpload.append(name, value);
+									}
+								}
+							});
+						}
 					}
-			        	
-			        var btn = $('#submit');
-					var spinner = $('<i class="glyphicon glyphicon-refresh glyphicon-spinner spinner"></i>');
-					btn.after(spinner);
-			        	btn.css('color', '#1ab394');
-			        	btn.attr("disabled", true);
 						
 					$.ajax({
 						url: "@routes.COSController.saveIssue()",
@@ -188,10 +205,7 @@
 			                }else{
 	                				showAlertToast(data.message, "alert-warning");
 			                }
-			            	
-				            	spinner.remove();
-				            	btn.css('color', 'white');
-		            	    		btn.attr("disabled", false);
+			            		$('.submit-wrapper button').attr("disabled", false);
 			            }
 		            });
 		        }
@@ -269,10 +283,18 @@
 		    }	
 		}
 		
-		function createUploder(e){
+		function createUploder(e, i){
 			var uploader = e.parents('.uploader-group');
-			var id = $('#addition-sec').find('input[type="file"]').length;
-			
+			var optWrapper = uploader.parents('.opt-wrapper');
+			var isTerm = optWrapper.length > 0;
+			var id;
+			if(isTerm){
+				id = optWrapper.attr('id')
+			}else{
+				id = $('.additional-sec .uploader').length;
+			}
+			var name = e.attr('name').split('-')[1];
+
 			var uploaderItem = '<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">';
 			uploaderItem += '<div class="cos-uploader-wrapper uploader">';
 			uploaderItem += '<a class="link-img cos-link"></a>';
@@ -281,11 +303,15 @@
 			uploaderItem += '<div class="upload-text">';
 			uploaderItem += '<p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>';
 			uploaderItem += '</div>';
-			uploaderItem += '<input id="'+id+'" class="file-input" type="file" name="images[]" accept="image/*" capture="camera"/>';
+			if(isTerm){
+				uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="'+ id + '-' +'' + name + '" accept="image/*" capture="camera"/>';
+			}else{
+				uploaderItem += '<input id="'+i+'" class="file-input" type="file" name="additionImages[]" accept="image/*" capture="camera"/>';
+			}
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
 			uploaderItem += '</div>';
-			
+
 			uploader.append(uploaderItem);
 		}
 	</script>
@@ -320,19 +346,28 @@
 				<p>@cos.serialNo.toUpperCase()</p>
 			</div>
 			
-			<div class="cos-sec">
-				<p class="cos-subheader">Subject</p>
+			@if(cos.project.isScaffold || cos.project.isFormwork){
 				@for(index <- 0 until cos.subGrids.size){
-					<p>@cos.subGrids(index).subject</p>
+					<div class="multi-subject-block">
+					<div class="cos-sec">
+						<p class="cos-subheader">Subject</p>
+						<p>@cos.subGrids(index).subject</p>
+					</div>
+					
+					<div class="cos-sec">
+						<p class="cos-subheader">Location</p>
+						<p>@cos.location</p>
+					</div>
+					</div>
 				}
-			</div>
-			
-			<div class="cos-sec">
-				<p class="cos-subheader">Location</p>
+			}else{
 				@for(index <- 0 until cos.subGrids.size){
-					<p>@cos.location</p>
+					<div class="cos-sec">
+						<p class="cos-subheader">Subject</p>
+						<p>@cos.subGrids(index).subject</p>
+					</div>
 				}
-			</div>
+			}
 			
 			@if(cos.project.isGondola){
 				<div class="cos-sec">
@@ -382,81 +417,146 @@
 				<p class="cos-subheader">Drawing/Calculations</p>
 				@if(cos.project.drawings != null){
 					@for(index <- 0 until cos.project.drawings.size){
-						<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/>
+						<p >@cos.location<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/></p>
+			
 					}
 				}
 			</div>
-			<p class="sec-header center-align">COMPLIANCE CRITERIA</p>
-			<div class="cos-sec">
-				<div class="opt-wrapper">
-				@if(cos.cosTerms != null){
-					@if(cos.cosTerms.size > 0){
-						<p class="cos-subheader">General</p>
-						@for(index <- 0 until cos.cosTerms.size){
-							@if(cos.cosTerms(index).term.termType == TermType.GENTERAL){
-								<p class="ques">
-									<span class="num">@(index+1). </span>
-									<span>@cos.cosTerms(index).term.subject</span>
-								</p>
-								<div class="value-box">
-									<ul class="opt-list">
-										<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
-										<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
-										<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
-									</ul>
-									<button class="remark-btn">Remark</button>
-									<div class="remark-body">
-								        	@if(cos.cosTerms(index).remarks.size > 0){
-											@for(j <- 0 until cos.cosTerms(index).remarks.size){
-												@if(cos.cosTerms(index).remarks(j).cosImages.size > 0){
-													@for(n <- 0 until cos.cosTerms(index).remarks(j).cosImages.size){
-														<a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).remarks(j).cosImages(n).uuid))"></a>
-													}
-												}
-												<p>@cos.cosTerms(index).remarks(j).author.user.name <span>: </span>@cos.cosTerms(index).remarks(j).remark</p>
-									     	}
-							        		}
-									</div>
-								</div>
+			<form id="issue-form" action="@routes.COSController.saveIssue()" method="POST">
+				<p class="sec-header center-align">COMPLIANCE CRITERIA</p>
+				<div class="cos-sec">
+					<div class="opt-wrapper">
+					@if(cos.cosTerms != null){
+						@if(cos.cosTerms.size > 0){
+							
+							@if(cos.project.isGondola){
+								<p class="cos-subheader">Gondola Checklist</p>
+							}else{
+								@if(cos.project.isMCWP){
+									<p class="cos-subheader">MCWP Checklist</p>
+								}else{
+									@if(cos.project.isFormwork){
+										<p class="cos-subheader">Formwork Checklist</p>
+									}else{
+										@if(cos.project.isScaffold){
+											<p class="cos-subheader">Scaffold Checklist</p>
+										}else{
+											<p class="cos-subheader">Others Checklist</p>
+										}
+									}
+								}
 							}
 							
-							@if(cos.cosTerms(index).term.termType == TermType.FORMWORK){
-								<p class="ques">
-									<span class="num">@(index+1). </span>
-									<span>@cos.cosTerms(index).term.subject</span>
-								</p>
-								<div class="value-box">
-									<ul class="opt-list">
-										<li class="opt-item @if(cos.cosTerms(index).value == 1){selected}">YES</li>
-										<li class="opt-item @if(cos.cosTerms(index).value == 0){selected}">NO</li>
-										<li class="opt-item @if(cos.cosTerms(index).value == -1){selected}">N/A</li>
-									</ul>
-									<button class="remark-btn">Remark</button>
+							@for(index <- 0 until cos.cosTerms.size){
+								<div id="@cos.cosTerms(index).term.id" class="opt-wrapper">
+									<p class="ques">
+										<span class="num">@(index+1). </span>
+										<span>@cos.cosTerms(index).term.subject</span>
+									</p>
+									<div class="value-box">
+										<ul class="opt-list">
+											<li class="opt-item @if(cos.cosTerms(index).term.value == 1){selected}">YES</li>
+											<li class="opt-item @if(cos.cosTerms(index).term.value == 0){selected}">NO</li>
+											<li class="opt-item @if(cos.cosTerms(index).term.value == -1){selected}">N/A</li>
+										</ul>
+										<input class="opt-value" type="hidden" name="@cos.cosTerms(index).term.id-value" value="1"/>
+										<button class="remark-btn">Remark</button>
+									</div>
+									
 									<div class="remark-body">
-								        	@if(cos.cosTerms(index).remarks.size > 0){
-											@for(j <- 0 until cos.cosTerms(index).remarks.size){
-												@if(cos.cosTerms(index).remarks(j).cosImages.size > 0){
-													@for(n <- 0 until cos.cosTerms(index).remarks(j).cosImages.size){
-														<a class="link-img" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).remarks(j).cosImages(n).uuid))"></a>
+										@if(cos.cosTerms(index).remarks != null){
+											@for(jdex <- 0 until cos.cosTerms(index).remarks.size){	
+												<div class="form-group">
+										           <div class="form-label">	
+										              <label>Remark By @cos.cosTerms(index).remarks(jdex).author.user.name</label>
+										           </div>
+										           <div class="form-input">
+										           	  <input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value="@if(cos.cosTerms(index).remarks(jdex).remark){@cos.cosTerms(index).remarks(jdex).remark}" @if(cos.cosTerms(index).remarks(jdex).author.id != account.id){disabled}/>
+										         	</div>
+										        </div>
+										        <div class="uploader-group form-group row">
+										        		@if(cos.cosTerms(index).remarks(jdex).cosImages.size > 0){
+														@for(n <- 0 until cos.cosTerms(index).remarks(jdex).cosImages.size){
+															<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+													         	 <div class="cos-uploader-wrapper uploader">
+													         	 	<a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n).uuid))"></a>
+														         </div>
+													         </div>
+														}
 													}
-												}
-												<p>@cos.cosTerms(index).remarks(j).author.user.name <span>: </span>@cos.cosTerms(index).remarks(j).remark</p>
-									     	}
-							        		}
+											    </div>
+										    }
+										    <div class="form-group">
+									           <div class="form-label">	
+									              <label>Remark</label>
+									           </div>
+									           <div class="form-input">
+									           	  <input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value=""/>
+									         	</div>
+									        </div>
+									        <div class="uploader-group form-group row">
+										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+										         	 <div class="cos-uploader-wrapper uploader">
+											            <a class="link-img cos-link"></a>
+											            <div class="upload-wrap">
+											               <i class="fa fa-picture-o" aria-hidden="true"></i>
+											               <div class="upload-text">
+											                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+											               </div>
+											               <input id="@if(cos.project.isGondola){gondola}else{@if(cos.project.isMCWP){mcwp}else{@if(cos.project.isFormwork){formwork}else{@if(cos.project.isScaffold){scaffold}else{others}}}}-uploader-@cos.cosTerms(index).term.id" class="file-input" type="file" name="@cos.cosTerms(index).term.id-@if(cos.project.isGondola){gondola}else{@if(cos.project.isMCWP){mcwp}else{@if(cos.project.isFormwork){formwork}else{@if(cos.project.isScaffold){scaffold}else{others}}}}Image[]" accept="image/*" capture="camera" multiple/>
+											            </div>
+											         </div>
+										         </div>
+										    </div>
+										}else{
+											<div class="form-group">
+									           <div class="form-label">	
+									              <label>Remark</label>
+									           </div>
+									           <div class="form-input">
+									           	  <input class="form-control" name="@cos.cosTerms(index).term.id-remark" placeholder="Fill in remark" value=""/>
+									         	</div>
+									        </div>
+									        <div class="uploader-group form-group row">
+										         <div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+										         	 <div class="cos-uploader-wrapper uploader">
+											            <a class="link-img cos-link"></a>
+											            <div class="upload-wrap">
+											               <i class="fa fa-picture-o" aria-hidden="true"></i>
+											               <div class="upload-text">
+											                  <p>@messages.at("drop_image")  <a class="browse-btn">@messages.at("browser_file")</a></p>
+											               </div>
+											               <input id="@if(cos.project.isGondola){gondola}else{@if(cos.project.isMCWP){mcwp}else{@if(cos.project.isFormwork){formwork}else{@if(cos.project.isScaffold){scaffold}else{others}}}}-uploader-@cos.cosTerms(index).term.id" class="file-input" type="file" name="@cos.cosTerms(index).term.id-@if(cos.project.isGondola){gondola}else{@if(cos.project.isMCWP){mcwp}else{@if(cos.project.isFormwork){formwork}else{@if(cos.project.isScaffold){scaffold}else{others}}}}Image[]" accept="image/*" capture="camera" multiple/>
+											            </div>
+											         </div>
+										         </div>
+										    </div>
+										}
 									</div>
 								</div>
 							}
 						}
 					}
-				}
+					</div>
 				</div>
-			</div>
+				
+				@if(cos.additionalImages.size > 0){
+					<p class="sec-header center-align">COS Additional Images</p>
+				}
 			
-			<form id="issue-form" action="@routes.COSController.saveIssue()" method="POST" enctype="multipart/form-data">
 				<input type="hidden" name="cosId" value="@cos.id"/>
 				<div id="addition-sec" class="cos-sec">
 					<p class="cos-subheader">Additional Images</p>
 					<div class="uploader-group form-group row">
+					
+						@for(index <- 0 until cos.additionalImages.size){	
+							<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
+								<div class="cos-uploader-wrapper uploader">
+									<a class="link-img cos-link" style="background-image:url(@routes.COSController.showCOSImage(cos.additionalImages(index).uuid))"></a>
+								</div>
+							</div>
+						}
+						
 						<div class="uploader-wrapper col col-xs-4 col-md-3 col-sm-3">
 							<div class="cos-uploader-wrapper uploader">
 								<a class="link-img cos-link"></a>
@@ -467,7 +567,7 @@
 											<a class="browse-btn">@messages.at("browser_file")</a>
 										</p>
 									</div>
-									<input id="0" class="file-input" type="file" name="images[]" accept="image/*" capture="camera" multiple/>
+									<input id="0" class="file-input" type="file" name="additionImages[]" accept="image/*" capture="camera" multiple/>
 								</div>
 							</div>
 						</div>
@@ -476,7 +576,7 @@
 				<div class="form-group date-group">
 					<label>Issue Date</label>
 					<input type="text" class="form-control issuedatepicker" name="issueDate" data-date-format="YYYY-MM-DD">
-				</div> 	
+				</div>
 				
 				<div class="submit-wrapper">
 					<input id="pass-input" type="hidden" name="passType" value="approve"/>
@@ -487,7 +587,6 @@
 			</form>
 		</div>
 	</div>
-	
 	<div class="modal fade" id="draw-model" role="dialog">
 		<div class="modal-dialog" role="document">
 		    <div class="modal-content">
@@ -504,11 +603,11 @@
 		      	</div>
 		      	<div class="modal-footer">
 			      	<div class="form-group">
-			        		<a id="draw-sure-btn" class="btn btn-success">确定</a>
+			      		<a id="draw-clear-btn" class="btn btn-success">Clear</a>
+			        		<a id="draw-sure-btn" class="btn btn-success">OK</a>
 		        		</div>
 	    			</div>
 			</div>
 		</div>
 	</div>
-	
 }
