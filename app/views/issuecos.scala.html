@@ -417,9 +417,12 @@
 				<p class="cos-subheader">Drawing/Calculations</p>
 				@if(cos.project.drawings != null){
 					@for(index <- 0 until cos.project.drawings.size){
-						<p >@cos.location<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/></p>
-			
+					
+					    @if(cos.project.drawings(index).location.indexOf(cos.location) != -1){
+						<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/>
+						<p>@cos.project.drawings(index).location<p/>
 					}
+				  }
 				}
 			</div>
 			<form id="issue-form" action="@routes.COSController.saveIssue()" method="POST">

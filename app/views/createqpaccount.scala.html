@@ -297,6 +297,14 @@
 			           <a id="add-file-btn" class="btn">Add</a>
 		         	   <a id="remove-file-btn" class="btn">remove</a>
 					</div>
+					<div class="Documents List">
+				<p class="Documents List">Documents List</p>
+				@if(qpAccount.user.documents != null){
+					@for(index <- 0 until qpAccount.user.documents.size){
+						<p id="Documents-delete">@qpAccount.user.documents(index).name</p><a id="delete" class="btn">delete</a>
+					}
+				}
+			</div>
 				   </div>
 				</div>
 				<div class="form-group txt-center form-submit">

@@ -7,7 +7,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
+import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.persistence.NoResultException;
@@ -42,7 +42,7 @@ import services.MailerService;
 import tools.Constants;
 import tools.Utils;
 import views.html.*;
-
+import services.S3Plugin;
 @SuppressWarnings("unchecked")
 public class ProjectController extends Controller{
 	@Inject private FormFactory formFactory;
@@ -728,7 +728,17 @@ public class ProjectController extends Controller{
 	@Transactional
 	public Result drawingFile(long projectId){
 		ResponseData responseData = new ResponseData();
+		List<String> locationLineArray = jpaApi.em().createNativeQuery("SELECT df.location FROM drawingfile df WHERE df.project_id = :projectId")
+				.setParameter("projectId", projectId)
+				.getResultList();
 		
+		List<String> locations = new ArrayList<String>();
+		if(locationLineArray != null && locationLineArray.size() > 0) {
+			for(String locationLine : locationLineArray) {
+				String[] loc = locationLine.split("\\|");
+				locations.addAll(Arrays.asList(loc));
+			}
+		}
 		Account account = (Account) ctx().args.get("account");
 		Account engineerAccount = jpaApi.em().find(Account.class, account.id);
 		if(engineerAccount.engineer == null) {
@@ -737,7 +747,7 @@ public class ProjectController extends Controller{
 		}else{
 			Project project = jpaApi.em().find(Project.class, projectId);
 			if(project != null) {
-				return ok(uploaddrawfile.render(account, project));
+				return ok(uploaddrawfile.render(account, project, locations));
 			}else {
 				responseData.code = 4000;
 				responseData.message = "Project doesn't exist.";
@@ -812,6 +822,24 @@ public class ProjectController extends Controller{
 		}
 		return ok(imageStream);
 	}
+	
+	
+	@Transactional
+	public Result deleteDrawing(String uuid){
+		TypedQuery<DrawingFile> query = jpaApi.em()
+				.createQuery("delete from DrawingFile df where df.uuid = :uuid", DrawingFile.class).setParameter("uuid", uuid);
+	
+
+		InputStream imageStream = null;
+		try {
+			DrawingFile drawingFile = query.getSingleResult();
+			imageStream = drawingFile.download();
+		} catch (NoResultException e) {
+			imageStream = application.get().classloader().getResourceAsStream(LetterHead.PLACEHOLDER);
+		}
+		return ok(imageStream);
+	}
+		
 }
 
 

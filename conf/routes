@@ -63,6 +63,7 @@ GET 		/project/execution				controllers.ProjectController.projectExecution(offse
 GET 		/project/drawing/file			controllers.ProjectController.drawingFile(projectId: Long ?= 0)
 POST 	/project/upload/drawingfile		controllers.ProjectController.uploadDrawingFile()
 GET     /project/show/drawingfile    	controllers.ProjectController.showDrawing(uuid: String ?= "")
+GET     /project/delete/drawingfile    	controllers.ProjectController.deleteDrawing(uuid: String ?= "")
 
 
 GET 		/mom/checklist/formwork			controllers.DocFormatController.momChecklistFormWork()

@@ -164,8 +164,12 @@ public class COSController extends Controller{
 						if(generalFilePart.getFile() != null && generalFilePart.getFile().length() > 0) {
 							String key = generalFilePart.getKey();
 							if(key.equals("signature")) {
-								Signature signature = new Signature(cos, generalFilePart.getFile());
-								jpaApi.em().persist(signature); //EOF Signature
+								try{
+									Signature signature = new Signature(cos, generalFilePart.getFile());
+									jpaApi.em().persist(signature); //EOF Signature
+									} catch(Exception e){
+										
+										}
 							}else if(key.contains("-")){
 								String termId = key.split("-")[0];
 								List<FilePart<File>> termFileList = null;

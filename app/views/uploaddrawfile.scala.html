@@ -1,6 +1,6 @@
 @import tags._
 
-@(account: Account, project: Project)
+@(account: Account, project: Project, locations: List[String])
 
 @sidemenu(account, 8){
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
@@ -11,10 +11,21 @@
 			$('#add-loc-btn').on('click', function(){
 				var inputElement = '<div class="input-wrapper col col-xs-4 col-md-2 col-sm-3">';
 					inputElement += '<input class="loc-input" type="text" name="location[]" placeholder="@messages.at("placeholder_location")">';
+					inputElement += '<a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>';
 					inputElement += '</div>';
 				$(this).parent().before(inputElement);
 			});
-
+			
+			$(document).on("click","#loc .minus-btn",function() {
+				 var c=confirm("delete?");
+				 if(c==true){
+					 var btn = $(this);
+						var parentElement = $(this).parents('.input-wrapper');
+						parentElement.remove();
+				
+				
+			  }
+			});
 			$(".uploader").on("change", function(e){
 				var srcTarget = e.originalEvent.target || e.originalEvent.srcElement;
 				var file = srcTarget.files[0];
@@ -150,20 +161,27 @@
 					            	<input id="file-name" type="text" class="form-control" name="fileName" placeholder="@messages.at("placeholder_filename")">
 					        </div>
 						</div>
+						<section id="loc">
 						<div class="form-group">
 							<div class="form-label">
 					            <label>@messages.at("location"):</label>
+					            <p></p>
 					         </div>
-					         <div class="row">
+					     <div class="row">
+					        @for(index <- 0 until locations.size){
 						         <div class="input-wrapper col col-xs-4 col-md-2 col-sm-3">
-						            <input class="loc-input" type="text" name="location[]" placeholder="@messages.at("placeholder_location")">
+						            <input class="loc-input" type="text" name="location[]" placeholder="@messages.at("placeholder_location")" value="@if(locations(index) != null){@locations(index)}">
+						            <a class="minus-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
 						         </div>
-
-						         <div class="input-wrapper col col-xs-4 col-md-2 col-sm-3">
-						            <a id="add-loc-btn" class="loc-input">
-						            		<i class="fa fa-plus"></i>
-						            </a>
+                                 }
+			         	
+			         	        <div class="input-wrapper col col-xs-4 col-md-2 col-sm-3">
+                                <a id="add-loc-btn" class="loc-input"><i class="fa fa-plus"></i></a>
+			                  </div>
+			         
+		      	         </div>
 						         </div>
+						         </section>
 					         </div>
 						</div>
 
@@ -171,6 +189,19 @@
 					    		<button id="save-add" type="button" class="btn btn-success" onclick="saveAndCreateMore();">@messages.at("save_add_other")</button>
 					        <input id="save" type="submit" class="btn btn-success" value='@messages.at("save")'/>
 					    </div>
+					    <div class="cos-sec">
+				<p class="cos-subheader">Drawing/Calculations</p>
+				@if(project.drawings != null){
+					@for(index <- 0 until project.drawings.size){
+					
+					    
+						<embed class="draw-preview" src="@routes.ProjectController.showDrawing(project.drawings(index).uuid)"/>
+						<p>@project.drawings(index).location</p><a href="@routes.ProjectController.deleteDrawing(project.drawings(index).uuid)">delete</a>
+						
+					
+				  }
+				}
+			</div>
 				    </div>
 				</div>
 			</form>

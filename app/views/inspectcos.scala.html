@@ -417,8 +417,9 @@
 				<p class="cos-subheader">Drawing/Calculations</p>
 				@if(cos.project.drawings != null){
 					@for(index <- 0 until cos.project.drawings.size){
+					@if(cos.project.drawings(index).location.indexOf(cos.location) != -1){
 						<p >@cos.location<embed class="draw-preview" src="@routes.ProjectController.showDrawing(cos.project.drawings(index).uuid)"/></p>
-			
+			           }
 					}
 				}
 			</div>
