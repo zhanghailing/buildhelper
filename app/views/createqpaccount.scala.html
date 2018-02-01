@@ -298,11 +298,14 @@
 		         	   <a id="remove-file-btn" class="btn">remove</a>
 					</div>
 					<div class="Documents List">
+				
+				@if(qpAccount != null){
 				<p class="Documents List">Documents List</p>
 				@if(qpAccount.user.documents != null){
 					@for(index <- 0 until qpAccount.user.documents.size){
 						<p id="Documents-delete">@qpAccount.user.documents(index).name</p><a id="delete" class="btn">delete</a>
 					}
+				}
 				}
 			</div>
 				   </div>
