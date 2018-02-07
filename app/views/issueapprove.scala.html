@@ -73,6 +73,7 @@
 			                var data = $.parseJSON(JSON.stringify(response));
 			            		if(data.code == 0){
 		           	    			showAlertToast(data.message, "alert-success");
+		           	    			location.assign("@routes.COSController.viewCOS(cos.project.id, 0)");
 			                }else{
 	                				showAlertToast(data.message, "alert-warning");
 			                }

@@ -236,7 +236,7 @@
 		            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 		        },
 		        submitHandler: function(form) {
-		        		var c=document.getElementById("canvas");
+		        	var c=document.getElementById("canvas");
 					var data=c.toDataURL("image/png");
 
 					var block = data.split(";");
@@ -283,6 +283,7 @@
 		                success: function(response, status) {
 			                var data = $.parseJSON(JSON.stringify(response));
 			            		if(data.code == 0){
+			            			showAlertToast(data.message, "alert-success");
 			            			location.assign("@routes.ProjectController.projectExecution(0)");
 			                }else{
 	                				showAlertToast(data.message, "alert-warning");

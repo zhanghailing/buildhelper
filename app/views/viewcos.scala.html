@@ -1101,7 +1101,7 @@
 							<td>
 								@for(j <- 0 until coses(index).subGrids.size){
 									@coses(index).subGrids(j).subject
-									@if(j < coses(index).subGrids.size){
+									@if(j < coses(index).subGrids.size - 1){
 										,
 									}
 								}
@@ -1135,8 +1135,8 @@
 										data-is-mcwp="@coses(index).project.isMCWP"
 										data-is-scaffold="@coses(index).project.isScaffold"
 										data-is-formwork="@coses(index).project.isFormwork"
-										data-username="@account.user.name"
-										data-pe-no="@account.user.peNo">Print<br>Hard Copy</a>
+										data-username="PeName"
+										data-pe-no="PeNo">Print<br>Hard Copy</a>
 								</div>
 								<div class="link-wrapper">
 									<a class="action-btn upload-action center-align">Upload <br> Hard Copy</a>
@@ -1164,8 +1164,8 @@
 										data-is-mcwp="@coses(index).project.isMCWP"
 										data-is-scaffold="@coses(index).project.isScaffold"
 										data-is-formwork="@coses(index).project.isFormwork"
-										data-username="@account.user.name"
-										data-pe-no="@account.user.peNo"
+										data-username="PeName"
+										data-pe-no="PeNo"
 										data-sign-uuid="@if(coses(index).signature != null){@coses(index).signature.uuid}">Print<br>E-Copy</a>
 									</div>
 									@if(coses(index).inspections.size() > 0){

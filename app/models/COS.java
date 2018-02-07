@@ -161,7 +161,7 @@ public class COS {
 				JPA.em().remove(approve);
 			}
 			Approve approve = new Approve(inspection, reason);
-			approve.approveDate = Utils.parse("yyyy-MM-dd", approveDate);
+			// approve.approveDate = Utils.parse("yyyy-MM-dd", approveDate);
 			approve.comment = comment;
 			JPA.em().persist(approve);
 			
