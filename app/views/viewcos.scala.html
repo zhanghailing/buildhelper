@@ -171,10 +171,6 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
-		    			cosPrint += '<div style="padding-top: 0px;">';
-		    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-		    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
-		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    		}else if(isMCWP){
 		    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
@@ -254,8 +250,11 @@
 		    			cosPrint += '<p style="text-align: justify;"><b>I</b>, <span>' + username + '</span>, <b>PE No.</b> <span>' + peNo + '</span>, hereby certify that the structure supporting the lifting equipment described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns, parapet walls, floor slab) are safe for the taking of mast climbing working platform loads to carrying out the building works.</p>';
 		    			cosPrint += '<br><br><br>';
 		    			cosPrint += '<p>Yours truly,</p>';
-		    			cosPrint += '<div>';
-		    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px; margin-left: 50px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
+		    			cosPrint += '<div style="position:relative; display: inline-block; margin-left: 50px;">';
+		    			cosPrint += '<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">';
+		    			cosPrint += '<div style="position: absolute; top: 39px; width: 100%;"><p style="font-family:MyriadPro-Regular, Myriad Pro; font-size: 18px; color: #2b3990; width: 100%; text-align: center; text-transform: uppercase;">' + username + '</p></div>';
+		    			cosPrint += '<div style="position: absolute; top: 63px; width: 100%;"><p style="font-family:MyriadPro-Regular, Myriad Pro; font-size: 18px; color: #2b3990; width: 100%; text-align: center;">' + peNo + '</p></div>';
+		    			cosPrint += '<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:150px;height:75px;top: -10px;left: 0;" src="/cos/show/signature?uuid='+signUUID+'&isLarge=true"/>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex; text-align: center;">';
 		    			cosPrint += '<div style="float: left; width: 50%;">';
@@ -273,10 +272,6 @@
 		    			cosPrint += '<span>Date</span>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
-		    			cosPrint += '</div>';
-		    			cosPrint += '<div style="padding-top: 20px;">';
-		    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-		    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    		}else if(isScaffold){
@@ -400,10 +395,6 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
-		    			cosPrint += '<div style="padding-top: 20px;">';
-		    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-		    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
-		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    		}else if(isFormwork){
 		    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
@@ -525,10 +516,6 @@
 		    			cosPrint += '<br>(PE)';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
-		    			cosPrint += '</div>';
-		    			cosPrint += '<div style="padding-top: 20px;">';
-		    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-		    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    		}
@@ -676,10 +663,6 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
-	    			cosPrint += '<div style="padding-top: 0px;">';
-	    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-	    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
-	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    		}else if(isMCWP){
 	    			cosPrint += '<div style="max-width: 715px; margin-left: auto; margin-right: auto;">';
@@ -775,10 +758,6 @@
 	    			cosPrint += '<span>Date</span>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
-	    			cosPrint += '</div>';
-	    			cosPrint += '<div style="padding-top: 20px;">';
-	    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-	    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    		}else if(isScaffold){
@@ -1026,10 +1005,6 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
-	    			cosPrint += '<div style="padding-top: 20px;">';
-	    			cosPrint += '<div style="float: right;"><img style="width: 80px; height: 80px;" src="@routes.Assets.versioned("images/sample_qr_code.jpg")"></div>';
-	    			cosPrint += '<div style="float: right; margin-top: 30px;">Scan to verify information or visit<br>www.e-spector.com/enquiry</div>';
-	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    		}
 
@@ -1138,8 +1113,8 @@
 										data-is-mcwp="@coses(index).project.isMCWP"
 										data-is-scaffold="@coses(index).project.isScaffold"
 										data-is-formwork="@coses(index).project.isFormwork"
-										data-username="PeName"
-										data-pe-no="PeNo">Print<br>Hard Copy</a>
+										data-username="@if(coses(index).issues.size > 0){@coses(index).issues(0).issuedBy.user.name}"
+										data-pe-no="@if(coses(index).issues.size > 0){@coses(index).issues(0).issuedBy.user.peNo}">Print<br>Hard Copy</a>
 								</div>
 								<div class="link-wrapper">
 									<a class="action-btn upload-action center-align">Upload <br> Hard Copy</a>
@@ -1171,8 +1146,8 @@
 										data-is-mcwp="@coses(index).project.isMCWP"
 										data-is-scaffold="@coses(index).project.isScaffold"
 										data-is-formwork="@coses(index).project.isFormwork"
-										data-username="PeName"
-										data-pe-no="PeNo"
+										data-username="@if(coses(index).issues.size > 0){@coses(index).issues(0).issuedBy.user.name}"
+										data-pe-no="@if(coses(index).issues.size > 0){@coses(index).issues(0).issuedBy.user.peNo}"
 										data-sign-uuid="@if(coses(index).signature != null){@coses(index).signature.uuid}">Print<br>E-Copy</a>
 									</div>
 									@if(coses(index).inspections.size() > 0){
