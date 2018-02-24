@@ -37,10 +37,11 @@
 		    		var builder = $(this).data("builder");
 		    		var location = $(this).data("location");
 		    		var subject = $(this).data('subject');
-		    		var inspectedDate = $(this).data('inspectedDate');
+		    		var inspectedDate = $(this).data('inspected-date');
+		    		var issuedDate = $(this).data('issued-date');
 		    		var gondolaNo = $(this).data('gondola-no');
 		    		var gondolaLE = $(this).data('gondola-le');
-		    		var gondolaDistinctiveNo = $(this).data('gondola-distinctiveNo');
+		    		var gondolaDistinctiveNo = $(this).data('gondola-distinctive-no');
 		    		var gondolaMaxlength = $(this).data('gondola-maxlength');
 		    		var mcwpNo = $(this).data('mcwp-no');
 		    		var mcwpHeight = $(this).data('mcwp-height');
@@ -74,7 +75,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
 		    			cosPrint += '<div style="width: 30%;">';
-		    			cosPrint += '<p><b>Client</b></p>';
+		    			cosPrint += '<p><b>Developer/Client</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 70%;">';
 		    			cosPrint += '<p>: <span>' + client + '</span></p>';
@@ -82,7 +83,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
 		    			cosPrint += '<div style="width: 30%;">';
-		    			cosPrint += '<p><b>Specialist contractor</b></p>';
+		    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 70%;">';
 		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -164,7 +165,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="float: right; width: 50%;">';
 		    			cosPrint += '<div style="float: right;">';
-		    			cosPrint += '<span>' + date.yyyymmdd() + '</span>';
+		    			cosPrint += '<span>' + issuedDate + '</span>';
 		    			cosPrint += '<br><hr style="width: 200px;">';
 		    			cosPrint += '<span>Date</span>';
 		    			cosPrint += '</div>';
@@ -202,7 +203,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
 		    			cosPrint += '<div style="width: 28%;">';
-		    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
+		    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
 		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -213,7 +214,7 @@
 		    			cosPrint += '<p><b>Subject</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>Installation of Mast Climbing Platform</span></p>';
+		    			cosPrint += '<p>: <span>' + subject + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -221,7 +222,7 @@
 		    			cosPrint += '<p><b>Inspection Date</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>31st October 2017</span></p>';
+		    			cosPrint += '<p>: <span>' + inspectedDate + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
@@ -267,7 +268,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="float: right; width: 50%;">';
 		    			cosPrint += '<div style="float: right;">';
-		    			cosPrint += '<span>31st October 2017</span>';
+		    			cosPrint += '<span>' + issuedDate + '</span>';
 		    			cosPrint += '<br><hr style="width: 200px;">';
 		    			cosPrint += '<span>Date</span>';
 		    			cosPrint += '</div>';
@@ -313,7 +314,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
 		    			cosPrint += '<div style="width: 28%;">';
-		    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
+		    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
 		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -324,7 +325,7 @@
 		    			cosPrint += '<p><b>Issue Date</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span>21.10.2017</span></p>';
+		    			cosPrint += '<p>: <span>' + issuedDate + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
@@ -439,7 +440,7 @@
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="display: flex;">';
 		    			cosPrint += '<div style="width: 28%;">';
-		    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
+		    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
 		    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -450,7 +451,7 @@
 		    			cosPrint += '<p><b>Issue Date</b></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '<div style="width: 72%;">';
-		    			cosPrint += '<p>: <span></span></p>';
+		    			cosPrint += '<p>: <span>' + issuedDate + '</span></p>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
 		    			cosPrint += '</div>';
@@ -547,10 +548,11 @@
 	    		var builder = $(this).data("builder");
 	    		var location = $(this).data("location");
 	    		var subject = $(this).data('subject');
-	    		var inspectedDate = $(this).data('inspectedDate');
+	    		var inspectedDate = $(this).data('inspected-date');
+	    		var issuedDate = $(this).data('issued-date');
 	    		var gondolaNo = $(this).data('gondola-no');
 	    		var gondolaLE = $(this).data('gondola-le');
-	    		var gondolaDistinctiveNo = $(this).data('gondola-distinctiveNo');
+	    		var gondolaDistinctiveNo = $(this).data('gondola-distinctive-no');
 	    		var gondolaMaxlength = $(this).data('gondola-maxlength');
 	    		var mcwpNo = $(this).data('mcwp-no');
 	    		var mcwpHeight = $(this).data('mcwp-height');
@@ -584,7 +586,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
 	    			cosPrint += '<div style="width: 30%;">';
-	    			cosPrint += '<p><b>Client</b></p>';
+	    			cosPrint += '<p><b>Developer/Client</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 70%;">';
 	    			cosPrint += '<p>: <span>' + client + '</span></p>';
@@ -592,7 +594,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
 	    			cosPrint += '<div style="width: 30%;">';
-	    			cosPrint += '<p><b>Specialist contractor</b></p>';
+	    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 70%;">';
 	    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -668,7 +670,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="float: right; width: 50%;">';
 	    			cosPrint += '<div style="float: right;">';
-	    			cosPrint += '<span>' + date.yyyymmdd() + '</span>';
+	    			cosPrint += '<span>' + issuedDate + '</span>';
 	    			cosPrint += '<br><hr style="width: 200px;">';
 	    			cosPrint += '<span>Date</span>';
 	    			cosPrint += '</div>';
@@ -706,7 +708,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
 	    			cosPrint += '<div style="width: 28%;">';
-	    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
+	    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
 	    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -717,7 +719,7 @@
 	    			cosPrint += '<p><b>Subject</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>Installation of Mast Climbing Platform</span></p>';
+	    			cosPrint += '<p>: <span>' + subject + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -725,7 +727,7 @@
 	    			cosPrint += '<p><b>Inspection Date</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span>31st October 2017</span></p>';
+	    			cosPrint += '<p>: <span>' + inspectedDate + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
@@ -768,7 +770,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="float: right; width: 50%;">';
 	    			cosPrint += '<div style="float: right;">';
-	    			cosPrint += '<span>31st October 2017</span>';
+	    			cosPrint += '<span>' + issuedDate + '</span>';
 	    			cosPrint += '<br><hr style="width: 200px;">';
 	    			cosPrint += '<span>Date</span>';
 	    			cosPrint += '</div>';
@@ -814,7 +816,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
 	    			cosPrint += '<div style="width: 28%;">';
-	    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
+	    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
 	    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -825,7 +827,7 @@
 	    			cosPrint += '<p><b>Issue Date</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '<p>: <span>' + issuedDate + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
@@ -939,7 +941,7 @@
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="display: flex;">';
 	    			cosPrint += '<div style="width: 28%;">';
-	    			cosPrint += '<p><b>Builder/Specialist Contractor</b></p>';
+	    			cosPrint += '<p><b>Builder/Contractor</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
 	    			cosPrint += '<p>: <span>' + builder + '</span></p>';
@@ -950,7 +952,7 @@
 	    			cosPrint += '<p><b>Issue Date</b></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '<div style="width: 72%;">';
-	    			cosPrint += '<p>: <span></span></p>';
+	    			cosPrint += '<p>: <span>' + issuedDate + '</span></p>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
 	    			cosPrint += '</div>';
@@ -1118,14 +1120,15 @@
 										data-location="@coses(index).location"
 										data-subject="@for(j <- 0 until coses(index).subGrids.size){
 														@coses(index).subGrids(j).subject
-														@if(j < coses(index).subGrids.size){
+														@if(j < coses(index).subGrids.size - 1){
 															,
 														}
 													}"
-										data-inspectedDate="@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}"
+										data-inspected-date="@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}"
+										data-issued-date="@if(coses(index).issues.size > 0){@coses(index).issues(0).issueDate}"
 										data-gondola-no="@coses(index).gondolaNo"
 										data-gondola-le="@coses(index).leRegistrationNo"
-										data-gondola-distinctiveNo="@coses(index).distinctiveNo"
+										data-gondola-distinctive-no="@coses(index).distinctiveNo"
 										data-gondola-maxlength="@coses(index).gondolaMaxLength"
 										data-gondola-swl="@coses(index).gondolaMaxSWL"
 										data-mcwp-no="@coses(index).cmwpSerialNo"
@@ -1150,16 +1153,20 @@
 										data-location="@coses(index).location"
 										data-subject="@for(j <- 0 until coses(index).subGrids.size){
 														@coses(index).subGrids(j).subject
-														@if(j < coses(index).subGrids.size){
+														@if(j < coses(index).subGrids.size - 1){
 															,
 														}
 													}"
-										data-inspectedDate="@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}"
+										data-inspected-date="@if(coses(index).inspections.size > 0){@coses(index).inspections(0).inspectDate}"
+										data-issued-date="@if(coses(index).issues.size > 0){@coses(index).issues(0).issueDate}"
 										data-gondola-no="@coses(index).gondolaNo"
 										data-gondola-le="@coses(index).leRegistrationNo"
-										data-gondola-distinctiveNo="@coses(index).distinctiveNo"
+										data-gondola-distinctive-no="@coses(index).distinctiveNo"
 										data-gondola-maxlength="@coses(index).gondolaMaxLength"
 										data-gondola-swl="@coses(index).gondolaMaxSWL"
+										data-mcwp-no="@coses(index).cmwpSerialNo"
+										data-mcwp-height="@coses(index).mcwpMaxHeight"
+										data-mcwp-length="@coses(index).mcwpMaxLength"
 										data-is-gondola="@coses(index).project.isGondola"
 										data-is-mcwp="@coses(index).project.isMCWP"
 										data-is-scaffold="@coses(index).project.isScaffold"
