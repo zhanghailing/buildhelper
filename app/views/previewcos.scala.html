@@ -4,7 +4,7 @@
 @(account: Account, cos: COS)
 
 @scripts = {
-	
+
 }
 
 @main(scripts, "Print") {
@@ -16,10 +16,10 @@
 	<script src="@routes.Assets.versioned("javascripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
 	<script>
 		$(function(){
-			
-		});	
+
+		});
 	</script>
-	
+
 	@if(cos.project.isGondola){
 	<div style="max-width: 715px; margin-left: auto; margin-right: auto;">
 		<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>
@@ -144,7 +144,86 @@
 				</div>
 			</div>
 		</div>
+
+
+    <div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">
+      <h3 style="text-align: center;">GONDOLA INSPECTION CHECKLIST</h3>
+      <table style="width: 100%; text-align: center; page-break-inside: auto;">
+        <tr style="background-color: #555555; color: #ffffff;">
+          <th style="padding: 10px;">#</th>
+          <th style="padding: 10px;" colspan="2">COMPLIANCE CRITERIA</th>
+          <th style="padding: 10px;">YES/NO/NA</th>
+        </tr>
+        <tr style="page-break-after: always;">
+          <td colspan="4" class="text-left">General</td>
+        </tr>
+        @for(index <- 0 until cos.cosTerms.size/3) {
+
+            <tr style="background-color: #f5f5f5;" id="@cos.cosTerms(index).term.id">
+              <td style="10px;">@(index + 1)</td>
+              <td style="text-align: justify;
+                padding: 10px;" colspan="2">
+              @cos.cosTerms(index).term.subject
+              </td>
+              <td style="padding: 10px;">@if(cos.cosTerms(index).term.value == 1) {YES} @if(cos.cosTerms(index).term.value == 0) {NO} @if(cos.cosTerms(index).term.value == -1) {N/A}</td>
+            </tr>
+            @if(cos.cosTerms(index).remarks != null) {
+              @for(jdex <- 0 until cos.cosTerms(index).remarks.size) {
+                <tr >
+                  <td> </td>
+                  <td colspan="3" class="text-left">
+                 Remark By @cos.cosTerms(index).remarks(jdex).author.user.name: @if(cos.cosTerms(index).remarks(jdex).remark) {@cos.cosTerms(index).remarks(jdex).remark}
+                </td>
+                </tr>
+                @if(cos.cosTerms(index).remarks(jdex).cosImages.size > 0) {
+                  @if(cos.cosTerms(index).remarks(jdex).cosImages.size % 2 == 0) {
+                    @for(n <- 0 until cos.cosTerms(index).remarks(jdex).cosImages.size / 2) {
+                      <tr>
+                        <td> </td>
+                        <td>
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n).uuid))"></img>
+                        </td>
+                        <td>
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n * 2).uuid))"></img>
+                        </td>
+                        <td> </td>
+                      </tr>
+                    }
+                  } else {
+                    @for(n <- 0 until cos.cosTerms(index).remarks(jdex).cosImages.size / 2) {
+                      <tr>
+                        <td> </td>
+                        <td >
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n).uuid))"></img>
+                        </td>
+                        <td >
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n * 2).uuid))"></img>
+                        </td>
+                        <td> </td>
+                      </tr>
+                    }
+                    <tr>
+                      <td> </td>
+                      <td colspan="1">
+                        <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(cos.cosTerms(index).remarks(jdex).cosImages.size - 1).uuid))"></img>
+                      </td>
+                      <td colspan="2"> </td>
+
+                    </tr>
+
+                  }
+
+                }
+              }
+            }
+
+        }
+      </table>
+    </div>
+
+
+
 	</div>
-		
+
 }
 }
