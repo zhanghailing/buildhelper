@@ -159,45 +159,47 @@
         </tr>
         @for(index <- 0 until cos.cosTerms.size/3) {
 
-            <tr style="background-color: #f5f5f5;" id="@cos.cosTerms(index).term.id">
-              <td style="10px;">@(index + 1)</td>
-              <td style="text-align: justify;
-                padding: 10px;" colspan="2">
-              @cos.cosTerms(index).term.subject
-              </td>
-              <td style="padding: 10px;">@if(cos.cosTerms(index).term.value == 1) {YES} @if(cos.cosTerms(index).term.value == 0) {NO} @if(cos.cosTerms(index).term.value == -1) {N/A}</td>
-            </tr>
-            @if(cos.cosTerms(index).remarks != null) {
-              @for(jdex <- 0 until cos.cosTerms(index).remarks.size) {
+
+              <tr style="background-color: #f5f5f5;" id="@cos.cosTerms(index).term.id">
+                <td style="10px;">@(index + 1)</td>
+                <td style="text-align: justify;
+                  padding: 10px;" colspan="2">
+                @cos.cosTerms(index).term.subject
+                </td>
+                <td style="padding: 10px;">@if(cos.cosTerms(index).term.value == 1) {YES} @if(cos.cosTerms(index).term.value == 0) {NO} @if(cos.cosTerms(index).term.value == -1) {N/A}</td>
+              </tr>
+          @for(mult <- 0 until 3) {
+            @if(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks != null) {
+              @for(jdex <- 0 until cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks.size) {
                 <tr >
                   <td> </td>
                   <td colspan="3" class="text-left">
-                 Remark By @cos.cosTerms(index).remarks(jdex).author.user.name: @if(cos.cosTerms(index).remarks(jdex).remark) {@cos.cosTerms(index).remarks(jdex).remark}
+                 Remark By @cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).author.user.name: @if(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).remark) {@cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).remark}
                 </td>
                 </tr>
-                @if(cos.cosTerms(index).remarks(jdex).cosImages.size > 0) {
-                  @if(cos.cosTerms(index).remarks(jdex).cosImages.size % 2 == 0) {
-                    @for(n <- 0 until cos.cosTerms(index).remarks(jdex).cosImages.size / 2) {
+                @if(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages.size > 0) {
+                  @if(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages.size % 2 == 0) {
+                    @for(n <- 0 until cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages.size / 2) {
                       <tr>
                         <td> </td>
                         <td>
-                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n).uuid))"></img>
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages(n).uuid))"></img>
                         </td>
                         <td>
-                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n * 2).uuid))"></img>
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages(n * 2).uuid))"></img>
                         </td>
                         <td> </td>
                       </tr>
                     }
                   } else {
-                    @for(n <- 0 until cos.cosTerms(index).remarks(jdex).cosImages.size / 2) {
+                    @for(n <- 0 until cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages.size / 2) {
                       <tr>
                         <td> </td>
                         <td >
-                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n).uuid))"></img>
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages(n).uuid))"></img>
                         </td>
                         <td >
-                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(n * 2).uuid))"></img>
+                          <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages(n * 2).uuid))"></img>
                         </td>
                         <td> </td>
                       </tr>
@@ -205,7 +207,7 @@
                     <tr>
                       <td> </td>
                       <td colspan="1">
-                        <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index).remarks(jdex).cosImages(cos.cosTerms(index).remarks(jdex).cosImages.size - 1).uuid))"></img>
+                        <img src="@(routes.COSController.showCOSImage(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages(cos.cosTerms(index + mult * cos.cosTerms.size/3).remarks(jdex).cosImages.size - 1).uuid))"></img>
                       </td>
                       <td colspan="2"> </td>
 
@@ -216,7 +218,7 @@
                 }
               }
             }
-
+          }
         }
       </table>
     </div>
