@@ -3,7 +3,11 @@
 
 @(account: Account, cos: COS)
 
-@sidemenu(account, 8) {
+@scripts = {
+	
+}
+
+@main(scripts, "Print") {
 	<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/froala/font-awesome.min.css")">
 	<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets//bootstrap-datetimepicker.min.css")">
 	<script src="@routes.Assets.versioned("javascripts/fabric/fabric.min.js")" type="text/javascript"></script>
@@ -16,11 +20,131 @@
 		});	
 	</script>
 	
-	<div class="dash-detail-header">
-		<p class="title">Preview COS</p>
+	@if(cos.project.isGondola){
+	<div style="max-width: 715px; margin-left: auto; margin-right: auto;">
+		<center><img src="@routes.Assets.versioned("images/ymw_letterhead.png")" style="max-width: 715px; max-height: 120px; "></center>
+		<hr>
+		<span>Our Ref No.: </span><span>@cos.serialNo</span>
 	</div>
-	<div class="cos-bg"> 
-		<div class="a4">
+	<div style="padding: 20px; max-width: 675px; margin-left: auto; margin-right: auto; font-size: 14px;">
+		<h4 style="text-align: center; margin-bottom: 20px;">CERTIFICATION OF SUPERVISION</h4>
+		<div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Project Title</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.project.title</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Developer/Client</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.project.clients(0).companyName</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Builder/Contractor</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.project.builders(0).companyName</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Subject</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@for(j <- 0 until cos.subGrids.size){
+									@cos.subGrids(j).subject
+									@if(j < cos.subGrids.size - 1){
+										,
+									}
+								}</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Inspection Date</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@if(cos.inspections.size > 0){@cos.inspections(0).inspectDate}</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Gondola No.</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.gondolaNo</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>L E Registration No.</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.leRegistrationNo</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Distinctive No.</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.distinctiveNo</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Max. Length</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.gondolaMaxLength</span></p>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div style="width: 30%">
+					<p><b>Max. S.W.L</b></p>
+				</div>
+				<div style="width: 70%">
+					<p>: <span>@cos.gondolaMaxSWL</span></p>
+				</div>
+			</div>
+		</div>
+		<p style="text-align: justify; margin-top: 20px;"><b>I</b>, <span>@if(cos.issues.size > 0){@cos.issues(0).issuedBy.user.name}</span>, <b>PE No.</b> <span>@if(cos.issues.size > 0){@cos.issues(0).issuedBy.user.peNo}</span>, hereby certify that the structural supporting the lifting equipment and tension of safety wire described in as above was examined by me and I confirmed that the stability of the structures (such as RC roof slab, beams, columns and parapet walls) are safe for the taking of gondola loads to carrying out the building works.</p>
+		<br>
+		<p>Yours truly,</p>
+		<div style="position:relative; display: inline-block; margin-left: 50px;">
+			<img style="width: 150px; height: 150px; margin-top: -20px; margin-bottom: -20px;" src="@routes.Assets.versioned("images/pe_stamp.svg")">
+			<div style="position: absolute; top: 56px; width: 100%;">
+				<p style="font-family:MyriadPro-Regular, Myriad Pro; font-size: 18px; color: #2b3990; width: 100%; text-align: center; text-transform: uppercase;">@if(cos.issues.size > 0){@cos.issues(0).issuedBy.user.name}</p>
+			</div>
+			<div style="position: absolute; top: 80px; width: 100%;">
+				<p style="font-family:MyriadPro-Regular, Myriad Pro; font-size: 18px; color: #2b3990; width: 100%; text-align: center;">@if(cos.issues.size > 0){@cos.issues(0).issuedBy.user.peNo}</p>
+			</div>
+			<img style="background-size: cover;background-repeat: no-repeat;background-position: center;z-index: 100;position:absolute;width:150px;height:75px;top: -10px;left: 0; background-image:url(@routes.COSController.showSignature(cos.issues(0).approves(0).approveSign.thumbnailUUID))"/>
+		</div>
+		<div style="display: flex; text-align: center;">
+			<div style="float: left; width: 50%;">
+				<div style="float: left;">
+					<br>
+					<hr style="width: 200px; margin: 5px 0;">Professional Engineer
+					<br>(Signature and Stamp)
+				</div>
+			</div>
+			<div style="float: right; width: 50%;">
+				<div style="float: right;">
+					<span>@if(cos.issues.size > 0){@cos.issues(0).issueDate}</span>
+					<br><hr style="width: 200px; margin: 5px 0;">
+					<span>Date</span>
+				</div>
+			</div>
 		</div>
 	</div>
+		
+}
 }
